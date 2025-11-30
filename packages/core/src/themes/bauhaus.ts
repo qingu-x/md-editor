@@ -106,16 +106,43 @@ export const bauhausTheme = `/* 包豪斯风格 */
 /* 引用 - 几何框 */
 #wemd .multiquote-1 {
     margin: 30px 0;
-    padding: 24px;
+    padding: 20px;
     background: #f9f9f9;
     border: 2px solid #111;
-    box-shadow: 5px 5px 0 #FBC02D;
-    /* 黄色硬阴影 */
+    box-shadow: 5px 5px 0 #D32F2F;
 }
 
 #wemd .multiquote-1 p {
+    color: #333;
     margin: 0;
-    font-size: 15px;
+    line-height: 1.7;
+}
+
+#wemd .multiquote-2 {
+    margin: 28px 0;
+    padding: 20px;
+    background: #fff;
+    border: 2px solid #111;
+    box-shadow: 4px 4px 0 #1976D2;
+}
+
+#wemd .multiquote-2 p {
+    color: #333;
+    margin: 0;
+}
+
+#wemd .multiquote-3 {
+    margin: 26px 0;
+    padding: 18px;
+    background: #fff;
+    border: 2px solid #111;
+    box-shadow: 3px 3px 0 #FBC02D;
+}
+
+#wemd .multiquote-3 p {
+    color: #333;
+    margin: 0;
+}
     color: #333;
 }
 
@@ -127,12 +154,24 @@ export const bauhausTheme = `/* 包豪斯风格 */
     color: #D32F2F;
 }
 
+/* 有序列表 - 粗黑数字 */
 #wemd ol {
     list-style: decimal;
     padding-left: 20px;
     margin: 20px 0;
-    color: #1976D2;
+    color: #D32F2F;
     font-weight: bold;
+}
+
+#wemd ul ul {
+    list-style-type: circle;
+    color: #1976D2;
+    margin-top: 8px;
+}
+
+#wemd ol ol {
+    list-style-type: lower-alpha;
+    color: #D32F2F;
 }
 
 #wemd li section {
@@ -221,6 +260,17 @@ export const bauhausTheme = `/* 包豪斯风格 */
     /* 蓝色硬阴影 */
 }
 
+#wemd figcaption {
+    margin-top: 10px;
+    text-align: center;
+    color: #111;
+    font-size: 14px;
+    font-weight: bold;
+    background: #FBC02D;
+    padding: 4px 8px;
+    display: inline-block;
+}
+
 /* 代码块 - 极简黑 */
 /* 注意：不要设置 color，让语法高亮主题控制文字颜色 */
 #wemd pre code.hljs {
@@ -258,6 +308,32 @@ export const bauhausTheme = `/* 包豪斯风格 */
     border: 1px solid #111;
     padding: 10px;
     color: #333;
+}
+
+/* 脚注 */
+#wemd .footnote-word,
+#wemd .footnote-ref {
+    color: #1976D2;
+    font-weight: bold;
+}
+
+#wemd .footnotes-sep {
+    border-top: 2px solid #111;
+    margin-top: 40px;
+    padding-top: 20px;
+}
+
+#wemd .footnote-num {
+    font-weight: 900;
+    color: #fff;
+    background: #D32F2F;
+    padding: 2px 6px;
+    margin-right: 6px;
+}
+
+#wemd .footnote-item p {
+    color: #333;
+    font-size: 14px;
 }
 
 /* 提示块 - 包豪斯风格 */

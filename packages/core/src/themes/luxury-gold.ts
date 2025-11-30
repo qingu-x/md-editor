@@ -124,6 +124,38 @@ export const luxuryGoldTheme = `/* 黑金奢华风格 */
     line-height: 1.8;
 }
 
+#wemd .multiquote-2 {
+    margin: 38px 0;
+    padding: 18px 28px;
+    background: #fff;
+    border: none;
+    text-align: center;
+    border-left: 2px solid #9E8045;
+}
+
+#wemd .multiquote-2 p {
+    color: #666;
+    font-style: italic;
+    font-family: serif;
+    font-size: 15px;
+}
+
+#wemd .multiquote-3 {
+    margin: 36px 0;
+    padding: 16px 26px;
+    background: #fafafa;
+    border: none;
+    text-align: center;
+    border-left: 1px solid #9E8045;
+}
+
+#wemd .multiquote-3 p {
+    color: #666;
+    font-style: italic;
+    font-family: serif;
+    font-size: 15px;
+}
+
 /* 列表 - 精致的金点 */
 #wemd ul {
     list-style: square;
@@ -146,6 +178,17 @@ export const luxuryGoldTheme = `/* 黑金奢华风格 */
     list-style: decimal;
     padding-left: 20px;
     margin: 20px 0;
+    color: #9E8045;
+}
+
+#wemd ul ul {
+    list-style-type: circle;
+    color: #9E8045;
+    margin-top: 8px;
+}
+
+#wemd ol ol {
+    list-style-type: lower-roman;
     color: #9E8045;
 }
 

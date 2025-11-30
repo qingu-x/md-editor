@@ -170,6 +170,17 @@ export const sunsetFilmTheme = `/* 落日胶片风格 */
     font-size: 16px;
 }
 
+#wemd ul ul {
+    list-style-type: circle;
+    color: #8D5B4C;
+    margin-top: 8px;
+}
+
+#wemd ol ol {
+    list-style-type: lower-roman;
+    color: #B33D25;
+}
+
 /* 
  * 引用 - 泛黄的旧报纸
  * 深米色背景 + 棕色边框
@@ -195,6 +206,23 @@ export const sunsetFilmTheme = `/* 落日胶片风格 */
     font-size: 15px;
     line-height: 1.8;
     font-style: italic;
+}
+
+#wemd .multiquote-2 {
+    margin: 34px 0;
+    padding: 22px;
+    background: #FFF8E7;
+    border-left: 3px solid #D98C45;
+    border-radius: 2px;
+}
+
+#wemd .multiquote-3 {
+    margin: 32px 0;
+    padding: 20px;
+    background: #FFFBF0;
+    border-left: 2px solid #D98C45;
+    border-radius: 2px;
+}
     /* 斜体增加叙事感 */
 }
 

@@ -116,10 +116,8 @@ export const cyberpunkNeonTheme = `/* 赛博朋克风格 */
     margin: 30px 0;
     padding: 20px;
     background-color: #1A212D;
-    /* 比背景稍亮 */
     border: 1px solid #2F3B4F;
     border-left: 4px solid #00F3FF;
-    /* 青色左边框 */
 }
 
 #wemd .multiquote-1 p {
@@ -127,7 +125,36 @@ export const cyberpunkNeonTheme = `/* 赛博朋克风格 */
     font-size: 14px;
     margin: 0;
     font-family: monospace;
-    /* 引用内容也用等宽字体 */
+}
+
+#wemd .multiquote-2 {
+    margin: 28px 0;
+    padding: 18px;
+    background: #161B22;
+    border: 1px solid #2F3B4F;
+    border-left: 4px solid #FFB84D;
+}
+
+#wemd .multiquote-2 p {
+    color: #8B9BB4;
+    font-size: 14px;
+    margin: 0;
+    font-family: monospace;
+}
+
+#wemd .multiquote-3 {
+    margin: 26px 0;
+    padding: 16px;
+    background: #0D1117;
+    border: 1px solid #2F3B4F;
+    border-left: 4px solid #FF00C1;
+}
+
+#wemd .multiquote-3 p {
+    color: #8B9BB4;
+    font-size: 14px;
+    margin: 0;
+    font-family: monospace;
 }
 
 /* 列表 */
@@ -144,6 +171,17 @@ export const cyberpunkNeonTheme = `/* 赛博朋克风格 */
     color: #FF00C1;
     font-weight: bold;
     margin: 20px 0;
+}
+
+#wemd ul ul {
+    list-style-type: square;
+    color: #FFB84D;
+    margin-top: 8px;
+}
+
+#wemd ol ol {
+    list-style-type: lower-alpha;
+    color: #00F3FF;
 }
 
 #wemd li section {
@@ -407,6 +445,14 @@ export const cyberpunkNeonTheme = `/* 赛博朋克风格 */
     border-bottom: 1px solid #30363D;
     padding: 10px;
     color: #CFD7E6;
+}
+
+#wemd figcaption {
+    margin-top: 10px;
+    text-align: center;
+    color: #00F3FF;
+    font-size: 13px;
+    font-family: monospace;
 }
 
 /* 脚注 */

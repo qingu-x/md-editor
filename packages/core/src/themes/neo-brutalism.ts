@@ -184,6 +184,18 @@ export const neoBrutalismTheme = `/* 新粗野主义风格 */
     padding-left: 5px;
 }
 
+#wemd ul ul {
+    list-style-type: circle;
+    color: #CCFF00;
+    margin-top: 10px;
+}
+
+#wemd ol ol {
+    list-style-type: upper-alpha;
+    color: #6A00FF;
+    font-weight: 900;
+}
+
 /* 
  * 引用 - 视窗风格 (Window Style)
  * 这是一个带粗边框和硬阴影的盒子
@@ -210,6 +222,22 @@ export const neoBrutalismTheme = `/* 新粗野主义风格 */
     font-size: 15px;
     line-height: 1.8;
     font-weight: 500;
+}
+
+#wemd .multiquote-2 {
+    margin: 38px 0;
+    padding: 22px;
+    background: #fff;
+    border: 2px solid #000;
+    box-shadow: 5px 5px 0px #CCFF00;
+}
+
+#wemd .multiquote-3 {
+    margin: 36px 0;
+    padding: 20px;
+    background: #fafafa;
+    border: 2px solid #000;
+    box-shadow: 4px 4px 0px #FF6B9D;
 }
 
 /* 链接 - 荧光笔涂抹效果 */

@@ -151,6 +151,15 @@ export const knowledgeBaseTheme = `/* 知识库风格 */
     font-weight: 600;
 }
 
+#wemd ul ul {
+    list-style-type: circle;
+    margin-top: 6px;
+}
+
+#wemd ol ol {
+    list-style-type: lower-alpha;
+}
+
 #wemd ol li {
     margin-bottom: 8px;
     line-height: 1.7;
@@ -273,6 +282,13 @@ export const knowledgeBaseTheme = `/* 知识库风格 */
     /* 笔记风格通常不需要阴影 */
     border: 1px solid #E3E2E0;
     /* 只有一圈细线 */
+}
+
+#wemd figcaption {
+    margin-top: 8px;
+    text-align: center;
+    color: #999;
+    font-size: 14px;
 }
 
 /* 

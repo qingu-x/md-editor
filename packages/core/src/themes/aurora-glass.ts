@@ -170,6 +170,17 @@ export const auroraGlassTheme = `/* 极光玻璃风格 */
   font-weight: bold;
 }
 
+#wemd ul ul {
+  list-style-type: circle;
+  color: #4158D0;
+  margin-top: 8px;
+}
+
+#wemd ol ol {
+  list-style-type: lower-roman;
+  color: #C850C0;
+}
+
 #wemd ol li {
   margin-bottom: 10px;
   line-height: 1.8;

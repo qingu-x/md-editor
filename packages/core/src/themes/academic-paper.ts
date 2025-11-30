@@ -93,32 +93,74 @@ export const academicPaperTheme = `/* 学术论文风格 */
     display: none;
 }
 
-/* 引用 - Abstract 摘要风格 */
+/* 引用 - 简洁边框 */
 #wemd .multiquote-1 {
     margin: 20px 0;
     padding: 16px 20px;
-    background: #f8f8f8;
-    border: 1px solid #eee;
-    font-size: 14px;
+    background: #fafafa;
+    border: 1px solid #ddd;
+    border-left: 4px solid #666;
 }
 
 #wemd .multiquote-1 p {
-    margin: 0;
     color: #555;
-    font-family: sans-serif;
-    /* 摘要用无衬线体区分 */
+    font-size: 15px;
+    margin: 0;
+    line-height: 1.6;
     text-indent: 0;
 }
 
+#wemd .multiquote-2 {
+    margin: 18px 0 18px 20px;
+    padding: 14px 18px;
+    background: #fafafa;
+    border: 1px solid #ddd;
+}
+
+#wemd .multiquote-2 p {
+    color: #555;
+    font-size: 15px;
+    margin: 0;
+}
+
+#wemd .multiquote-3 {
+    margin: 16px 0 16px 20px;
+    padding: 12px 16px;
+    background: #fcfcfc;
+    border: 1px solid #e0e0e0;
+}
+
+#wemd .multiquote-3 p {
+    color: #555;
+    font-size: 15px;
+    margin: 0;
+}
+
 /* 列表 */
-#wemd ul,
+#wemd ul {
+    list-style: disc;
+    padding-left: 20px;
+    margin: 16px 0;
+}
+
+#wemd ul ul {
+    list-style-type: square;
+    margin-top: 5px;
+}
+
 #wemd ol {
-    margin: 15px 0 15px 20px;
-    padding: 0;
+    list-style: decimal;
+    padding-left: 20px;
+    margin: 16px 0;
+}
+
+#wemd ol ol {
+    list-style-type: lower-alpha;
 }
 
 #wemd li section {
-    color: #1a1a1a;
+    color: #333;
+    line-height: 1.6;
 }
 
 /* 链接 - 经典深蓝 */
@@ -160,11 +202,20 @@ export const academicPaperTheme = `/* 学术论文风格 */
     opacity: 0.7;
 }
 
-/* 分割线 - 简单细线 */
-#wemd hr {
-    margin: 40px 0;
-    border: none;
-    border-top: 1px solid #ccc;
+/* 图片 - 简洁无装饰 */
+#wemd img {
+    display: block;
+    margin: 30px auto;
+    width: 100%;
+    border: 1px solid #ddd;
+}
+
+#wemd figcaption {
+    margin-top: 8px;
+    text-align: center;
+    color: #666;
+    font-size: 14px;
+    font-style: italic;
 }
 
 /* 

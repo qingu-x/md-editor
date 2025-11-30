@@ -140,6 +140,17 @@ export const morandiForestTheme = `/* 莫兰迪森林风格 */
   font-weight: bold;
 }
 
+#wemd ul ul {
+  list-style-type: circle;
+  color: #4F6F52;
+  margin-top: 8px;
+}
+
+#wemd ol ol {
+  list-style-type: lower-alpha;
+  color: #739072;
+}
+
 #wemd ol li {
   margin-bottom: 12px;
   line-height: 1.8;

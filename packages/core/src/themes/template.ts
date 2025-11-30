@@ -224,6 +224,15 @@ export const templateTheme = `/*
     line-height: 1.6;
 }
 
+#wemd ul ul {
+    list-style-type: circle;
+    margin-top: 6px;
+}
+
+#wemd ol ol {
+    list-style-type: lower-alpha;
+}
+
 /* ============================================
  * 6. 链接样式
  * ============================================

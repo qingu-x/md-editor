@@ -124,6 +124,30 @@ export const receiptTheme = `/* 购物小票风格 */
     color: #444;
 }
 
+#wemd .multiquote-2 {
+    margin: 22px 0;
+    padding: 13px;
+    border: 1px dashed #000;
+    background: #fafafa;
+}
+
+#wemd .multiquote-2 p {
+    font-family: monospace;
+    color: #444;
+}
+
+#wemd .multiquote-3 {
+    margin: 20px 0;
+    padding: 11px;
+    border: 1px dotted #666;
+    background: #fcfcfc;
+}
+
+#wemd .multiquote-3 p {
+    font-family: monospace;
+    color: #444;
+}
+
 /* 列表 */
 #wemd ul {
     list-style: none;
@@ -155,6 +179,20 @@ export const receiptTheme = `/* 购物小票风格 */
 #wemd li section {
     font-weight: normal;
     color: #222;
+}
+
+#wemd ul ul {
+    list-style: none;
+    margin-top: 6px;
+}
+
+#wemd ul ul li::before {
+    content: "[-] ";
+    font-weight: bold;
+}
+
+#wemd ol ol {
+    list-style-type: lower-alpha;
 }
 
 /* 链接 */
@@ -224,6 +262,16 @@ export const receiptTheme = `/* 购物小票风格 */
     border: 2px dashed #000;
     padding: 8px;
     background: #fff;
+}
+
+#wemd figcaption {
+    margin-top: 8px;
+    text-align: center;
+    color: #000;
+    font-size: 13px;
+    font-family: monospace;
+    border-top: 1px dashed #000;
+    padding-top: 6px;
 }
 
 /* 
@@ -305,6 +353,20 @@ export const receiptTheme = `/* 购物小票风格 */
 
 #wemd .footnotes-sep {
     border-top: 2px dashed #000;
+    margin-top: 30px;
+    padding-top: 15px;
+}
+
+#wemd .footnote-num {
+    font-weight: bold;
+    color: #000;
+    margin-right: 4px;
+}
+
+#wemd .footnote-item p {
+    color: #444;
+    font-size: 13px;
+    font-family: monospace;
 }
 
 /* 提示块 - 购物小票风格 */
