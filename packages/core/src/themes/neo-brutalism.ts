@@ -321,16 +321,15 @@ export const neoBrutalismTheme = `/* 新粗野主义风格 */
 
 /* 针对图片下方的注释文字 */
 #wemd figcaption {
-    display: block;
+    margin-top: 12px;
     text-align: center;
+    color: #000;
     font-size: 14px;
     font-weight: bold;
-    color: #000;
     background: #CCFF00;
-    display: inline-block;
     padding: 4px 10px;
     border: 2px solid #000;
-    margin-top: 15px;
+    display: inline-block;
     box-shadow: 3px 3px 0 #000;
 }
 

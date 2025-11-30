@@ -223,8 +223,6 @@ export const sunsetFilmTheme = `/* 落日胶片风格 */
     border-left: 2px solid #D98C45;
     border-radius: 2px;
 }
-    /* 斜体增加叙事感 */
-}
 
 /* 链接 - 像是手写的下划线 */
 #wemd a {

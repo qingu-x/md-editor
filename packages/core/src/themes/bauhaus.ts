@@ -143,8 +143,6 @@ export const bauhausTheme = `/* 包豪斯风格 */
     color: #333;
     margin: 0;
 }
-    color: #333;
-}
 
 /* 列表 */
 #wemd ul {
