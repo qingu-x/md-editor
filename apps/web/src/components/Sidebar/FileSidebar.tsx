@@ -1,6 +1,7 @@
 import { useState, useMemo } from 'react';
 import { useFileSystem } from '../../hooks/useFileSystem';
-import { Search, Plus, Trash2, FileText, FolderOpen, Edit2, MoreHorizontal, Check, X } from 'lucide-react';
+import { useEditorStore } from '../../store/editorStore';
+import { Search, Plus, Trash2, FolderOpen, Edit2, MoreHorizontal } from 'lucide-react';
 import { createPortal } from 'react-dom';
 import './FileSidebar.css';
 
@@ -8,6 +9,7 @@ import type { FileItem } from '../../store/fileTypes';
 
 export function FileSidebar() {
     const { files, currentFile, openFile, createFile, renameFile, deleteFile, selectWorkspace, workspacePath } = useFileSystem();
+    const currentThemeName = useEditorStore((state) => state.themeName);
     const [filter, setFilter] = useState('');
     const [renamingPath, setRenamingPath] = useState<string | null>(null);
     const [renameValue, setRenameValue] = useState('');
@@ -108,7 +110,7 @@ export function FileSidebar() {
                                     )}
                                     {renamingPath !== file.path && (
                                         <span className="fs-theme-info">
-                                            {file.themeName || '默认主题'}
+                                            {currentFile?.path === file.path ? currentThemeName : (file.themeName || '默认主题')}
                                         </span>
                                     )}
                                 </div>

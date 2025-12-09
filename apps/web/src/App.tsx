@@ -15,11 +15,13 @@ import { useStorageContext } from './storage/StorageContext';
 import { HistoryManager } from './components/History/HistoryManager';
 import { Loader2 } from 'lucide-react';
 import { useHistoryStore } from './store/historyStore';
+import { useFileStore } from './store/fileStore';
 
 function App() {
   const { workspacePath } = useFileSystem();
-  const { type: storageType } = useStorageContext();
+  const { type: storageType, ready } = useStorageContext();
   const historyLoading = useHistoryStore((state) => state.loading);
+  const fileLoading = useFileStore((state) => state.isLoading);
 
   // Check if running in Electron
   const isElectron = useMemo(() => {
@@ -72,79 +74,86 @@ function App() {
 
   return (
     <div className="app">
-      {!isElectron && storageType === 'indexeddb' && <HistoryManager />}
+      {/* 只在存储上下文完全就绪且确认为 IndexedDB 模式时才渲染 HistoryManager */}
+      {!isElectron && ready && storageType === 'indexeddb' && <HistoryManager />}
 
       <>
-          <Toaster
-            position="top-center"
-            toastOptions={{
-              className: 'premium-toast',
-              style: {
-                background: 'rgba(255, 255, 255, 0.9)',
-                backdropFilter: 'blur(12px)',
-                WebkitBackdropFilter: 'blur(12px)',
-                color: '#1a1a1a',
-                boxShadow: '0 12px 30px -10px rgba(0, 0, 0, 0.12)',
-                borderRadius: '50px',
-                padding: '10px 20px',
-                fontSize: '14px',
-                fontWeight: 500,
-                border: '1px solid rgba(0, 0, 0, 0.05)',
-                maxWidth: '400px',
+        <Toaster
+          position="top-center"
+          toastOptions={{
+            className: 'premium-toast',
+            style: {
+              background: 'rgba(255, 255, 255, 0.9)',
+              backdropFilter: 'blur(12px)',
+              WebkitBackdropFilter: 'blur(12px)',
+              color: '#1a1a1a',
+              boxShadow: '0 12px 30px -10px rgba(0, 0, 0, 0.12)',
+              borderRadius: '50px',
+              padding: '10px 20px',
+              fontSize: '14px',
+              fontWeight: 500,
+              border: '1px solid rgba(0, 0, 0, 0.05)',
+              maxWidth: '400px',
+            },
+            success: {
+              iconTheme: {
+                primary: '#07c160',
+                secondary: '#fff',
               },
-              success: {
-                iconTheme: {
-                  primary: '#07c160',
-                  secondary: '#fff',
-                },
-                duration: 2000,
+              duration: 2000,
+            },
+            error: {
+              iconTheme: {
+                primary: '#ef4444',
+                secondary: '#fff',
               },
-              error: {
-                iconTheme: {
-                  primary: '#ef4444',
-                  secondary: '#fff',
-                },
-                duration: 3000,
-              },
-            }}
-          />
-          <Header />
-          <main className={mainClass} style={mainStyle} data-show-history={showHistory}>
-            <button
-              className={`history-toggle ${showHistory ? '' : 'is-collapsed'}`}
-              onClick={() => setShowHistory((prev) => !prev)}
-              aria-label={showHistory ? '隐藏列表' : '显示列表'}
-            >
-              <span className="sr-only">{showHistory ? '隐藏列表' : '显示列表'}</span>
-            </button>
-            <div className={`history-pane ${showHistory ? 'is-visible' : 'is-hidden'}`} aria-hidden={!showHistory}>
-              <div className="history-pane__content">
-                {isElectron || storageType === 'filesystem' ? <FileSidebar /> : <HistoryPanel />}
-              </div>
+              duration: 3000,
+            },
+          }}
+        />
+        <Header />
+        <main className={mainClass} style={mainStyle} data-show-history={showHistory}>
+          <button
+            className={`history-toggle ${showHistory ? '' : 'is-collapsed'}`}
+            onClick={() => setShowHistory((prev) => !prev)}
+            aria-label={showHistory ? '隐藏列表' : '显示列表'}
+          >
+            <span className="sr-only">{showHistory ? '隐藏列表' : '显示列表'}</span>
+          </button>
+          <div className={`history-pane ${showHistory ? 'is-visible' : 'is-hidden'}`} aria-hidden={!showHistory}>
+            <div className="history-pane__content">
+              {/* ready 后渲染，防止闪烁 */}
+              {ready && (isElectron || storageType === 'filesystem' ? (
+                <FileSidebar />
+              ) : (
+                <HistoryPanel />
+              ))}
             </div>
-        <div className="workspace">
-          <div className="editor-pane">
-            {historyLoading && !isElectron && storageType === 'indexeddb' ? (
-              <div className="workspace-loading">
-                <Loader2 className="animate-spin" size={24} />
-                <p>正在加载文章</p>
-              </div>
-            ) : (
-              <MarkdownEditor />
-            )}
           </div>
-          <div className="preview-pane">
-            {historyLoading && !isElectron && storageType === 'indexeddb' ? (
-              <div className="workspace-loading">
-                <Loader2 className="animate-spin" size={24} />
-                <p>正在加载文章</p>
-              </div>
-            ) : (
-              <MarkdownPreview />
-            )}
+          <div className="workspace">
+            <div className="editor-pane">
+              {/* 存储未就绪或文件/历史加载中显示 loading */}
+              {(!ready || fileLoading || (historyLoading && !isElectron && storageType === 'indexeddb')) ? (
+                <div className="workspace-loading">
+                  <Loader2 className="animate-spin" size={24} />
+                  <p>正在加载文章</p>
+                </div>
+              ) : (
+                <MarkdownEditor />
+              )}
+            </div>
+            <div className="preview-pane">
+              {(!ready || fileLoading || (historyLoading && !isElectron && storageType === 'indexeddb')) ? (
+                <div className="workspace-loading">
+                  <Loader2 className="animate-spin" size={24} />
+                  <p>正在加载文章</p>
+                </div>
+              ) : (
+                <MarkdownPreview />
+              )}
+            </div>
           </div>
-        </div>
-          </main>
+        </main>
       </>
     </div>
   );

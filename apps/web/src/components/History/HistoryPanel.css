@@ -104,6 +104,8 @@
   gap: 12px;
   /* 移除灰色背景 */
   background: transparent;
+  /* 底部圆角与容器匹配 */
+  border-radius: 0 0 var(--radius-xl) var(--radius-xl);
 }
 
 .history-item {

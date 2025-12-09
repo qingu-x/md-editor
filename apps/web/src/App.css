@@ -29,12 +29,18 @@
 .history-pane {
   position: relative;
   overflow: hidden;
+  height: 100%;
+  min-height: 0;
+  border-radius: var(--radius-xl);
+  background: transparent;
 }
 
 .history-pane__content {
   height: 100%;
   min-height: 0;
   border-radius: var(--radius-xl);
+  overflow: hidden;
+  /* 裁剪内容确保圆角生效 */
 
   /* 玻璃态样式 */
   background: var(--glass-bg);

@@ -71,15 +71,39 @@ export class FileSystemAdapter implements StorageAdapter {
     const result: FileItem[] = [];
     for await (const entry of handle.values()) {
       if (entry.kind === 'file' && entry.name.endsWith('.md')) {
-        const file = await (entry as FileSystemFileHandle).getFile();
+        const fileHandle = entry as FileSystemFileHandle;
+        const file = await fileHandle.getFile();
+
+        // Parse frontmatter to get themeName
+        let themeName: string | undefined;
+        try {
+          const content = await file.text();
+          const match = content.match(/^---\n([\s\S]*?)\n---/);
+          if (match) {
+            const themeNameMatch = match[1].match(/themeName:\s*(.+)/);
+            if (themeNameMatch) {
+              themeName = themeNameMatch[1].trim().replace(/^['"]|['"]$/g, '');
+            }
+          }
+        } catch {
+          // Ignore parse errors
+        }
+
         result.push({
           path: entry.name,
           name: entry.name,
           size: file.size,
           updatedAt: file.lastModified ? new Date(file.lastModified).toISOString() : undefined,
+          meta: themeName ? { themeName } : undefined,
         });
       }
     }
+    // 按编辑时间降序排序（最新的在前）
+    result.sort((a, b) => {
+      const timeA = a.updatedAt ? new Date(a.updatedAt).getTime() : 0;
+      const timeB = b.updatedAt ? new Date(b.updatedAt).getTime() : 0;
+      return timeB - timeA;
+    });
     return result;
   }
 

@@ -128,6 +128,8 @@
     flex-direction: column;
     gap: 12px;
     background: transparent;
+    /* 底部圆角与容器匹配 */
+    border-radius: 0 0 var(--radius-xl) var(--radius-xl);
 }
 
 .fs-item {

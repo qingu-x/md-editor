@@ -31,18 +31,18 @@ const getElectron = (): ElectronAPI | null => {
 };
 
 const WORKSPACE_KEY = 'wemd-workspace-path';
+const LAST_FILE_KEY = 'wemd-last-file-path';
 
 export function useFileSystem() {
     const { adapter, ready: storageReady, type: storageType } = useStorageContext();
     const electron = getElectron();
-    const webMode = !electron && storageReady;
 
     const {
         workspacePath, files, currentFile, isLoading, isSaving,
         setWorkspacePath, setFiles, setCurrentFile, setLoading, setSaving
     } = useFileStore();
 
-    const { setMarkdown, markdown } = useEditorStore();
+    const { setMarkdown, markdown, theme, themeName } = useEditorStore();
 
     // Track last saved content to prevent unnecessary saves
     const lastSavedContent = useRef<string>('');
@@ -128,6 +128,24 @@ export function useFileSystem() {
 
     // 4. Open File
     const openFile = useCallback(async (file: any) => {
+        // 切换文件前保存当前文件的更改（包括主题）
+        if (currentFile && isDirty.current && !isRestoring.current) {
+            const { markdown: currentMarkdown, theme: currentTheme, themeName: currentThemeName } = useEditorStore.getState();
+            const frontmatter = `---\ntheme: ${currentTheme}\nthemeName: ${currentThemeName}\n---\n`;
+            const fullContent = frontmatter + '\n' + currentMarkdown;
+
+            if (adapter && storageReady) {
+                try {
+                    await adapter.writeFile(currentFile.path, fullContent);
+                    isDirty.current = false;
+                    // 刷新文件列表以更新 themeName 显示
+                    await refreshFiles();
+                } catch (e) {
+                    console.error('Failed to save before switch:', e);
+                }
+            }
+        }
+
         isRestoring.current = true; // Mark as restoring to prevent auto-save
 
         let content = '';
@@ -186,7 +204,10 @@ export function useFileSystem() {
         setTimeout(() => {
             isRestoring.current = false;
         }, 100);
-    }, [setMarkdown, electron, adapter, storageReady]);
+
+        // Save last opened file path to localStorage
+        localStorage.setItem(LAST_FILE_KEY, file.path);
+    }, [setMarkdown, electron, adapter, storageReady, currentFile, refreshFiles]);
 
     // 5. Create File
     const createFile = useCallback(async () => {
@@ -223,7 +244,7 @@ export function useFileSystem() {
                 };
                 await openFile(newFile);
                 toast.success('已创建新文章');
-            } catch (error) {
+            } catch {
                 toast.error('创建失败');
             }
         }
@@ -346,7 +367,25 @@ themeName: ${themeName}
             }
         } else if (storageReady) {
             // Web: refresh files when storage is ready
-            refreshFiles();
+            setLoading(true);
+            (async () => {
+                try {
+                    await refreshFiles();
+                    // Auto-open last file or first file
+                    const lastPath = localStorage.getItem(LAST_FILE_KEY);
+                    const { files: currentFiles } = useFileStore.getState();
+                    if (currentFiles.length > 0) {
+                        const targetFile = lastPath
+                            ? currentFiles.find(f => f.path === lastPath) || currentFiles[0]
+                            : currentFiles[0];
+                        if (targetFile) {
+                            await openFile(targetFile);
+                        }
+                    }
+                } finally {
+                    setLoading(false);
+                }
+            })();
             // Set a virtual workspace path for UI display
             setWorkspacePath(storageType === 'filesystem' ? '本地文件夹' : '浏览器存储');
         }
@@ -400,7 +439,7 @@ themeName: ${themeName}
         }, 3000);
 
         return () => clearTimeout(timer);
-    }, [markdown, currentFile, saveFile]);
+    }, [markdown, theme, themeName, currentFile, saveFile]);
 
     return {
         workspacePath,
