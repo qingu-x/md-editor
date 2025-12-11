@@ -1,5 +1,5 @@
 import toast from 'react-hot-toast';
-import { processHtml } from '@wemd/core';
+import { processHtml, createMarkdownParser } from '@wemd/core';
 
 // 处理 MathJax 元素以适配微信（参考 legacy 实现，结合 DOM 和字符串处理）
 function processMathJaxForWechat(element: HTMLElement): void {
@@ -81,13 +81,7 @@ export async function copyToWechat(markdown: string, css: string): Promise<void>
     document.body.appendChild(container);
 
     try {
-        // Wait, processHtml takes raw HTML and CSS. We need to render markdown to HTML first.
-        // Since we can't easily import the parser here (it's in a component or hook), 
-        // we might need to rely on the preview component to update a store value, 
-        // OR import the parser here.
-        // Let's import createMarkdownParser from @wemd/core
-
-        const { createMarkdownParser } = await import('@wemd/core');
+        // Create parser synchronously
         const parser = createMarkdownParser();
         const rawHtml = parser.render(markdown);
         const styledHtml = processHtml(rawHtml, css);

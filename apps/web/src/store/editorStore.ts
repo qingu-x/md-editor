@@ -5,6 +5,7 @@
  */
 import { create } from 'zustand';
 import { useThemeStore } from './themeStore';
+import { copyToWechat as execCopyToWechat } from '../services/wechatCopyService';
 
 export interface ResetOptions {
   markdown?: string;
@@ -184,8 +185,7 @@ export const useEditorStore = create<EditorStore>((set, get) => ({
     const css = themeStore.getThemeCSS(themeStore.themeId);
 
     try {
-      const { copyToWechat } = await import('../services/wechatCopyService');
-      await copyToWechat(markdown, css);
+      await execCopyToWechat(markdown, css);
     } catch (error) {
       console.error('Copy failed:', error);
     }
