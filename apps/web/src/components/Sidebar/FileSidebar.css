@@ -349,3 +349,13 @@
 .fs-context-menu button.danger:hover {
     background: color-mix(in srgb, var(--error) 12%, transparent);
 }
+
+/* 无限滚动 - 加载更多 */
+.fs-load-more {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 16px;
+    color: var(--text-tertiary);
+    font-size: 13px;
+}

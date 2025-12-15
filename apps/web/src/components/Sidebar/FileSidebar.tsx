@@ -1,4 +1,4 @@
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useRef, useEffect, useCallback } from 'react';
 import { useFileSystem } from '../../hooks/useFileSystem';
 import { useThemeStore } from '../../store/themeStore';
 import { Search, Plus, Trash2, FolderOpen, Edit2, MoreHorizontal, Copy } from 'lucide-react';
@@ -8,6 +8,9 @@ import './FileSidebar.css';
 
 import type { FileItem } from '../../store/fileTypes';
 
+// 每次加载的文件数量
+const PAGE_SIZE = 50;
+
 export function FileSidebar() {
     const { files, currentFile, openFile, createFile, renameFile, deleteFile, selectWorkspace, workspacePath } = useFileSystem();
     const currentThemeName = useThemeStore((state) => state.themeName);
@@ -15,7 +18,11 @@ export function FileSidebar() {
     const [renamingPath, setRenamingPath] = useState<string | null>(null);
     const [renameValue, setRenameValue] = useState('');
 
-    // Context Menu State
+    // 无限滚动状态
+    const [visibleCount, setVisibleCount] = useState(PAGE_SIZE);
+    const loadMoreRef = useRef<HTMLDivElement>(null);
+
+    // 右键菜单状态
     const [menuOpen, setMenuOpen] = useState(false);
     const [menuPos, setMenuPos] = useState({ x: 0, y: 0 });
     const [menuTarget, setMenuTarget] = useState<FileItem | null>(null);
@@ -24,6 +31,44 @@ export function FileSidebar() {
         if (!filter) return files;
         return files.filter(f => f.name.toLowerCase().includes(filter.toLowerCase()));
     }, [files, filter]);
+
+    // 当前可见的文件列表
+    const visibleFiles = useMemo(() => {
+        return filteredFiles.slice(0, visibleCount);
+    }, [filteredFiles, visibleCount]);
+
+    // 是否还有更多文件可加载
+    const hasMore = visibleCount < filteredFiles.length;
+
+    // 加载更多文件
+    const loadMore = useCallback(() => {
+        if (hasMore) {
+            setVisibleCount(prev => Math.min(prev + PAGE_SIZE, filteredFiles.length));
+        }
+    }, [hasMore, filteredFiles.length]);
+
+    // 使用 Intersection Observer 检测滚动到底部
+    useEffect(() => {
+        const observer = new IntersectionObserver(
+            (entries) => {
+                if (entries[0].isIntersecting && hasMore) {
+                    loadMore();
+                }
+            },
+            { threshold: 0.1 }
+        );
+
+        if (loadMoreRef.current) {
+            observer.observe(loadMoreRef.current);
+        }
+
+        return () => observer.disconnect();
+    }, [hasMore, loadMore]);
+
+    // 搜索条件变化时重置可见数量
+    useEffect(() => {
+        setVisibleCount(PAGE_SIZE);
+    }, [filter]);
 
     const handleContextMenu = (e: React.MouseEvent, file: FileItem) => {
         e.preventDefault();
@@ -93,7 +138,7 @@ export function FileSidebar() {
 
             <div className="fs-body">
                 <div className="fs-list">
-                    {filteredFiles.map(file => (
+                    {visibleFiles.map(file => (
                         <div
                             key={file.path}
                             className={`fs-item ${currentFile?.path === file.path ? 'active' : ''}`}
@@ -138,6 +183,12 @@ export function FileSidebar() {
                             </div>
                         </div>
                     ))}
+                    {/* 无限滚动触发器 */}
+                    {hasMore && (
+                        <div ref={loadMoreRef} className="fs-load-more">
+                            <span>加载更多...</span>
+                        </div>
+                    )}
                     {filteredFiles.length === 0 && (
                         <div className="fs-empty">暂无文件</div>
                     )}

@@ -23,7 +23,7 @@ function App() {
   const historyLoading = useHistoryStore((state) => state.loading);
   const fileLoading = useFileStore((state) => state.isLoading);
 
-  // Global Save Shortcut (One listener to rule them all)
+  // 全局保存快捷键（统一监听器）
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
       if ((e.metaKey || e.ctrlKey) && e.key === 's') {
@@ -35,9 +35,9 @@ function App() {
     return () => document.removeEventListener('keydown', handleKeyDown);
   }, [saveFile]);
 
-  // Check if running in Electron
+  // 检查是否在 Electron 中运行
   const isElectron = useMemo(() => {
-    // @ts-expect-error Electron type defs
+    // @ts-expect-error Electron 类型定义
     return typeof window !== 'undefined' && window.electron?.isElectron;
   }, []);
 
@@ -52,7 +52,7 @@ function App() {
     try {
       localStorage.setItem('wemd-show-history', String(showHistory));
     } catch {
-      /* ignore persistence errors */
+      /* 忽略持久化错误 */
     }
   }, [showHistory]);
 
@@ -74,7 +74,7 @@ function App() {
     [historyWidth],
   );
 
-  // Electron Mode: Force Workspace Selection
+  // Electron 模式：强制选择工作区
   if (isElectron && !workspacePath) {
     return (
       <>

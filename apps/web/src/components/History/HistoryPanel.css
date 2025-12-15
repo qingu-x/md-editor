@@ -280,3 +280,13 @@
   padding: 24px;
   text-align: center;
 }
+
+/* 无限滚动 - 加载更多 */
+.history-load-more {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 16px;
+  color: var(--text-tertiary);
+  font-size: 13px;
+}

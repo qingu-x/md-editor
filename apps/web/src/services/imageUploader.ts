@@ -15,7 +15,7 @@ export const uploadImageToLocal = async (file: File, config: LocalConfig): Promi
     });
 
     if (!response.ok) {
-        throw new Error(`Upload failed: ${response.statusText}`);
+        throw new Error(`上传失败: ${response.statusText}`);
     }
 
     const data = await response.json();
@@ -28,7 +28,7 @@ export const uploadImageToLocal = async (file: File, config: LocalConfig): Promi
 export const uploadImageToGitHub = async (file: File, config: GithubConfig): Promise<UploadResult> => {
     const filename = `${Date.now()}-${file.name.replace(/[^a-zA-Z0-9._-]/g, '')}`;
     const content = await fileToBase64(file);
-    const path = `images/${filename}`; // Default folder
+    const path = `images/${filename}`; // 默认文件夹
 
     const response = await fetch(`https://api.github.com/repos/${config.repo}/contents/${path}`, {
         method: 'PUT',
@@ -45,7 +45,7 @@ export const uploadImageToGitHub = async (file: File, config: GithubConfig): Pro
 
     if (!response.ok) {
         const error = await response.json();
-        throw new Error(error.message || 'GitHub upload failed');
+        throw new Error(error.message || 'GitHub 上传失败');
     }
 
     const data = await response.json();
@@ -67,7 +67,7 @@ const fileToBase64 = (file: File): Promise<string> => {
         reader.readAsDataURL(file);
         reader.onload = () => {
             const result = reader.result as string;
-            // Remove "data:image/png;base64," prefix
+            // 移除 "data:image/png;base64," 前缀
             const base64 = result.split(',')[1];
             resolve(base64);
         };

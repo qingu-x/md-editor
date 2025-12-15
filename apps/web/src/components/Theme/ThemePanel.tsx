@@ -112,7 +112,7 @@ export function ThemePanel({ open, onClose }: ThemePanelProps) {
   const getAllThemes = useThemeStore((state) => state.getAllThemes);
   const customThemesFromStore = useThemeStore((state) => state.customThemes);
   const persistActiveSnapshot = useHistoryStore((state) => state.persistActiveSnapshot);
-  // Re-compute allThemes when customThemes changes
+  // customThemes 变化时重新计算 allThemes
   // eslint-disable-next-line react-hooks/exhaustive-deps
   const allThemes = useMemo(() => getAllThemes(), [getAllThemes, customThemesFromStore]);
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -240,7 +240,7 @@ export function ThemePanel({ open, onClose }: ThemePanelProps) {
     toast.success('主题已复制');
   };
 
-  // Group themes
+  // 分组主题
   const builtInThemes = allThemes.filter((t) => t.isBuiltIn);
   const customThemes = allThemes.filter((t) => !t.isBuiltIn);
 

@@ -187,7 +187,7 @@ export const useEditorStore = create<EditorStore>((set, get) => ({
     try {
       await execCopyToWechat(markdown, css);
     } catch (error) {
-      console.error('Copy failed:', error);
+      console.error('复制失败:', error);
     }
   },
 }));

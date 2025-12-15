@@ -73,7 +73,7 @@ export function renderMathInElement(element: HTMLElement): void {
                     throwOnError: false,
                     displayMode: isBlock,
                 });
-            } catch (e) {
+            } catch {
                 wrapper.textContent = match[0]; // 渲染失败时保留原文
                 wrapper.className = 'katex-error';
             }

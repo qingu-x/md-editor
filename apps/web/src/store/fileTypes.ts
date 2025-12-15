@@ -14,7 +14,7 @@ export interface FileStoreState {
     isLoading: boolean;
     isSaving: boolean;
 
-    // Actions
+    // 操作方法
     setWorkspacePath: (path: string | null) => void;
     setFiles: (files: FileItem[]) => void;
     setCurrentFile: (file: FileItem | null) => void;

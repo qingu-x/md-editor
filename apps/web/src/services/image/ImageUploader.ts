@@ -1,7 +1,7 @@
 /**
  * 图床上传接口
  */
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
+ 
 export interface ImageUploader {
     /** 图床名称 */
     name: string;

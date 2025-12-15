@@ -230,7 +230,7 @@ export function MarkdownEditor() {
     const wordCount = countWords(content);
     const lineCount = countLines(content);
 
-    // Handle toolbar text insertion
+    // 处理工具栏文本插入
     const handleInsert = (prefix: string, suffix: string, placeholder: string) => {
         const view = viewRef.current;
         if (!view) return;

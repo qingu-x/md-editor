@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState, useRef } from 'react';
 import { createPortal } from 'react-dom';
 import toast from 'react-hot-toast';
 import { Search, Plus, Trash2, MoreHorizontal, Edit2, Copy, Save } from 'lucide-react';
@@ -10,6 +10,9 @@ import { useStorageContext } from '../../storage/StorageContext';
 import type { StorageAdapter } from '../../storage/StorageAdapter';
 import type { FileItem as StorageFileItem } from '../../storage/types';
 import './HistoryPanel.css';
+
+// 每次加载的记录数量
+const PAGE_SIZE = 50;
 
 const defaultFsContent = `---
 theme: default
@@ -76,6 +79,10 @@ function IndexedHistoryPanel() {
   const [actionMenuId, setActionMenuId] = useState<string | null>(null);
   const [menuPosition, setMenuPosition] = useState<{ top: number; left: number }>({ top: 0, left: 0 });
   const [menuEntry, setMenuEntry] = useState<HistorySnapshot | null>(null);
+
+  // 无限滚动状态
+  const [visibleCount, setVisibleCount] = useState(PAGE_SIZE);
+  const loadMoreRef = useRef<HTMLDivElement>(null);
 
   const handleRestore = async (entry?: HistorySnapshot) => {
     if (!entry) return;
@@ -198,7 +205,7 @@ function IndexedHistoryPanel() {
     };
   }, []);
 
-  // Load history on mount
+  // 组件挂载时加载历史记录
   useEffect(() => {
     loadHistory();
   }, [loadHistory]);
@@ -211,6 +218,44 @@ function IndexedHistoryPanel() {
       (entry.title || '未命名文章').toLowerCase().includes(keyword),
     );
   }, [history, keyword]);
+
+  // 当前可见的历史记录
+  const visibleHistory = useMemo(() => {
+    return filteredHistory.slice(0, visibleCount);
+  }, [filteredHistory, visibleCount]);
+
+  // 是否还有更多记录可加载
+  const hasMore = visibleCount < filteredHistory.length;
+
+  // 加载更多记录
+  const loadMore = useCallback(() => {
+    if (hasMore) {
+      setVisibleCount(prev => Math.min(prev + PAGE_SIZE, filteredHistory.length));
+    }
+  }, [hasMore, filteredHistory.length]);
+
+  // 使用 Intersection Observer 检测滚动到底部
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      (entries) => {
+        if (entries[0].isIntersecting && hasMore) {
+          loadMore();
+        }
+      },
+      { threshold: 0.1 }
+    );
+
+    if (loadMoreRef.current) {
+      observer.observe(loadMoreRef.current);
+    }
+
+    return () => observer.disconnect();
+  }, [hasMore, loadMore]);
+
+  // 搜索条件变化时重置可见数量
+  useEffect(() => {
+    setVisibleCount(PAGE_SIZE);
+  }, [filter]);
 
   const hasEntries = filteredHistory.length > 0;
 
@@ -257,7 +302,7 @@ function IndexedHistoryPanel() {
         ) : (
           <div className="history-body">
             <div className="history-list">
-              {filteredHistory.map((entry) => (
+              {visibleHistory.map((entry) => (
                 <div
                   key={entry.id}
                   className={`history-item ${activeId === entry.id ? 'active' : ''}`}
@@ -293,6 +338,12 @@ function IndexedHistoryPanel() {
                   </div>
                 </div>
               ))}
+              {/* 无限滚动触发器 */}
+              {hasMore && (
+                <div ref={loadMoreRef} className="history-load-more">
+                  <span>加载更多...</span>
+                </div>
+              )}
             </div>
           </div>
         )}

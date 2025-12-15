@@ -3,7 +3,7 @@ import { useEditorStore, defaultMarkdown } from '../../store/editorStore';
 import { useThemeStore } from '../../store/themeStore';
 import { useHistoryStore } from '../../store/historyStore';
 
-const AUTO_SAVE_INTERVAL = 10 * 1000; // 10 seconds - better balance for web storage
+const AUTO_SAVE_INTERVAL = 10 * 1000; // 10 秒 - Web 存储的较好平衡点
 const UNTITLED_TITLE = '未命名文章';
 
 function deriveTitle(markdown: string) {
@@ -53,7 +53,7 @@ export function HistoryManager() {
     loadHistory();
   }, [loadHistory]);
 
-  // Track loading lifecycle
+  // 跟踪加载生命周期
   useEffect(() => {
     if (loading) {
       wasLoadingRef.current = true;
@@ -73,17 +73,17 @@ export function HistoryManager() {
       return;
     }
 
-    // Check if this change matches the content we are restoring
+    // 检查当前变化是否与正在恢复的内容匹配
     if (restoringContentRef.current !== null && markdown === restoringContentRef.current) {
       restoringContentRef.current = null; // Reset
       return; // Skip marking as edited
     }
 
-    // Only mark as edited if:
-    // 1. Markdown actually changed
-    // 2. We are not restoring (legacy check, keep for safety)
-    // 3. We are not loading
-    // 4. History has finished loading at least once
+    // 只有在以下条件满足时才标记为已编辑：
+    // 1. Markdown 实际发生了变化
+    // 2. 当前不是在恢复中（保留旧检查以确保安全）
+    // 3. 当前不是在加载中
+    // 4. 历史记录已至少加载完成一次
     if (markdownChanged && !isRestoringRef.current && !loading && hasLoadedHistoryRef.current) {
       hasUserEditedRef.current = true;
     }
@@ -114,7 +114,7 @@ export function HistoryManager() {
     const snapshot = latestRef.current;
     if (!snapshot.markdown.trim()) return;
 
-    // Prevent auto-save if user hasn't edited or if we are currently restoring history
+    // 如果用户未编辑或当前正在恢复历史记录，则阻止自动保存
     if (!hasUserEditedRef.current || isRestoringRef.current) {
       return;
     }

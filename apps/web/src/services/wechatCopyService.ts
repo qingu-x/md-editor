@@ -82,7 +82,7 @@ export async function copyToWechat(markdown: string, css: string): Promise<void>
     document.body.appendChild(container);
 
     try {
-        // Create parser synchronously
+        // 同步创建解析器
         const parser = createMarkdownParser();
         const rawHtml = parser.render(markdown);
         const styledHtml = processHtml(rawHtml, css);
@@ -98,14 +98,14 @@ export async function copyToWechat(markdown: string, css: string): Promise<void>
                     await window.MathJax.typesetPromise([container]);
                 }
             } catch (e) {
-                console.error('MathJax rendering failed during copy:', e);
+                console.error('复制时 MathJax 渲染失败:', e);
             }
         }
 
-        // Process for WeChat (MathJax etc)
+        // 处理微信兼容性（MathJax 等）
         processMathJaxForWechat(container);
 
-        // Copy logic
+        // 复制逻辑
         const selection = window.getSelection();
         const range = document.createRange();
         range.selectNodeContents(container);
@@ -114,12 +114,11 @@ export async function copyToWechat(markdown: string, css: string): Promise<void>
 
         document.execCommand('copy');
 
-        // Modern API fallback/enhancement
+        // 现代 API 回退/增强
         if (navigator.clipboard && window.ClipboardItem) {
             try {
-                // We need inline styles for WeChat, which processHtml should have handled (juice)
-                // But processHtml in @wemd/core might just wrap it.
-                // Actually, processHtml in @wemd/core uses juice to inline styles.
+                // 微信需要内联样式，processHtml 应该已经处理了（juice）
+                // processHtml 在 @wemd/core 中使用 juice 来内联样式
 
                 const blob = new Blob([container.innerHTML], { type: 'text/html' });
                 const textBlob = new Blob([markdown], { type: 'text/plain' });
@@ -130,7 +129,7 @@ export async function copyToWechat(markdown: string, css: string): Promise<void>
                     })
                 ]);
             } catch (e) {
-                console.error('Clipboard API failed, fallback used', e);
+                console.error('Clipboard API 失败，使用回退方案', e);
             }
         }
 
@@ -139,7 +138,7 @@ export async function copyToWechat(markdown: string, css: string): Promise<void>
             icon: '✅',
         });
     } catch (error) {
-        console.error('Copy failed:', error);
+        console.error('复制失败:', error);
         toast.error('复制失败，请重试');
         throw error;
     } finally {

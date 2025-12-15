@@ -5,7 +5,7 @@
 import { create } from 'zustand';
 import { builtInThemes, type CustomTheme } from './themes/builtInThemes';
 
-// LocalStorage keys
+// localStorage 键名
 const CUSTOM_THEMES_KEY = 'wemd-custom-themes';
 const SELECTED_THEME_KEY = 'wemd-selected-theme';
 
@@ -21,7 +21,7 @@ const loadCustomThemes = (): CustomTheme[] => {
         if (!stored) return [];
         return JSON.parse(stored);
     } catch (error) {
-        console.error('Failed to load custom themes:', error);
+        console.error('加载自定义主题失败:', error);
         return [];
     }
 };
@@ -32,7 +32,7 @@ const saveCustomThemes = (themes: CustomTheme[]): void => {
     try {
         localStorage.setItem(CUSTOM_THEMES_KEY, JSON.stringify(themes));
     } catch (error) {
-        console.error('Failed to save custom themes:', error);
+        console.error('保存自定义主题失败:', error);
     }
 };
 
@@ -42,7 +42,7 @@ const saveSelectedTheme = (themeId: string, themeName: string): void => {
     try {
         localStorage.setItem(SELECTED_THEME_KEY, JSON.stringify({ id: themeId, name: themeName }));
     } catch (error) {
-        console.error('Failed to save selected theme:', error);
+        console.error('保存选中主题失败:', error);
     }
 };
 
@@ -54,7 +54,7 @@ const loadSelectedTheme = (): { id: string; name: string } | null => {
         if (!stored) return null;
         return JSON.parse(stored);
     } catch (error) {
-        console.error('Failed to load selected theme:', error);
+        console.error('加载选中主题失败:', error);
         return null;
     }
 };
@@ -160,7 +160,7 @@ export const useThemeStore = create<ThemeStore>((set, get) => ({
         const themeIndex = state.customThemes.findIndex((t) => t.id === id);
 
         if (themeIndex === -1) {
-            console.warn(`Theme ${id} not found or is built-in`);
+            console.warn(`主题 ${id} 未找到或为内置主题`);
             return;
         }
 
@@ -190,7 +190,7 @@ export const useThemeStore = create<ThemeStore>((set, get) => ({
         const theme = state.customThemes.find((t) => t.id === id);
 
         if (!theme) {
-            console.warn(`Theme ${id} not found or is built-in`);
+            console.warn(`主题 ${id} 未找到或为内置主题`);
             return;
         }
 
@@ -215,7 +215,7 @@ export const useThemeStore = create<ThemeStore>((set, get) => ({
         const sourceTheme = allThemes.find((t) => t.id === id);
 
         if (!sourceTheme) {
-            throw new Error(`Theme ${id} not found`);
+            throw new Error(`主题 ${id} 未找到`);
         }
 
         return state.createTheme(newName, sourceTheme.css);
