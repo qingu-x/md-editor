@@ -1,6 +1,6 @@
 /**
- * 微信深色模式颜色转换引擎
- * 基于微信公众号 App 的原生渲染行为，实现 HSL 映射模型与对比度保全算法。
+ * 微信深色模式预览转换引擎
+ * 模拟微信公众号 App 原生渲染行为，通过 CSS 字符串转换实现 1:1 预览效果。
  */
 type ElementType =
     | 'heading'
@@ -17,11 +17,11 @@ type ElementType =
     | 'selection'
     | 'selection-text'
     | 'other';
+
 type CssNode =
     | { type: 'rule'; selector: string; body: string }
     | { type: 'atrule'; name: string; params: string; body: string; children: CssNode[]; isStandalone?: boolean };
 
-/** 深色模式可配置参数 */
 export interface DarkModeConfig {
     vibrantSaturationThreshold: number;
     vibrantLightnessRange: [number, number];
@@ -35,7 +35,22 @@ const DEFAULT_CONFIG: DarkModeConfig = {
 };
 
 const CSS_KEYWORDS_SKIP = /^(currentcolor|inherit|transparent|initial|unset|none)$/i;
-const DEFAULT_DARK_BG_COLOR_RGB = [25, 25, 25];
+const DEFAULT_LIGHT_TEXT_COLOR_RGB = [25, 25, 25]; // #191919
+const DEFAULT_LIGHT_BG_COLOR_RGB = [255, 255, 255]; // #ffffff
+const DEFAULT_DARK_TEXT_COLOR_RGB = [163, 163, 163]; // #a3a3a3
+const DEFAULT_DARK_BG_COLOR_RGB = [25, 25, 25]; // #191919
+
+/** 对齐微信官方 SDK 的算法常量 */
+const CONSTANTS = {
+    WHITE_LIKE_COLOR_BRIGHTNESS: 250,
+    MAX_LIMIT_BGCOLOR_BRIGHTNESS: 190,
+    MIN_LIMIT_OFFSET_BRIGHTNESS: 65,
+    HIGH_BGCOLOR_BRIGHTNESS: 100,
+    HIGH_BLACKWHITE_HSL_BRIGHTNESS: 40,
+    LOW_BLACKWHITE_HSL_BRIGHTNESS: 22,
+    IGNORE_ALPHA: 0.05
+};
+
 const CONVERSION_MARK = '/* wemd-wechat-dark-converted */';
 const convertCssCache = new Map<string, string>();
 const convertCssCacheQueue: string[] = [];
@@ -103,61 +118,73 @@ function hslToRgb(h: number, s: number, l: number): [number, number, number] {
     return [hue2rgb(p, q, h + 1 / 3) * 255, hue2rgb(p, q, h) * 255, hue2rgb(p, q, h - 1 / 3) * 255];
 }
 
-function calculateLuminance(rgb: number[]): number {
-    return (299 * rgb[0] + 587 * rgb[1] + 114 * rgb[2]) / 1000;
+function getColorPerceivedBrightness(rgb: number[]): number {
+    return (rgb[0] * 299 + rgb[1] * 587 + rgb[2] * 114) / 1000;
 }
 
-function adjustToLuminance(targetLuminance: number, rgb: number[]): [number, number, number] {
-    const currentLuminance = calculateLuminance(rgb);
-    if (currentLuminance < 1e-3) return [targetLuminance, targetLuminance, targetLuminance];
-    const ratio = targetLuminance / currentLuminance;
+function adjustBrightnessTo(target: number, rgb: number[]): [number, number, number] {
+    const current = getColorPerceivedBrightness(rgb);
+    if (current < 1e-3) return [target, target, target];
+    const ratio = target / current;
     let r = Math.min(255, rgb[0] * ratio), g = Math.min(255, rgb[1] * ratio), b = Math.min(255, rgb[2] * ratio);
     if (g === 0 || r === 255 || b === 255) {
-        g = (1000 * targetLuminance - 299 * r - 114 * b) / 587;
+        g = (target * 1000 - r * 299 - b * 114) / 587;
     } else if (r === 0) {
-        r = (1000 * targetLuminance - 587 * g - 114 * b) / 299;
+        r = (target * 1000 - g * 587 - b * 114) / 299;
     } else if (b === 0 || g === 255) {
-        b = (1000 * targetLuminance - 299 * r - 587 * g) / 114;
+        b = (target * 1000 - r * 299 - g * 587) / 114;
     }
     return [Math.max(0, Math.min(255, r)), Math.max(0, Math.min(255, g)), Math.max(0, Math.min(255, b))];
 }
 
-function mapBackgroundRange(hsl: [number, number, number], minL: number, maxL: number, sFactor: number = 0.8): [number, number, number] {
+/** 背景亮度调整：黑白灰取反，彩色压低亮度 */
+function adjustBackgroundBrightness(rgb: number[], hsl: [number, number, number]): [number, number, number] {
     const [h, s, l] = hsl;
-    const newL = maxL - (l / 100) * (maxL - minL);
-    const newS = s > 5 ? s * sFactor : s;
-    return hslToRgb(h, newS, newL);
+    const perceived = getColorPerceivedBrightness(rgb);
+
+    if ((s === 0 && l > CONSTANTS.HIGH_BLACKWHITE_HSL_BRIGHTNESS) || perceived > CONSTANTS.WHITE_LIKE_COLOR_BRIGHTNESS) {
+        return hslToRgb(0, 0, Math.min(100, 110 - l));
+    }
+
+    if (perceived > CONSTANTS.MAX_LIMIT_BGCOLOR_BRIGHTNESS) {
+        return adjustBrightnessTo(CONSTANTS.MAX_LIMIT_BGCOLOR_BRIGHTNESS, rgb);
+    }
+
+    if (l < CONSTANTS.LOW_BLACKWHITE_HSL_BRIGHTNESS) {
+        return hslToRgb(h, s, CONSTANTS.LOW_BLACKWHITE_HSL_BRIGHTNESS);
+    }
+
+    return [rgb[0], rgb[1], rgb[2]];
 }
 
-function adjustBackgroundBrightness(rgb: number[], hsl: [number, number, number], type: ElementType = 'background', config: DarkModeConfig = DEFAULT_CONFIG): [number, number, number] {
-    const [h, s, l] = hsl;
-    const { vibrantSaturationThreshold, vibrantLightnessRange } = config;
-    if (s > vibrantSaturationThreshold && l > 15 && l < 95) {
-        return hslToRgb(h, s, Math.max(vibrantLightnessRange[0], Math.min(vibrantLightnessRange[1], l * 0.85)));
+/** 文本亮度调整：基于感知亮度与背景色保全对比度 */
+function adjustTextBrightness(textRgb: number[], textHsl: [number, number, number], bgRgb: number[] = DEFAULT_DARK_BG_COLOR_RGB): [number, number, number] {
+    const textPerceived = getColorPerceivedBrightness(textRgb);
+    const bgPerceived = getColorPerceivedBrightness(bgRgb);
+    const offset = Math.abs(bgPerceived - textPerceived);
+
+    if (textPerceived >= CONSTANTS.WHITE_LIKE_COLOR_BRIGHTNESS) return [textRgb[0], textRgb[1], textRgb[2]];
+
+    const MAX_LIMIT_OFFSET = 138;
+    if (offset > MAX_LIMIT_OFFSET && bgPerceived <= 27) {
+        return adjustBrightnessTo(MAX_LIMIT_OFFSET + bgPerceived, textRgb);
     }
-    const ranges: Record<ElementType, { min: number; max: number; sFactor: number }> = {
-        'body': { min: 10, max: 10, sFactor: 0 },
-        'background': { min: 12, max: 18, sFactor: 0.5 },
-        'table': { min: 10, max: 24, sFactor: 0.6 },
-        'blockquote': { min: 14, max: 22, sFactor: 0.7 },
-        'code': { min: 10, max: 20, sFactor: 0.5 },
-        'heading': { min: 10, max: 10, sFactor: 0 },
-        'selection': { min: 45, max: 65, sFactor: 0.6 },
-        'blockquote-text': { min: 0, max: 0, sFactor: 0 },
-        'table-text': { min: 0, max: 0, sFactor: 0 },
-        'code-text': { min: 0, max: 0, sFactor: 0 },
-        'selection-text': { min: 0, max: 0, sFactor: 0 },
-        'decorative-dark': { min: 10, max: 15, sFactor: 0 },
-        'vibrant-protected': { min: 35, max: 55, sFactor: 1 },
-        'other': { min: 12, max: 20, sFactor: 0.7 }
-    };
-    const rangeConfig = ranges[type] || ranges['background'];
-    if (type === 'table' && l > 85) {
-        const factor = Math.pow((100 - l) / 15, 0.7);
-        return hslToRgb(h, s * rangeConfig.sFactor, rangeConfig.min + factor * (rangeConfig.max - rangeConfig.min));
+
+    if (offset >= CONSTANTS.MIN_LIMIT_OFFSET_BRIGHTNESS) return [textRgb[0], textRgb[1], textRgb[2]];
+
+    if (bgPerceived >= CONSTANTS.HIGH_BGCOLOR_BRIGHTNESS) {
+        if (textHsl[2] > 90 - CONSTANTS.HIGH_BLACKWHITE_HSL_BRIGHTNESS) {
+            const newL = 90 - textHsl[2];
+            return adjustTextBrightness(hslToRgb(textHsl[0], textHsl[1], newL), [textHsl[0], textHsl[1], newL], bgRgb);
+        }
+        return adjustBrightnessTo(Math.min(MAX_LIMIT_OFFSET, bgPerceived - CONSTANTS.MIN_LIMIT_OFFSET_BRIGHTNESS), textRgb);
+    } else {
+        if (textHsl[2] <= CONSTANTS.HIGH_BLACKWHITE_HSL_BRIGHTNESS) {
+            const newL = 90 - textHsl[2];
+            return adjustTextBrightness(hslToRgb(textHsl[0], textHsl[1], newL), [textHsl[0], textHsl[1], newL], bgRgb);
+        }
+        return adjustBrightnessTo(Math.min(MAX_LIMIT_OFFSET, bgPerceived + CONSTANTS.MIN_LIMIT_OFFSET_BRIGHTNESS), textRgb);
     }
-    if (l < 15 && s > 8) return hslToRgb(h, s, 22);
-    return mapBackgroundRange(hsl, rangeConfig.min, rangeConfig.max, rangeConfig.sFactor);
 }
 
 function adjustDecorativeDarkBrightness(rgb: number[], hsl: [number, number, number]): [number, number, number] {
@@ -165,28 +192,17 @@ function adjustDecorativeDarkBrightness(rgb: number[], hsl: [number, number, num
     return hslToRgb(h, s * 0.5, Math.max(10, Math.min(15, l)));
 }
 
-function adjustBlockquoteTextBrightness(textRgb: number[], textHsl: [number, number, number]): [number, number, number] {
-    const [h, s, l] = textHsl;
-    return hslToRgb(h, s * 0.4, Math.max(75, Math.min(85, 100 - l * 0.2)));
+function adjustBlockquoteTextBrightness(textRgb: number[], textHsl: [number, number, number], bgRgb: number[] = DEFAULT_DARK_BG_COLOR_RGB): [number, number, number] {
+    return adjustTextBrightness(textRgb, textHsl, bgRgb);
 }
 
-function adjustTableTextBrightness(textRgb: number[], textHsl: [number, number, number]): [number, number, number] {
-    const [h, s, l] = textHsl;
-    return hslToRgb(h, s > 15 ? s * 0.8 : s * 0.4, Math.max(78, Math.min(88, 100 - l * 0.22)));
-}
-
-function adjustTextBrightness(textRgb: number[], textHsl: [number, number, number], bgRgb: number[] = DEFAULT_DARK_BG_COLOR_RGB): [number, number, number] {
-    const [h, s, l] = textHsl;
-    const bgL = calculateLuminance(bgRgb), textL = calculateLuminance(textRgb);
-    if (textL > 220) return [textRgb[0], textRgb[1], textRgb[2]];
-    const minL = bgL + 65, maxL = bgL + 180;
-    if (textL >= minL && textL <= maxL) return [textRgb[0], textRgb[1], textRgb[2]];
-    return adjustToLuminance(minL + (l / 100) * (maxL - minL), textRgb);
+function adjustTableTextBrightness(textRgb: number[], textHsl: [number, number, number], bgRgb: number[] = DEFAULT_DARK_BG_COLOR_RGB): [number, number, number] {
+    return adjustTextBrightness(textRgb, textHsl, bgRgb);
 }
 
 function adjustCodeTextBrightness(textRgb: number[], textHsl: [number, number, number]): [number, number, number] {
     const [h, s, l] = textHsl;
-    if (l > 70) return adjustToLuminance(Math.max(200, calculateLuminance(textRgb)), textRgb);
+    if (l > 70) return adjustBrightnessTo(Math.max(200, getColorPerceivedBrightness(textRgb)), textRgb);
     return hslToRgb(h, Math.min(100, s * 1.1 + 5), 78);
 }
 
@@ -303,42 +319,41 @@ function parseCssBlocks(css: string): CssNode[] {
 }
 
 function getElementType(selector: string): ElementType {
-    const lower = selector.toLowerCase();
-    if (/::selection/.test(lower)) return 'selection';
-    if (/::(before|after|marker|backdrop|placeholder)/.test(lower)) return 'decorative-dark';
-    const sanitized = lower
-        .replace(/:not\(([^)]*)\)/g, '$1')
-        .replace(/:[:]?[\w-]+(\([^)]*\))?/g, '')
-        .trim();
-    const target = sanitized || lower;
-    if (/\b(blockquote|callout|multiquote|tip|note|warning|danger|success|info|caution|card|paper|footnote|custom-block|imageflow-caption)\b/.test(lower)) return 'blockquote';
-    if (/\b(pre|code|hljs|language-)/.test(target)) return 'code';
-    if (/\b(table|tr|th|td|theader)\b/.test(target)) return 'table';
-    if (/\bh[1-6]\b/.test(target)) return 'heading';
-    if (/\bp\b|\bli\b|\bsection\b|\bspan\b/.test(target)) return 'body';
-    if (/background|bg-|color-/.test(target)) return 'background';
+    const s = selector.toLowerCase();
+    if (s.includes('ue-table-interlace-color-single')) return 'table';
+    if (s.includes('ue-table-interlace-color-double')) return 'table';
+    if (s.includes('js_darkmode__')) return 'other';
+
+    if (/blockquote|callout|multiquote/.test(s)) return 'blockquote';
+    if (/\b(pre|code|hljs|language-)/.test(s)) return 'code';
+    if (/table|tr|th|td/.test(s)) return 'table';
+    if (/h[1-6]/.test(s)) return 'heading';
+    if (/::selection/.test(s)) return 'selection';
+    if (s.includes('body')) return 'body';
     return 'other';
 }
 
-function processColorRgb(rgb: number[], type: ElementType): [number, number, number] {
+function processColorRgb(rgb: number[], type: ElementType, bgRgb: number[] = DEFAULT_DARK_BG_COLOR_RGB): [number, number, number] {
     const hsl = rgbToHsl(rgb[0], rgb[1], rgb[2]);
-    const isBg = ['background', 'table', 'blockquote', 'code', 'vibrant-protected'].includes(type);
-    if (isBg) return adjustBackgroundBrightness(rgb, hsl, type);
+    const isBg = ['background', 'table', 'blockquote', 'code', 'vibrant-protected', 'selection'].includes(type);
+
+    if (isBg) return adjustBackgroundBrightness(rgb, hsl);
     if (type === 'decorative-dark') return adjustDecorativeDarkBrightness(rgb, hsl);
-    if (type === 'table-text') return adjustTableTextBrightness(rgb, hsl);
+    if (type === 'table-text') return adjustTableTextBrightness(rgb, hsl, bgRgb);
     if (type === 'code-text') return adjustCodeTextBrightness(rgb, hsl);
-    if (type === 'blockquote-text') return adjustBlockquoteTextBrightness(rgb, hsl);
-    return adjustTextBrightness(rgb, hsl);
+    if (type === 'blockquote-text') return adjustBlockquoteTextBrightness(rgb, hsl, bgRgb);
+    if (type === 'selection-text') return adjustTextBrightness(rgb, hsl, bgRgb);
+    return adjustTextBrightness(rgb, hsl, bgRgb);
 }
 
-export function convertToWeChatDarkMode(hex: string, type: ElementType = 'body'): string {
+export function convertToWeChatDarkMode(hex: string, type: ElementType = 'body', bgRgb: number[] = DEFAULT_DARK_BG_COLOR_RGB): string {
     const rgb = hexToRgb(hex);
     if (!rgb) return hex;
-    const [r, g, b] = processColorRgb(rgb, type);
+    const [r, g, b] = processColorRgb(rgb, type, bgRgb);
     return rgbToHex(r, g, b);
 }
 
-function convertColorValue(raw: string, type: ElementType): string {
+function convertColorValue(raw: string, type: ElementType, bgRgb: number[] = DEFAULT_DARK_BG_COLOR_RGB): string {
     const lower = raw.toLowerCase();
     if (lower.includes('var(') || lower.includes('gradient') || CSS_KEYWORDS_SKIP.test(lower.trim())) return raw;
     let res = raw.replace(/#([0-9a-fA-F]{3,8})\b/g, m => {
@@ -347,7 +362,7 @@ function convertColorValue(raw: string, type: ElementType): string {
         if (m.length === 5 || m.length === 9) {
             hex = hex.slice(0, 7);
         }
-        return convertToWeChatDarkMode(hex, type);
+        return convertToWeChatDarkMode(hex, type, bgRgb);
     });
 
     const rgbPattern = /rgba?\(\s*([^)]+)\)/gi;
@@ -357,7 +372,7 @@ function convertColorValue(raw: string, type: ElementType): string {
         const [r, g, b] = parts.slice(0, 3).map(parseFloat);
         const a = parts[3] !== undefined ? parseFloat(parts[3]) : 1;
         if ([r, g, b].some((n) => Number.isNaN(n))) return m;
-        const [nr, ng, nb] = processColorRgb([r, g, b], type);
+        const [nr, ng, nb] = processColorRgb([r, g, b], type, bgRgb);
         return a < 1 ? `rgba(${Math.round(nr)}, ${Math.round(ng)}, ${Math.round(nb)}, ${a})` : `rgb(${Math.round(nr)}, ${Math.round(ng)}, ${Math.round(nb)})`;
     });
 
@@ -368,7 +383,7 @@ function convertColorValue(raw: string, type: ElementType): string {
         const [h, s, l] = parts.slice(0, 3).map(parseFloat);
         const a = parts[3] !== undefined ? parseFloat(parts[3]) : 1;
         if ([h, s, l].some((n) => Number.isNaN(n))) return m;
-        const [nr, ng, nb] = processColorRgb(hslToRgb(h, s, l), type);
+        const [nr, ng, nb] = processColorRgb(hslToRgb(h, s, l), type, bgRgb);
         return a < 1 ? `rgba(${Math.round(nr)}, ${Math.round(ng)}, ${Math.round(nb)}, ${a})` : `rgb(${Math.round(nr)}, ${Math.round(ng)}, ${Math.round(nb)})`;
     });
 
@@ -380,34 +395,59 @@ function transformDeclarations(selector: string, props: string): string {
     const lowerSelector = selector.toLowerCase();
     const isCode = /\b(pre|code|hljs|language-)/.test(lowerSelector);
     const decls = splitDeclarations(props);
-    const rebuilt: string[] = [];
 
-    for (const decl of decls) {
+    // 1. 解析所有声明并提取关键属性
+    const parsedDecls = decls.map(decl => {
         const colonIndex = decl.indexOf(':');
-        if (colonIndex === -1) {
-            rebuilt.push(decl);
-            continue;
-        }
-        const name = decl.slice(0, colonIndex).trim();
-        const val = decl.slice(colonIndex + 1).trim();
-        if (!name || !val) {
-            rebuilt.push(decl);
-            continue;
-        }
+        if (colonIndex === -1) return { name: '', lowerName: '', val: '', raw: decl };
+        return {
+            name: decl.slice(0, colonIndex).trim(),
+            lowerName: decl.slice(0, colonIndex).trim().toLowerCase(),
+            val: decl.slice(colonIndex + 1).trim()
+        };
+    }).filter(d => d.name !== '');
 
-        const lowerName = name.toLowerCase();
-        if (val.toLowerCase().includes('url(')) {
-            rebuilt.push(`${name}: ${val}`);
-            continue;
-        }
+    // 2. 遍历提取背景色上下文，用于后续文本对比度计算
+    let currentBgRgb = DEFAULT_DARK_BG_COLOR_RGB;
+    let convertedBgColorHex = '';
 
-        const isBg = /background|bgcolor/i.test(name);
-        const isText = lowerName === 'color';
-        const isShadow = /shadow/i.test(name);
-        const isBorder = /border|outline/i.test(name);
+    for (const d of parsedDecls) {
+        if ((d.lowerName === 'background-color' || d.lowerName === 'background') && !d.val.toLowerCase().includes('url(') && !d.val.toLowerCase().includes('gradient')) {
+            const colorMatch = d.val.match(/#([0-9a-fA-F]{3,8})|rgba?\(\s*([^)]+)\)/i);
+            if (colorMatch) {
+                let rgb: [number, number, number] | null = null;
+                if (colorMatch[1]) {
+                    const h = colorMatch[1];
+                    const hex = h.length === 3 ? '#' + h[0] + h[0] + h[1] + h[1] + h[2] + h[2] : '#' + h.slice(0, 6);
+                    rgb = hexToRgb(hex);
+                } else if (colorMatch[2]) {
+                    const parts = colorMatch[2].split(',').map(p => parseFloat(p.trim()));
+                    if (parts.length >= 3) rgb = [parts[0], parts[1], parts[2]];
+                }
+                if (rgb) {
+                    const hsl = rgbToHsl(rgb[0], rgb[1], rgb[2]);
+                    const darkRgb = adjustBackgroundBrightness(rgb, hsl);
+                    currentBgRgb = darkRgb;
+                    convertedBgColorHex = rgbToHex(darkRgb[0], darkRgb[1], darkRgb[2]);
+                }
+            }
+        }
+    }
+
+    // 3. 执行颜色转换
+    const finalDecls: { name: string, val: string }[] = [];
+    for (const d of parsedDecls) {
+        const name = d.name;
+        const lowerName = d.lowerName;
+        const val = d.val;
+
+        // 对齐官方 SDK 的属性探测分类
+        const isBg = /background|bgcolor/i.test(lowerName);
+        const isText = /color|-webkit-text-stroke|-webkit-text-fill-color|text-decoration-color|text-emphasis-color/i.test(lowerName);
+        const isShadow = /shadow/i.test(lowerName);
+        const isBorder = /border|outline|column-rule/i.test(lowerName);
 
         let type: ElementType = baseType;
-
         if (isBg) {
             type = baseType === 'table' ? 'table' : baseType === 'blockquote' ? 'blockquote' : baseType === 'selection' ? 'selection' : (baseType === 'code' || isCode ? 'code' : 'background');
         } else if (isShadow || isBorder) {
@@ -422,27 +462,44 @@ function transformDeclarations(selector: string, props: string): string {
                     const parts = colorMatch[2].split(',').map(p => parseFloat(p.trim()));
                     if (parts.length >= 3) rgb = [parts[0], parts[1], parts[2]];
                 }
-
                 if (rgb) {
-                    const lum = calculateLuminance(rgb);
+                    const lum = getColorPerceivedBrightness(rgb);
                     const [, s] = rgbToHsl(rgb[0], rgb[1], rgb[2]);
                     if (lum < 20) type = 'decorative-dark';
                     else if (s > 15) type = 'vibrant-protected';
                     else type = baseType === 'table' ? 'table-text' : baseType === 'blockquote' ? 'blockquote-text' : baseType === 'selection' ? 'selection-text' : (baseType === 'code' || isCode ? 'code-text' : baseType);
-                } else {
-                    type = baseType === 'table' ? 'table-text' : baseType === 'blockquote' ? 'blockquote-text' : baseType === 'selection' ? 'selection-text' : (baseType === 'code' || isCode ? 'code-text' : baseType);
                 }
-            } else {
-                type = baseType === 'table' ? 'table-text' : baseType === 'blockquote' ? 'blockquote-text' : baseType === 'selection' ? 'selection-text' : (baseType === 'code' || isCode ? 'code-text' : baseType);
             }
         } else if (isText) {
             type = baseType === 'table' ? 'table-text' : baseType === 'blockquote' ? 'blockquote-text' : baseType === 'selection' ? 'selection-text' : (baseType === 'code' || isCode ? 'code-text' : baseType);
         }
 
-        rebuilt.push(`${name}: ${convertColorValue(val, type)}`);
+        let convertedVal = convertColorValue(val, type, currentBgRgb);
+
+        // 背景图补色逻辑：针对透明图片追加 linear-gradient，防止透出底部的白色
+        if ((lowerName === 'background-image' || lowerName === 'background') && val.toLowerCase().includes('url(') && convertedBgColorHex) {
+            if (!convertedVal.includes('linear-gradient')) {
+                convertedVal = `${convertedVal}, linear-gradient(${convertedBgColorHex}, ${convertedBgColorHex})`;
+            }
+        }
+
+        finalDecls.push({ name, val: convertedVal });
     }
 
-    return `${selector}{${rebuilt.join(';')}}`;
+    // 4. 对齐官方 SDK 声明顺序：-webkit-text 置前，color 置后
+    finalDecls.sort((a, b) => {
+        const na = a.name.toLowerCase();
+        const nb = b.name.toLowerCase();
+        if (na.startsWith('-webkit-text')) return -1;
+        if (nb.startsWith('-webkit-text')) return 1;
+        if (na === 'color') return 1;
+        if (nb === 'color') return -1;
+        if (na.includes('image') && nb.includes('color')) return 1;
+        if (nb.includes('image') && na.includes('color')) return -1;
+        return 0;
+    });
+
+    return `${selector}{${finalDecls.map(d => `${d.name}: ${d.val}`).join(';')}}`;
 }
 
 function convertCssInternal(css: string): string {
@@ -483,3 +540,4 @@ export function convertCssToWeChatDarkMode(css: string): string {
 }
 
 export { convertCssInternal as _convertCssToWeChatDarkModeInternal };
+
