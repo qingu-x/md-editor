@@ -393,9 +393,8 @@ export const receiptTheme = `/* 购物小票风格 */
 }
 
 #wemd .callout-note { border-left: 2px dashed #000; }
-#wemd .callout-info { border-left: 2px dashed #000; }
 #wemd .callout-tip { border-left: 2px dashed #000; }
-#wemd .callout-success { border-left: 2px dashed #000; }
+#wemd .callout-important { border-left: 2px dashed #000; }
 #wemd .callout-warning { border-left: 2px dashed #000; }
-#wemd .callout-danger { border-left: 2px dashed #000; }
+#wemd .callout-caution { border-left: 2px dashed #000; }
 `;

@@ -528,17 +528,12 @@ export const cyberpunkNeonTheme = `/* 赛博朋克风格 */
     box-shadow: 0 0 10px rgba(0, 243, 255, 0.2);
 }
 
-#wemd .callout-info { 
-    border-left: 3px solid #00F3FF;
-    box-shadow: 0 0 10px rgba(0, 243, 255, 0.2);
-}
-
 #wemd .callout-tip { 
     border-left: 3px solid #FF00C1;
     box-shadow: 0 0 10px rgba(255, 0, 193, 0.2);
 }
 
-#wemd .callout-success { 
+#wemd .callout-important { 
     border-left: 3px solid #00F3FF;
     box-shadow: 0 0 10px rgba(0, 243, 255, 0.2);
 }
@@ -548,7 +543,7 @@ export const cyberpunkNeonTheme = `/* 赛博朋克风格 */
     box-shadow: 0 0 10px rgba(255, 184, 77, 0.2);
 }
 
-#wemd .callout-danger { 
+#wemd .callout-caution { 
     border-left: 3px solid #FF00C1;
     box-shadow: 0 0 10px rgba(255, 0, 193, 0.2);
 }

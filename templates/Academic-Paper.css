@@ -251,7 +251,7 @@
     /* 直角 */
     overflow-x: auto;
     white-space: pre;
-  min-width: max-content;
+    min-width: max-content;
 }
 
 /* 如果没有语法高亮，设置默认颜色 */
@@ -348,33 +348,27 @@
     margin-right: 6px;
 }
 
-#wemd .callout-note { 
-    border-left: 4px solid #666; 
+#wemd .callout-note {
+    border-left: 4px solid #666;
     background: #f5f5f5;
 }
 
-#wemd .callout-info { 
-    border-left: 4px solid #888; 
+#wemd .callout-tip {
+    border-left: 4px solid #555;
     background: #f5f5f5;
 }
 
-#wemd .callout-tip { 
-    border-left: 4px solid #555; 
+#wemd .callout-important {
+    border-left: 4px solid #888;
     background: #f5f5f5;
 }
 
-#wemd .callout-success { 
-    border-left: 4px solid #333; 
+#wemd .callout-warning {
+    border-left: 4px solid #999;
     background: #f5f5f5;
 }
 
-#wemd .callout-warning { 
-    border-left: 4px solid #999; 
+#wemd .callout-caution {
+    border-left: 4px solid #000;
     background: #f5f5f5;
 }
-
-#wemd .callout-danger { 
-    border-left: 4px solid #000; 
-    background: #f5f5f5;
-}
-

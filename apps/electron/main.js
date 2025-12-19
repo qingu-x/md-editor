@@ -123,6 +123,8 @@ function scanWorkspace(dir) {
 
 function createWindow() {
     const windowIcon = getWindowIcon();
+    const isWindows = process.platform === 'win32';
+
     mainWindow = new BrowserWindow({
         width: 1200,
         height: 800,
@@ -136,7 +138,8 @@ function createWindow() {
             contextIsolation: true,
         },
         titleBarStyle: 'hidden',
-        titleBarOverlay: {
+        frame: !isWindows, // Windows 完全无边框
+        titleBarOverlay: isWindows ? false : {
             color: '#f5f7f9',
             symbolColor: '#2c2c2c',
             height: 48,
@@ -155,13 +158,6 @@ function createWindow() {
     console.log('[WeMD] resourcesPath:', process.resourcesPath);
 
     mainWindow.loadURL(startUrl);
-    mainWindow.webContents.on('did-finish-load', () => {
-        mainWindow.webContents.insertCSS(`
-          body { padding-top: 52px; box-sizing: border-box; }
-          #root, #app, .app-root { padding-top: 0; }
-        `).catch(() => { });
-    });
-
     mainWindow.on('closed', () => {
         mainWindow = null;
         stopWatching();
@@ -169,6 +165,15 @@ function createWindow() {
 }
 
 // --- IPC Handlers ---
+
+// 窗口控制 (用于 Windows 自定义标题栏)
+ipcMain.handle('window:minimize', () => mainWindow?.minimize());
+ipcMain.handle('window:maximize', () => {
+    if (mainWindow?.isMaximized()) mainWindow.unmaximize();
+    else mainWindow?.maximize();
+});
+ipcMain.handle('window:close', () => mainWindow?.close());
+ipcMain.handle('window:isMaximized', () => mainWindow?.isMaximized());
 
 // 1. 选择工作区
 ipcMain.handle('workspace:select', async () => {

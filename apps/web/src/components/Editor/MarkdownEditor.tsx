@@ -46,7 +46,6 @@ export function MarkdownEditor() {
     const viewRef = useRef<EditorView | null>(null);
     const { markdown: content, setMarkdown } = useEditorStore();
     const uiTheme = useUITheme((state) => state.theme);
-    const initialContent = useRef(content);
     const isSyncingRef = useRef(false);
     const [showSearch, setShowSearch] = useState(false);
 

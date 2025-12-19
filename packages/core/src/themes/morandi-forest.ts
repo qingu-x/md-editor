@@ -384,9 +384,8 @@ export const morandiForestTheme = `/* 莫兰迪森林风格 */
 }
 
 #wemd .callout-note { border-left: 4px solid #739072; }
-#wemd .callout-info { border-left: 4px solid #4F6F52; }
 #wemd .callout-tip { border-left: 4px solid #86A789; }
-#wemd .callout-success { border-left: 4px solid #4F6F52; }
+#wemd .callout-important { border-left: 4px solid #4F6F52; }
 #wemd .callout-warning { border-left: 4px solid #D98C45; }
-#wemd .callout-danger { border-left: 4px solid #B33D25; }
+#wemd .callout-caution { border-left: 4px solid #B33D25; }
 `;

@@ -400,9 +400,8 @@ export const luxuryGoldTheme = `/* 黑金奢华风格 */
 }
 
 #wemd .callout-note { border-left: 3px solid #9E8045; }
-#wemd .callout-info { border-left: 3px solid #9E8045; }
 #wemd .callout-tip { border-left: 3px solid #9E8045; }
-#wemd .callout-success { border-left: 3px solid #9E8045; }
+#wemd .callout-important { border-left: 3px solid #9E8045; }
 #wemd .callout-warning { border-left: 3px solid #D98C45; }
-#wemd .callout-danger { border-left: 3px solid #B33D25; }
+#wemd .callout-caution { border-left: 3px solid #B33D25; }
 `;

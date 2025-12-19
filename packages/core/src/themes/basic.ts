@@ -477,10 +477,11 @@ export const basicTheme = `/* 默认样式，最佳实践 */
 }
 
 #wemd .callout-note { border-left: 4px solid #6366f1; background: #f5f5ff; }
-#wemd .callout-info { border-left: 4px solid #0ea5e9; background: #f0f9ff; }
-#wemd .callout-success { border-left: 4px solid #10b981; background: #ecfdf5; }
+#wemd .callout-tip { border-left: 4px solid #10b981; background: #ecfdf5; }
+#wemd .callout-important { border-left: 4px solid #8b5cf6; background: #f5f3ff; }
 #wemd .callout-warning { border-left: 4px solid #f59e0b; background: #fffbeb; }
-#wemd .callout-danger { border-left: 4px solid #ef4444; background: #fff5f5; }
+#wemd .callout-caution { border-left: 4px solid #ef4444; background: #fff5f5; }
+
 
 #wemd .task-list-item {
   list-style: none;

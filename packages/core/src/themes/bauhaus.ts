@@ -392,15 +392,11 @@ export const bauhausTheme = `/* 包豪斯风格 */
     border-left: 10px solid #1976D2; 
 }
 
-#wemd .callout-info { 
-    border-left: 10px solid #1976D2; 
-}
-
 #wemd .callout-tip { 
     border-left: 10px solid #FBC02D; 
 }
 
-#wemd .callout-success { 
+#wemd .callout-important { 
     border-left: 10px solid #1976D2; 
 }
 
@@ -408,7 +404,7 @@ export const bauhausTheme = `/* 包豪斯风格 */
     border-left: 10px solid #FBC02D; 
 }
 
-#wemd .callout-danger { 
+#wemd .callout-caution { 
     border-left: 10px solid #D32F2F; 
 }
 `;

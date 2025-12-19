@@ -27,7 +27,7 @@ importers:
         specifier: ^28.0.0
         version: 28.3.3
       electron-builder:
-        specifier: ^24.9.1
+        specifier: ^24.13.3
         version: 24.13.3(electron-builder-squirrel-windows@24.13.3(dmg-builder@24.13.3))
 
   apps/server:

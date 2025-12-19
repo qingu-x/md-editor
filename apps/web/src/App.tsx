@@ -37,8 +37,12 @@ function App() {
 
   // 检查是否在 Electron 中运行
   const isElectron = useMemo(() => {
-    // @ts-expect-error Electron 类型定义
     return typeof window !== 'undefined' && window.electron?.isElectron;
+  }, []);
+  const platform = useMemo(() => {
+    if (typeof window === 'undefined') return 'web';
+    const electron = window.electron as { platform?: string } | undefined;
+    return electron?.platform ?? 'web';
   }, []);
 
   const [showHistory, setShowHistory] = useState(() => {
@@ -85,7 +89,7 @@ function App() {
   }
 
   return (
-    <div className="app">
+    <div className="app" data-platform={platform}>
       {/* 只在存储上下文完全就绪且确认为 IndexedDB 模式时才渲染 HistoryManager */}
       {!isElectron && ready && storageType === 'indexeddb' && <HistoryManager />}
 
@@ -124,14 +128,14 @@ function App() {
           }}
         />
         <Header />
+        <button
+          className={`history-toggle ${showHistory ? '' : 'is-collapsed'}`}
+          onClick={() => setShowHistory((prev) => !prev)}
+          aria-label={showHistory ? '隐藏列表' : '显示列表'}
+        >
+          <span className="sr-only">{showHistory ? '隐藏列表' : '显示列表'}</span>
+        </button>
         <main className={mainClass} style={mainStyle} data-show-history={showHistory}>
-          <button
-            className={`history-toggle ${showHistory ? '' : 'is-collapsed'}`}
-            onClick={() => setShowHistory((prev) => !prev)}
-            aria-label={showHistory ? '隐藏列表' : '显示列表'}
-          >
-            <span className="sr-only">{showHistory ? '隐藏列表' : '显示列表'}</span>
-          </button>
           <div className={`history-pane ${showHistory ? 'is-visible' : 'is-hidden'}`} aria-hidden={!showHistory}>
             <div className="history-pane__content">
               {/* ready 后渲染，防止闪烁 */}
@@ -142,7 +146,6 @@ function App() {
               ))}
             </div>
           </div>
-          {isElectron && <div className="window-drag-region" />}
           <div className="workspace">
             <div className="editor-pane">
               {/* 存储未就绪或文件/历史加载中显示 loading */}

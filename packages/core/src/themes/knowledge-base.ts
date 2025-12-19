@@ -420,19 +420,14 @@ export const knowledgeBaseTheme = `/* 知识库风格 */
     border-left-color: #37352F;
 }
 
-#wemd .callout-info { 
-    background: #E7F3F8;
-    border-left-color: #2D9CDB;
-}
-
 #wemd .callout-tip { 
     background: #FDF5F2;
     border-left-color: #F2994A;
 }
 
-#wemd .callout-success { 
-    background: #EDF7ED;
-    border-left-color: #4CAF50;
+#wemd .callout-important { 
+    background: #E7F3F8;
+    border-left-color: #2D9CDB;
 }
 
 #wemd .callout-warning { 
@@ -440,7 +435,7 @@ export const knowledgeBaseTheme = `/* 知识库风格 */
     border-left-color: #FF9800;
 }
 
-#wemd .callout-danger { 
+#wemd .callout-caution { 
     background: #FFEBEE;
     border-left-color: #F44336;
 }

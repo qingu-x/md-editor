@@ -1,7 +1,3 @@
-/**
- * 微信深色模式预览转换引擎
- * 模拟微信公众号 App 原生渲染行为，通过 CSS 字符串转换实现 1:1 预览效果。
- */
 type ElementType =
     | 'heading'
     | 'body'
@@ -35,12 +31,11 @@ const DEFAULT_CONFIG: DarkModeConfig = {
 };
 
 const CSS_KEYWORDS_SKIP = /^(currentcolor|inherit|transparent|initial|unset|none)$/i;
-const DEFAULT_LIGHT_TEXT_COLOR_RGB = [25, 25, 25]; // #191919
-const DEFAULT_LIGHT_BG_COLOR_RGB = [255, 255, 255]; // #ffffff
-const DEFAULT_DARK_TEXT_COLOR_RGB = [163, 163, 163]; // #a3a3a3
-const DEFAULT_DARK_BG_COLOR_RGB = [25, 25, 25]; // #191919
+const DEFAULT_LIGHT_TEXT_COLOR_RGB = [25, 25, 25];
+const DEFAULT_LIGHT_BG_COLOR_RGB = [255, 255, 255];
+const DEFAULT_DARK_TEXT_COLOR_RGB = [163, 163, 163];
+const DEFAULT_DARK_BG_COLOR_RGB = [25, 25, 25];
 
-/** 对齐微信官方 SDK 的算法常量 */
 const CONSTANTS = {
     WHITE_LIKE_COLOR_BRIGHTNESS: 250,
     MAX_LIMIT_BGCOLOR_BRIGHTNESS: 190,
@@ -48,7 +43,8 @@ const CONSTANTS = {
     HIGH_BGCOLOR_BRIGHTNESS: 100,
     HIGH_BLACKWHITE_HSL_BRIGHTNESS: 40,
     LOW_BLACKWHITE_HSL_BRIGHTNESS: 22,
-    IGNORE_ALPHA: 0.05
+    IGNORE_ALPHA: 0.05,
+    DEFAULT_DARK_BG_L_OFFSET: 10,
 };
 
 const CONVERSION_MARK = '/* wemd-wechat-dark-converted */';
@@ -137,13 +133,12 @@ function adjustBrightnessTo(target: number, rgb: number[]): [number, number, num
     return [Math.max(0, Math.min(255, r)), Math.max(0, Math.min(255, g)), Math.max(0, Math.min(255, b))];
 }
 
-/** 背景亮度调整：黑白灰取反，彩色压低亮度 */
 function adjustBackgroundBrightness(rgb: number[], hsl: [number, number, number]): [number, number, number] {
     const [h, s, l] = hsl;
     const perceived = getColorPerceivedBrightness(rgb);
 
-    if ((s === 0 && l > CONSTANTS.HIGH_BLACKWHITE_HSL_BRIGHTNESS) || perceived > CONSTANTS.WHITE_LIKE_COLOR_BRIGHTNESS) {
-        return hslToRgb(0, 0, Math.min(100, 110 - l));
+    if ((s < 10 && l > CONSTANTS.HIGH_BLACKWHITE_HSL_BRIGHTNESS) || perceived > CONSTANTS.WHITE_LIKE_COLOR_BRIGHTNESS) {
+        return hslToRgb(0, 0, Math.min(100, 100 + CONSTANTS.DEFAULT_DARK_BG_L_OFFSET - l));
     }
 
     if (perceived > CONSTANTS.MAX_LIMIT_BGCOLOR_BRIGHTNESS) {
@@ -157,7 +152,22 @@ function adjustBackgroundBrightness(rgb: number[], hsl: [number, number, number]
     return [rgb[0], rgb[1], rgb[2]];
 }
 
-/** 文本亮度调整：基于感知亮度与背景色保全对比度 */
+function adjustCodeBackgroundBrightness(rgb: number[], hsl: [number, number, number]): [number, number, number] {
+    const [h, s, l] = hsl;
+    const perceived = getColorPerceivedBrightness(rgb);
+
+    if ((s < 10 && l > CONSTANTS.HIGH_BLACKWHITE_HSL_BRIGHTNESS) || perceived > CONSTANTS.WHITE_LIKE_COLOR_BRIGHTNESS) {
+        return hslToRgb(0, 0, Math.min(100, 100 + CONSTANTS.DEFAULT_DARK_BG_L_OFFSET - l));
+    }
+
+    const CODE_MAX_BG_PERCEIVED = 40;
+    if (perceived > CODE_MAX_BG_PERCEIVED) {
+        return adjustBrightnessTo(CODE_MAX_BG_PERCEIVED, rgb);
+    }
+
+    return [rgb[0], rgb[1], rgb[2]];
+}
+
 function adjustTextBrightness(textRgb: number[], textHsl: [number, number, number], bgRgb: number[] = DEFAULT_DARK_BG_COLOR_RGB): [number, number, number] {
     const textPerceived = getColorPerceivedBrightness(textRgb);
     const bgPerceived = getColorPerceivedBrightness(bgRgb);
@@ -202,8 +212,8 @@ function adjustTableTextBrightness(textRgb: number[], textHsl: [number, number, 
 
 function adjustCodeTextBrightness(textRgb: number[], textHsl: [number, number, number]): [number, number, number] {
     const [h, s, l] = textHsl;
-    if (l > 70) return adjustBrightnessTo(Math.max(200, getColorPerceivedBrightness(textRgb)), textRgb);
-    return hslToRgb(h, Math.min(100, s * 1.1 + 5), 78);
+    if (l > 75) return [textRgb[0], textRgb[1], textRgb[2]];
+    return hslToRgb(h, Math.min(100, s * 1.1 + 5), Math.max(78, l));
 }
 
 function stripComments(css: string): string {
@@ -337,6 +347,7 @@ function processColorRgb(rgb: number[], type: ElementType, bgRgb: number[] = DEF
     const hsl = rgbToHsl(rgb[0], rgb[1], rgb[2]);
     const isBg = ['background', 'table', 'blockquote', 'code', 'vibrant-protected', 'selection'].includes(type);
 
+    if (type === 'code') return adjustCodeBackgroundBrightness(rgb, hsl);
     if (isBg) return adjustBackgroundBrightness(rgb, hsl);
     if (type === 'decorative-dark') return adjustDecorativeDarkBrightness(rgb, hsl);
     if (type === 'table-text') return adjustTableTextBrightness(rgb, hsl, bgRgb);
@@ -344,6 +355,13 @@ function processColorRgb(rgb: number[], type: ElementType, bgRgb: number[] = DEF
     if (type === 'blockquote-text') return adjustBlockquoteTextBrightness(rgb, hsl, bgRgb);
     if (type === 'selection-text') return adjustTextBrightness(rgb, hsl, bgRgb);
     return adjustTextBrightness(rgb, hsl, bgRgb);
+}
+
+function processImportant(val: string, suffix: string): string {
+    const isImportant = val.toLowerCase().includes('!important');
+    if (!isImportant) return `${val}, ${suffix}`;
+    const cleanVal = val.replace(/\s*!important/i, '').trim();
+    return `${cleanVal}, ${suffix} !important`;
 }
 
 export function convertToWeChatDarkMode(hex: string, type: ElementType = 'body', bgRgb: number[] = DEFAULT_DARK_BG_COLOR_RGB): string {
@@ -396,7 +414,6 @@ function transformDeclarations(selector: string, props: string): string {
     const isCode = /\b(pre|code|hljs|language-)/.test(lowerSelector);
     const decls = splitDeclarations(props);
 
-    // 1. 解析所有声明并提取关键属性
     const parsedDecls = decls.map(decl => {
         const colonIndex = decl.indexOf(':');
         if (colonIndex === -1) return { name: '', lowerName: '', val: '', raw: decl };
@@ -407,12 +424,16 @@ function transformDeclarations(selector: string, props: string): string {
         };
     }).filter(d => d.name !== '');
 
-    // 2. 遍历提取背景色上下文，用于后续文本对比度计算
     let currentBgRgb = DEFAULT_DARK_BG_COLOR_RGB;
     let convertedBgColorHex = '';
 
     for (const d of parsedDecls) {
-        if ((d.lowerName === 'background-color' || d.lowerName === 'background') && !d.val.toLowerCase().includes('url(') && !d.val.toLowerCase().includes('gradient')) {
+        const lowerName = d.lowerName;
+        const lowerVal = d.val.toLowerCase();
+        const isShorthand = lowerName === 'background';
+        const isBgColorName = lowerName === 'background-color';
+
+        if ((isShorthand || isBgColorName) && !lowerVal.includes('gradient')) {
             const colorMatch = d.val.match(/#([0-9a-fA-F]{3,8})|rgba?\(\s*([^)]+)\)/i);
             if (colorMatch) {
                 let rgb: [number, number, number] | null = null;
@@ -434,18 +455,17 @@ function transformDeclarations(selector: string, props: string): string {
         }
     }
 
-    // 3. 执行颜色转换
-    const finalDecls: { name: string, val: string }[] = [];
+    const finalDecls: { name: string; val: string; lowerName: string }[] = [];
+
     for (const d of parsedDecls) {
         const name = d.name;
         const lowerName = d.lowerName;
         const val = d.val;
 
-        // 对齐官方 SDK 的属性探测分类
         const isBg = /background|bgcolor/i.test(lowerName);
         const isText = /color|-webkit-text-stroke|-webkit-text-fill-color|text-decoration-color|text-emphasis-color/i.test(lowerName);
         const isShadow = /shadow/i.test(lowerName);
-        const isBorder = /border|outline|column-rule/i.test(lowerName);
+        const isBorder = /border|outline|column-rule|box-shadow/i.test(lowerName);
 
         let type: ElementType = baseType;
         if (isBg) {
@@ -476,20 +496,26 @@ function transformDeclarations(selector: string, props: string): string {
 
         let convertedVal = convertColorValue(val, type, currentBgRgb);
 
-        // 背景图补色逻辑：针对透明图片追加 linear-gradient，防止透出底部的白色
-        if ((lowerName === 'background-image' || lowerName === 'background') && val.toLowerCase().includes('url(') && convertedBgColorHex) {
-            if (!convertedVal.includes('linear-gradient')) {
-                convertedVal = `${convertedVal}, linear-gradient(${convertedBgColorHex}, ${convertedBgColorHex})`;
+        const isInheritOrPredefined = /^(inherit|initial|unset|none)$/i.test(val.trim());
+
+        if (!isInheritOrPredefined && convertedBgColorHex) {
+            if ((lowerName === 'background-image' || lowerName === 'background') && val.toLowerCase().includes('url(')) {
+                if (!convertedVal.includes('linear-gradient')) {
+                    convertedVal = processImportant(convertedVal, `linear-gradient(${convertedBgColorHex}, ${convertedBgColorHex})`);
+                }
+            } else if (lowerName === 'background-position') {
+                convertedVal = processImportant(convertedVal, 'top left');
+            } else if (lowerName === 'background-size') {
+                convertedVal = processImportant(convertedVal, '100%');
             }
         }
 
-        finalDecls.push({ name, val: convertedVal });
+        finalDecls.push({ name, val: convertedVal, lowerName });
     }
 
-    // 4. 对齐官方 SDK 声明顺序：-webkit-text 置前，color 置后
     finalDecls.sort((a, b) => {
-        const na = a.name.toLowerCase();
-        const nb = b.name.toLowerCase();
+        const na = a.lowerName;
+        const nb = b.lowerName;
         if (na.startsWith('-webkit-text')) return -1;
         if (nb.startsWith('-webkit-text')) return 1;
         if (na === 'color') return 1;

@@ -354,18 +354,13 @@ export const academicPaperTheme = `/* 学术论文风格 */
     background: #f5f5f5;
 }
 
-#wemd .callout-info { 
-    border-left: 4px solid #888; 
-    background: #f5f5f5;
-}
-
 #wemd .callout-tip { 
     border-left: 4px solid #555; 
     background: #f5f5f5;
 }
 
-#wemd .callout-success { 
-    border-left: 4px solid #333; 
+#wemd .callout-important { 
+    border-left: 4px solid #888; 
     background: #f5f5f5;
 }
 
@@ -374,7 +369,7 @@ export const academicPaperTheme = `/* 学术论文风格 */
     background: #f5f5f5;
 }
 
-#wemd .callout-danger { 
+#wemd .callout-caution { 
     border-left: 4px solid #000; 
     background: #f5f5f5;
 }

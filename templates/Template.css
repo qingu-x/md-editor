@@ -514,8 +514,8 @@
  * 16. 提示块样式（Callout）
  * ============================================
  * 
- * 提示块用于显示不同类型的提示信息
- * 支持的类型：note、info、tip、success、warning、danger
+ * GitHub 风格 Alert 语法：
+ * > [!NOTE] / [!TIP] / [!IMPORTANT] / [!WARNING] / [!CAUTION]
  */
 
 /* 提示块基础样式 */
@@ -544,19 +544,14 @@
     background: #f5f5ff;
 }
 
-#wemd .callout-info {
-    border-left-color: #0ea5e9;
-    background: #f0f9ff;
-}
-
 #wemd .callout-tip {
     border-left-color: #10b981;
     background: #ecfdf5;
 }
 
-#wemd .callout-success {
-    border-left-color: #10b981;
-    background: #ecfdf5;
+#wemd .callout-important {
+    border-left-color: #8b5cf6;
+    background: #f5f3ff;
 }
 
 #wemd .callout-warning {
@@ -564,7 +559,7 @@
     background: #fffbeb;
 }
 
-#wemd .callout-danger {
+#wemd .callout-caution {
     border-left-color: #ef4444;
     background: #fff5f5;
 }

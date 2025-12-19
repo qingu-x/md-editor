@@ -272,7 +272,8 @@
 /* 代码块 - 极简黑 */
 #wemd pre code.hljs {
     background: #111;
-    color: #f5f5f5; /* 默认亮色文字 */
+    color: #f5f5f5;
+    /* 默认亮色文字 */
     padding: 20px;
     border-radius: 0;
     font-family: monospace;
@@ -285,7 +286,8 @@
 #wemd pre code.hljs .hljs-built_in,
 #wemd pre code.hljs .hljs-name,
 #wemd pre code.hljs .hljs-tag {
-    color: #FBC02D; /* 包豪斯黄 */
+    color: #FBC02D;
+    /* 包豪斯黄 */
 }
 
 #wemd pre code.hljs .hljs-string,
@@ -296,19 +298,22 @@
 #wemd pre code.hljs .hljs-template-tag,
 #wemd pre code.hljs .hljs-template-variable,
 #wemd pre code.hljs .hljs-type {
-    color: #D32F2F; /* 包豪斯红 */
+    color: #D32F2F;
+    /* 包豪斯红 */
 }
 
 #wemd pre code.hljs .hljs-comment,
 #wemd pre code.hljs .hljs-quote {
-    color: #888; /* 灰色注释 */
+    color: #888;
+    /* 灰色注释 */
 }
 
 #wemd pre code.hljs .hljs-number,
 #wemd pre code.hljs .hljs-regexp,
 #wemd pre code.hljs .hljs-variable,
 #wemd pre code.hljs .hljs-params {
-    color: #1976D2; /* 包豪斯蓝 */
+    color: #1976D2;
+    /* 包豪斯蓝 */
 }
 
 /* 如果没有语法高亮，设置默认黄色 */
@@ -387,27 +392,22 @@
     margin-right: 6px;
 }
 
-#wemd .callout-note { 
-    border-left: 10px solid #1976D2; 
+#wemd .callout-note {
+    border-left: 10px solid #1976D2;
 }
 
-#wemd .callout-info { 
-    border-left: 10px solid #1976D2; 
+#wemd .callout-tip {
+    border-left: 10px solid #FBC02D;
 }
 
-#wemd .callout-tip { 
-    border-left: 10px solid #FBC02D; 
+#wemd .callout-important {
+    border-left: 10px solid #1976D2;
 }
 
-#wemd .callout-success { 
-    border-left: 10px solid #1976D2; 
+#wemd .callout-warning {
+    border-left: 10px solid #FBC02D;
 }
 
-#wemd .callout-warning { 
-    border-left: 10px solid #FBC02D; 
+#wemd .callout-caution {
+    border-left: 10px solid #D32F2F;
 }
-
-#wemd .callout-danger { 
-    border-left: 10px solid #D32F2F; 
-}
-

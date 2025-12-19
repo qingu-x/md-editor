@@ -464,23 +464,19 @@ export const auroraGlassTheme = `/* 极光玻璃风格 */
   border-left: 4px solid #6366f1;
 }
 
-#wemd .callout-info {
-  border-left: 4px solid #4158D0;
-}
-
 #wemd .callout-tip {
   border-left: 4px solid #C850C0;
 }
 
-#wemd .callout-success {
-  border-left: 4px solid #10b981;
+#wemd .callout-important {
+  border-left: 4px solid #4158D0;
 }
 
 #wemd .callout-warning {
   border-left: 4px solid #FFCC70;
 }
 
-#wemd .callout-danger {
+#wemd .callout-caution {
   border-left: 4px solid #ef4444;
 }
 `;

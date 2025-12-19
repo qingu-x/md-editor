@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useEditorStore } from '../../store/editorStore';
 import { ThemePanel } from '../Theme/ThemePanel';
 import { StorageModeSelector } from '../StorageModeSelector/StorageModeSelector';
@@ -31,6 +31,56 @@ export function Header() {
     const isStructuralismUI = uiTheme === 'dark';
 
     const isElectron = typeof window !== 'undefined' && !!(window as unknown as { electron?: unknown }).electron;
+    const platform = typeof window !== 'undefined' ? window.electron?.platform : undefined;
+    const isWindows = platform === 'win32';
+
+    // Windows 使用自定义按钮，不需要 WCO inset 计算
+    useEffect(() => {
+        if (!isElectron || isWindows) {
+            document.documentElement.style.removeProperty('--titlebar-right-inset');
+            document.documentElement.style.removeProperty('--titlebar-left-inset');
+            return;
+        }
+        const controlsOverlay = (navigator as Navigator & {
+            windowControlsOverlay?: {
+                visible?: boolean;
+                getTitlebarAreaRect?: () => DOMRect;
+                addEventListener?: (type: 'geometrychange', listener: () => void) => void;
+                removeEventListener?: (type: 'geometrychange', listener: () => void) => void;
+            };
+        }).windowControlsOverlay;
+
+        if (!controlsOverlay?.getTitlebarAreaRect) {
+            document.documentElement.style.removeProperty('--titlebar-right-inset');
+            document.documentElement.style.removeProperty('--titlebar-left-inset');
+            return;
+        }
+
+        const updateInset = () => {
+            if (controlsOverlay.visible === false) {
+                document.documentElement.style.setProperty('--titlebar-right-inset', '0px');
+                document.documentElement.style.setProperty('--titlebar-left-inset', '0px');
+                return;
+            }
+            const rect = controlsOverlay.getTitlebarAreaRect();
+            const leftInset = Math.max(0, Math.round(rect.x));
+            const rightInset = Math.max(0, Math.round(window.innerWidth - (rect.x + rect.width)));
+            document.documentElement.style.setProperty('--titlebar-left-inset', `${leftInset}px`);
+            document.documentElement.style.setProperty('--titlebar-right-inset', `${rightInset}px`);
+        };
+
+        updateInset();
+        const handleResize = () => updateInset();
+        window.addEventListener('resize', handleResize);
+        controlsOverlay.addEventListener?.('geometrychange', updateInset);
+
+        return () => {
+            window.removeEventListener('resize', handleResize);
+            controlsOverlay.removeEventListener?.('geometrychange', updateInset);
+            document.documentElement.style.removeProperty('--titlebar-right-inset');
+            document.documentElement.style.removeProperty('--titlebar-left-inset');
+        };
+    }, [isElectron, isWindows]);
 
     return (
         <>
@@ -45,33 +95,68 @@ export function Header() {
                     </div>
                 </div>
 
-                <div className="header-right">
-                    <button
-                        className="btn-icon-only"
-                        onClick={() => setTheme(uiTheme === 'dark' ? 'default' : 'dark')}
-                        aria-label={uiTheme === 'dark' ? '切换到亮色模式' : '切换到暗色模式'}
-                        title={uiTheme === 'dark' ? '切换到亮色模式' : '切换到暗色模式'}
-                    >
-                        {uiTheme === 'dark' ? <Sun size={18} strokeWidth={2} /> : <Moon size={18} strokeWidth={2} />}
-                    </button>
-                    {!isElectron && (
-                        <button className="btn-secondary" onClick={() => setShowStorageModal(true)}>
-                            <Layers size={18} strokeWidth={2} />
-                            <span>存储模式</span>
+                <div className="header-actions">
+                    <div className="header-right">
+                        <button
+                            className="btn-icon-only"
+                            onClick={() => setTheme(uiTheme === 'dark' ? 'default' : 'dark')}
+                            aria-label={uiTheme === 'dark' ? '切换到亮色模式' : '切换到暗色模式'}
+                            title={uiTheme === 'dark' ? '切换到亮色模式' : '切换到暗色模式'}
+                        >
+                            {uiTheme === 'dark' ? <Sun size={18} strokeWidth={2} /> : <Moon size={18} strokeWidth={2} />}
                         </button>
+                        {!isElectron && (
+                            <button className="btn-secondary" onClick={() => setShowStorageModal(true)}>
+                                <Layers size={18} strokeWidth={2} />
+                                <span>存储模式</span>
+                            </button>
+                        )}
+                        <button className="btn-secondary" onClick={() => setShowImageHostModal(true)}>
+                            <ImageIcon size={18} strokeWidth={2} />
+                            <span>图床设置</span>
+                        </button>
+                        <button className="btn-secondary" onClick={() => setShowThemePanel(true)}>
+                            <Palette size={18} strokeWidth={2} />
+                            <span>主题管理</span>
+                        </button>
+                        <button className="btn-primary" onClick={copyToWechat}>
+                            <Send size={18} strokeWidth={2} />
+                            <span>复制到公众号</span>
+                        </button>
+                    </div>
+
+                    {/* Windows 自定义标题栏按钮 */}
+                    {isWindows && (
+                        <div className="window-controls">
+                            <button
+                                className="win-btn win-minimize"
+                                onClick={() => window.electron?.window?.minimize()}
+                                aria-label="最小化"
+                            >
+                                <svg width="10" height="1" viewBox="0 0 10 1">
+                                    <rect width="10" height="1" fill="currentColor" />
+                                </svg>
+                            </button>
+                            <button
+                                className="win-btn win-maximize"
+                                onClick={() => window.electron?.window?.maximize()}
+                                aria-label="最大化"
+                            >
+                                <svg width="10" height="10" viewBox="0 0 10 10">
+                                    <rect width="9" height="9" x="0.5" y="0.5" fill="none" stroke="currentColor" strokeWidth="1" />
+                                </svg>
+                            </button>
+                            <button
+                                className="win-btn win-close"
+                                onClick={() => window.electron?.window?.close()}
+                                aria-label="关闭"
+                            >
+                                <svg width="10" height="10" viewBox="0 0 10 10">
+                                    <path d="M0,0 L10,10 M10,0 L0,10" stroke="currentColor" strokeWidth="1.2" />
+                                </svg>
+                            </button>
+                        </div>
                     )}
-                    <button className="btn-secondary" onClick={() => setShowImageHostModal(true)}>
-                        <ImageIcon size={18} strokeWidth={2} />
-                        <span>图床设置</span>
-                    </button>
-                    <button className="btn-secondary" onClick={() => setShowThemePanel(true)}>
-                        <Palette size={18} strokeWidth={2} />
-                        <span>主题管理</span>
-                    </button>
-                    <button className="btn-primary" onClick={copyToWechat}>
-                        <Send size={18} strokeWidth={2} />
-                        <span>复制到公众号</span>
-                    </button>
                 </div>
             </header>
 

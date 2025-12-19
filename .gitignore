@@ -10,6 +10,7 @@ apps/macos/
 # Electron
 apps/electron/node_modules/
 apps/electron/dist/
+apps/electron/web-dist/
 
 # AI Agent files
 .agentdocs/

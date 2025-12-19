@@ -50,5 +50,13 @@ contextBridge.exposeInMainWorld('electron', {
             ipcRenderer.removeAllListeners('menu:save');
             ipcRenderer.removeAllListeners('menu:switch-workspace');
         }
+    },
+
+    // 窗口控制 (用于 Windows 自定义标题栏)
+    window: {
+        minimize: () => ipcRenderer.invoke('window:minimize'),
+        maximize: () => ipcRenderer.invoke('window:maximize'),
+        close: () => ipcRenderer.invoke('window:close'),
+        isMaximized: () => ipcRenderer.invoke('window:isMaximized'),
     }
 });

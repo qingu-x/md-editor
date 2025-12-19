@@ -469,9 +469,8 @@ export const sunsetFilmTheme = `/* 落日胶片风格 */
 }
 
 #wemd .callout-note { border-left-color: #8D5B4C; }
-#wemd .callout-info { border-left-color: #8D5B4C; }
 #wemd .callout-tip { border-left-color: #D98C45; }
-#wemd .callout-success { border-left-color: #8D5B4C; }
+#wemd .callout-important { border-left-color: #8D5B4C; }
 #wemd .callout-warning { border-left-color: #D98C45; }
-#wemd .callout-danger { border-left-color: #B33D25; }
+#wemd .callout-caution { border-left-color: #B33D25; }
 `;

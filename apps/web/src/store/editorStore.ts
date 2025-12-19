@@ -84,29 +84,20 @@ export const defaultMarkdown = `# 欢迎使用 WeMD
 > > > 这是一个三级引用
 > 
 
-::: tip
-这是一个技巧提示块 (Tip)
-:::
+> [!TIP]
+> 这是一个技巧提示块
 
-::: note
-这是一个提示块 (Note)
-:::
+> [!NOTE]
+> 这是一个备注提示块
 
-::: info
-这是一个信息提示块 (Info)
-:::
+> [!IMPORTANT]
+> 这是一个重要信息提示块
 
-::: success
-这是一个成功提示块 (Success)
-:::
+> [!WARNING]
+> 这是一个警告提示块
 
-::: warning
-这是一个警告提示块 (Warning)
-:::
-
-::: danger
-这是一个危险提示块 (Danger)
-:::
+> [!CAUTION]
+> 这是一个危险提示块
 
 ## 5. 代码展示
 ### 行内代码

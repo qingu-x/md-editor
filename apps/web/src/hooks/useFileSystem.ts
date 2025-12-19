@@ -37,7 +37,6 @@ interface ElectronAPI {
 }
 
 const getElectron = (): ElectronAPI | null => {
-    // @ts-expect-error - Electron API 在运行时注入
     return window.electron as ElectronAPI;
 };
 

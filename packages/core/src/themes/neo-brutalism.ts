@@ -508,9 +508,8 @@ export const neoBrutalismTheme = `/* 新粗野主义风格 */
 }
 
 #wemd .callout-note { border-left: 8px solid #6A00FF; }
-#wemd .callout-info { border-left: 8px solid #6A00FF; }
 #wemd .callout-tip { border-left: 8px solid #CCFF00; }
-#wemd .callout-success { border-left: 8px solid #6A00FF; }
+#wemd .callout-important { border-left: 8px solid #6A00FF; }
 #wemd .callout-warning { border-left: 8px solid #CCFF00; }
-#wemd .callout-danger { border-left: 8px solid #FF6B9D; }
+#wemd .callout-caution { border-left: 8px solid #FF6B9D; }
 `;

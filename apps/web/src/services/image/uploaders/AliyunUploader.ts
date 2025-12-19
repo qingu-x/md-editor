@@ -69,8 +69,9 @@ export class AliyunUploader implements ImageUploader {
             return this.config.cdnHost
                 ? `${this.config.cdnHost}/${dir}`
                 : `${protocol}://${this.config.bucket}.${this.config.region}.aliyuncs.com/${dir}`;
-        } catch (e: any) {
-            throw new Error(`上传失败: ${e.message || e}`);
+        } catch (e: unknown) {
+            const message = e instanceof Error ? e.message : String(e);
+            throw new Error(`上传失败: ${message}`);
         }
     }
 }

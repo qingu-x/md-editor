@@ -1,5 +1,4 @@
 import MarkdownIt from "markdown-it";
-import markdownItContainer from "markdown-it-container";
 import markdownItDeflist from "markdown-it-deflist";
 import markdownItImplicitFigures from "markdown-it-implicit-figures";
 import markdownItTableOfContents from "markdown-it-table-of-contents";
@@ -25,6 +24,8 @@ import markdownItImageFlow from "./plugins/markdown-it-imageflow";
 import markdownItMultiquote from "./plugins/markdown-it-multiquote";
 // @ts-ignore
 import markdownItLiReplacer from "./plugins/markdown-it-li";
+// @ts-ignore
+import markdownItGitHubAlert from "./plugins/markdown-it-github-alert";
 
 // @ts-ignore
 import highlightjs from "./utils/langHighlight";
@@ -50,29 +51,6 @@ export const createMarkdownParser = () => {
         },
     });
 
-    const calloutConfigs = [
-        { type: "tip", label: "技巧", icon: "💡" },
-        { type: "note", label: "提示", icon: "📝" },
-        { type: "info", label: "信息", icon: "ℹ️" },
-        { type: "success", label: "成功", icon: "✅" },
-        { type: "warning", label: "注意", icon: "⚠️" },
-        { type: "danger", label: "警告", icon: "❗" },
-    ];
-
-    const renderCallout = (type: string, defaultTitle: string, icon: string) => (tokens, idx) => {
-        const token = tokens[idx];
-        if (token.nesting === 1) {
-            const info = token.info.trim().slice(type.length).trim();
-            const title = info || defaultTitle;
-            const escaped = markdownParser.utils.escapeHtml(title);
-            return (
-                `\n<section class="callout callout-${type}">` +
-                `<div class="callout-title"><span class="callout-icon">${icon}</span><span>${escaped}</span></div>\n`
-            );
-        }
-        return "</section>\n";
-    };
-
     markdownParser
         .use(markdownItSpan) // 在标题标签中添加span
         .use(markdownItTableContainer) // 在表格外部添加容器
@@ -92,14 +70,8 @@ export const createMarkdownParser = () => {
         .use(markdownItMark) // 高亮文本 ==text==
         .use(markdownItSub) // 下标 H~2~O
         .use(markdownItSup) // 上标 x^2^
-        .use(markdownItEmoji); // Emoji :smile:
-
-    calloutConfigs.forEach((config) => {
-        markdownParser.use(markdownItContainer, config.type, {
-            validate: (params: string) => params.trim().startsWith(config.type),
-            render: renderCallout(config.type, config.label, config.icon),
-        });
-    });
+        .use(markdownItEmoji) // Emoji :smile:
+        .use(markdownItGitHubAlert); // GitHub 风格 Alert 语法
 
     return markdownParser;
 };

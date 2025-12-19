@@ -321,7 +321,7 @@
     font-family: "SFMono-Regular", Consolas, Menlo, monospace;
     overflow-x: auto;
     white-space: pre;
-  min-width: max-content;
+    min-width: max-content;
     border: none;
 }
 
@@ -414,33 +414,27 @@
     margin-right: 6px;
 }
 
-#wemd .callout-note { 
+#wemd .callout-note {
     background: #F1F1EF;
     border-left-color: #37352F;
 }
 
-#wemd .callout-info { 
-    background: #E7F3F8;
-    border-left-color: #2D9CDB;
-}
-
-#wemd .callout-tip { 
+#wemd .callout-tip {
     background: #FDF5F2;
     border-left-color: #F2994A;
 }
 
-#wemd .callout-success { 
-    background: #EDF7ED;
-    border-left-color: #4CAF50;
+#wemd .callout-important {
+    background: #E7F3F8;
+    border-left-color: #2D9CDB;
 }
 
-#wemd .callout-warning { 
+#wemd .callout-warning {
     background: #FFF4E5;
     border-left-color: #FF9800;
 }
 
-#wemd .callout-danger { 
+#wemd .callout-caution {
     background: #FFEBEE;
     border-left-color: #F44336;
 }
-

@@ -502,14 +502,14 @@ export const customDefaultTheme = `/* 自定义样式,实时生效,浏览器实�
   background: linear-gradient(135deg, #f7f9ff, #edf2ff);
 }
 
-#wemd .callout-info {
-  border-color: rgba(14, 165, 233, 0.25);
-  background: linear-gradient(135deg, #f0f9ff, #e0f2ff);
+#wemd .callout-tip {
+  border-color: rgba(139, 92, 246, 0.25);
+  background: linear-gradient(135deg, #f5f3ff, #ede9fe);
 }
 
-#wemd .callout-success {
-  border-color: rgba(16, 185, 129, 0.25);
-  background: linear-gradient(135deg, #f1fff9, #e6f9f0);
+#wemd .callout-important {
+  border-color: rgba(14, 165, 233, 0.25);
+  background: linear-gradient(135deg, #f0f9ff, #e0f2ff);
 }
 
 #wemd .callout-warning {
@@ -517,38 +517,11 @@ export const customDefaultTheme = `/* 自定义样式,实时生效,浏览器实�
   background: linear-gradient(135deg, #fff8ed, #fff3dc);
 }
 
-#wemd .callout-danger {
+#wemd .callout-caution {
   border-color: rgba(239, 68, 68, 0.25);
   background: linear-gradient(135deg, #fff5f5, #ffe7e7);
 }
 
-/* 任务清单 */
-#wemd .task-list-item {
-  list-style: none;
-  margin-left: -1.5em;
-  margin-bottom: 8px;
-  display: flex;
-  align-items: flex-start;
-  gap: 10px;
-}
-
-#wemd .task-list-item input[type='checkbox'] {
-  margin-top: 4px;
-  width: 16px;
-  height: 16px;
-  border-radius: 4px;
-  pointer-events: none;
-  accent-color: #07c160;
-}
-
-#wemd .task-list-item input[type='checkbox']:disabled {
-  opacity: 0.9;
-}
-
-#wemd .callout-tip {
-  border-color: rgba(139, 92, 246, 0.25);
-  background: linear-gradient(135deg, #f5f3ff, #ede9fe);
-}
 
 /* 高亮文本 */
 #wemd mark {

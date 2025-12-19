@@ -545,19 +545,14 @@ export const templateTheme = `/*
     background: #f5f5ff; 
 }
 
-#wemd .callout-info { 
-    border-left-color: #0ea5e9; 
-    background: #f0f9ff; 
-}
-
 #wemd .callout-tip { 
     border-left-color: #10b981; 
     background: #ecfdf5; 
 }
 
-#wemd .callout-success { 
-    border-left-color: #10b981; 
-    background: #ecfdf5; 
+#wemd .callout-important { 
+    border-left-color: #8b5cf6; 
+    background: #f5f3ff; 
 }
 
 #wemd .callout-warning { 
@@ -565,7 +560,7 @@ export const templateTheme = `/*
     background: #fffbeb; 
 }
 
-#wemd .callout-danger { 
+#wemd .callout-caution { 
     border-left-color: #ef4444; 
     background: #fff5f5; 
 }

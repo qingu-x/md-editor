@@ -304,7 +304,7 @@
     /* 特意使用衬线体显示代码，极具艺术感 */
     overflow-x: auto;
     white-space: pre;
-  min-width: max-content;
+    min-width: max-content;
 }
 
 /* 如果没有语法高亮，设置默认深灰色 */
@@ -398,10 +398,22 @@
     margin-right: 6px;
 }
 
-#wemd .callout-note { border-left: 3px solid #9E8045; }
-#wemd .callout-info { border-left: 3px solid #9E8045; }
-#wemd .callout-tip { border-left: 3px solid #9E8045; }
-#wemd .callout-success { border-left: 3px solid #9E8045; }
-#wemd .callout-warning { border-left: 3px solid #D98C45; }
-#wemd .callout-danger { border-left: 3px solid #B33D25; }
+#wemd .callout-note {
+    border-left: 3px solid #9E8045;
+}
 
+#wemd .callout-tip {
+    border-left: 3px solid #9E8045;
+}
+
+#wemd .callout-important {
+    border-left: 3px solid #9E8045;
+}
+
+#wemd .callout-warning {
+    border-left: 3px solid #D98C45;
+}
+
+#wemd .callout-caution {
+    border-left: 3px solid #B33D25;
+}

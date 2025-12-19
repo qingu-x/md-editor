@@ -279,9 +279,9 @@
     font-size: 13px;
     overflow-x: auto;
     white-space: pre;
-  min-width: max-content;
+    min-width: max-content;
     /* 微妙的发光效果 */
-    box-shadow: 
+    box-shadow:
         0 0 10px rgba(0, 243, 255, 0.2),
         inset 0 0 20px rgba(0, 243, 255, 0.05);
     /* 外发光 + 内发光 */
@@ -296,10 +296,8 @@
     left: 0;
     right: 0;
     bottom: 0;
-    background: linear-gradient(
-        transparent 50%,
-        rgba(0, 243, 255, 0.015) 50%
-    );
+    background: linear-gradient(transparent 50%,
+            rgba(0, 243, 255, 0.015) 50%);
     /* 降低扫描线透明度，从 0.03 改为 0.015 */
     background-size: 100% 4px;
     pointer-events: none;
@@ -417,7 +415,7 @@
     background: #161B22;
     border: 1px solid #00F3FF;
     border-left: 3px solid #00F3FF;
-    box-shadow: 
+    box-shadow:
         0 0 10px rgba(0, 243, 255, 0.2),
         inset 0 0 20px rgba(0, 243, 255, 0.05);
 }
@@ -522,33 +520,27 @@
     margin-right: 6px;
 }
 
-#wemd .callout-note { 
+#wemd .callout-note {
     border-left: 3px solid #00F3FF;
     box-shadow: 0 0 10px rgba(0, 243, 255, 0.2);
 }
 
-#wemd .callout-info { 
-    border-left: 3px solid #00F3FF;
-    box-shadow: 0 0 10px rgba(0, 243, 255, 0.2);
-}
-
-#wemd .callout-tip { 
+#wemd .callout-tip {
     border-left: 3px solid #FF00C1;
     box-shadow: 0 0 10px rgba(255, 0, 193, 0.2);
 }
 
-#wemd .callout-success { 
+#wemd .callout-important {
     border-left: 3px solid #00F3FF;
     box-shadow: 0 0 10px rgba(0, 243, 255, 0.2);
 }
 
-#wemd .callout-warning { 
+#wemd .callout-warning {
     border-left: 3px solid #FFB84D;
     box-shadow: 0 0 10px rgba(255, 184, 77, 0.2);
 }
 
-#wemd .callout-danger { 
+#wemd .callout-caution {
     border-left: 3px solid #FF00C1;
     box-shadow: 0 0 10px rgba(255, 0, 193, 0.2);
 }
-

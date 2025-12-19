@@ -10,17 +10,83 @@
     display: flex;
     align-items: center;
     justify-content: space-between;
-    padding: 0 32px;
+    padding: 0 calc(32px + var(--titlebar-right-inset, 0px)) 0 calc(32px + var(--titlebar-left-inset, 0px));
     position: sticky;
     top: 16px;
     z-index: 100;
     transition: all 0.3s ease;
+    -webkit-app-region: drag;
 }
 
 .header-left {
     display: flex;
     align-items: center;
     gap: 24px;
+}
+
+/* 右侧区域容器（工具栏 + 窗口控制按钮） */
+.header-actions {
+    display: flex;
+    align-items: center;
+    height: 100%;
+}
+
+.app-header button,
+.app-header a,
+.app-header input,
+.app-header select,
+.app-header textarea,
+.app-header [role="button"],
+.app-header svg,
+.app-header .logo,
+.app-header .header-left,
+.app-header .header-right,
+.app-header .window-controls {
+    -webkit-app-region: no-drag;
+}
+
+/* Windows 自定义标题栏按钮 */
+.window-controls {
+    display: flex;
+    height: 100%;
+    margin-left: 0;
+    margin-right: calc(-32px - var(--titlebar-right-inset, 0px));
+    /* 抵消 header padding */
+    border-top-right-radius: var(--radius-xl);
+    border-bottom-right-radius: var(--radius-xl);
+    overflow: hidden;
+}
+
+.win-btn {
+    width: 46px;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: none;
+    background: transparent;
+    color: var(--text-secondary);
+    cursor: pointer;
+    transition: background 0.15s ease, color 0.15s ease;
+}
+
+.win-btn:hover {
+    background: var(--bg-hover);
+    color: var(--text-primary);
+}
+
+.win-btn:active {
+    background: var(--bg-tertiary);
+}
+
+.win-close:hover {
+    background: #e81123;
+    color: white;
+}
+
+.win-close:active {
+    background: #c42b1c;
+    color: white;
 }
 
 .workspace-status {
@@ -347,7 +413,7 @@
 /* 响应式 */
 @media (max-width: 768px) {
     .app-header {
-        padding: 0 16px;
+        padding: 0 calc(16px + var(--titlebar-right-inset, 0px)) 0 calc(16px + var(--titlebar-left-inset, 0px));
     }
 
     .logo-text {

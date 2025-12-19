@@ -362,7 +362,7 @@
     font-family: "Menlo", "Courier New", monospace;
     overflow-x: auto;
     white-space: pre;
-  min-width: max-content;
+    min-width: max-content;
     border: 2px solid #000;
     box-shadow: 6px 6px 0px #ddd;
 }
@@ -506,10 +506,22 @@
     margin-right: 6px;
 }
 
-#wemd .callout-note { border-left: 8px solid #6A00FF; }
-#wemd .callout-info { border-left: 8px solid #6A00FF; }
-#wemd .callout-tip { border-left: 8px solid #CCFF00; }
-#wemd .callout-success { border-left: 8px solid #6A00FF; }
-#wemd .callout-warning { border-left: 8px solid #CCFF00; }
-#wemd .callout-danger { border-left: 8px solid #FF6B9D; }
+#wemd .callout-note {
+    border-left: 8px solid #6A00FF;
+}
 
+#wemd .callout-tip {
+    border-left: 8px solid #CCFF00;
+}
+
+#wemd .callout-important {
+    border-left: 8px solid #6A00FF;
+}
+
+#wemd .callout-warning {
+    border-left: 8px solid #CCFF00;
+}
+
+#wemd .callout-caution {
+    border-left: 8px solid #FF6B9D;
+}

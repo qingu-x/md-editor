@@ -69,6 +69,13 @@
         ],
         "icon": "assets/icon.ico"
     },
+    "nsis": {
+        "oneClick": false,
+        "allowToChangeInstallationDirectory": true,
+        "perMachine": false,
+        "createDesktopShortcut": true,
+        "createStartMenuShortcut": true
+    },
     "linux": {
         "target": [
             "AppImage",
