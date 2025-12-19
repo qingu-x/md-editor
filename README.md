@@ -2,7 +2,7 @@
   <img src="apps/web/public/favicon-dark.svg" width="80" height="80" alt="WeMD Logo" />
 </p>
 
-<h1 align="center">WeMD</h1>
+<h1 align="center">WeMD - for Vue3</h1>
 
 <p align="center">
   <strong>更优雅的 Markdown 公众号排版工具</strong>
@@ -22,7 +22,7 @@
 
 <p align="center">
   <a href="LICENSE"><img src="https://img.shields.io/badge/License-MIT-4CAF50?style=for-the-badge" alt="License: MIT" /></a>
-  <img src="https://img.shields.io/badge/React-18-61DAFB?style=for-the-badge&logo=react&logoColor=black" alt="React 18" />
+  <img src="https://img.shields.io/badge/Vue-3.5-61DAFB?style=for-the-badge&logo=vue.js&logoColor=white" alt="Vue 3.5" />
   <img src="https://img.shields.io/badge/Electron-28-47848F?style=for-the-badge&logo=electron&logoColor=white" alt="Electron" />
   <img src="https://img.shields.io/badge/pnpm-9-F69220?style=for-the-badge&logo=pnpm&logoColor=white" alt="pnpm" />
 </p>
