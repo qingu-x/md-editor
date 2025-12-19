@@ -52,7 +52,9 @@ body,
   --ui-shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
 
   /* Fonts */
-  --ui-font-sans: -apple-system, BlinkMacSystemFont, 'SF Pro Text', 'Segoe UI', 'Roboto', 'Helvetica Neue', sans-serif;
+  --ui-font-sans:
+    -apple-system, BlinkMacSystemFont, 'SF Pro Text', 'Segoe UI', 'Roboto', 'Helvetica Neue',
+    sans-serif;
   --ui-font-mono: 'SF Mono', 'Monaco', 'Inconsolata', 'Fira Code', monospace;
 
   /* Spacing */
@@ -100,7 +102,7 @@ body,
 /* ========================================
    DARK UI THEME (参考 VS Code 配色)
    ======================================== */
-[data-ui-theme="dark"] {
+[data-ui-theme='dark'] {
   color-scheme: dark;
 
   /* Colors - VS Code 风格深色背景（不那么刺眼） */
@@ -139,7 +141,9 @@ body,
   --ui-shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.5), 0 10px 10px -5px rgba(0, 0, 0, 0.3);
 
   /* Fonts - 保持默认 */
-  --ui-font-sans: -apple-system, BlinkMacSystemFont, 'SF Pro Text', 'Segoe UI', 'Roboto', 'Helvetica Neue', sans-serif;
+  --ui-font-sans:
+    -apple-system, BlinkMacSystemFont, 'SF Pro Text', 'Segoe UI', 'Roboto', 'Helvetica Neue',
+    sans-serif;
   --ui-font-mono: 'SF Mono', 'Monaco', 'Inconsolata', 'Fira Code', monospace;
   --ui-spacing-unit: 8px;
   --ui-glass-blur: blur(20px);

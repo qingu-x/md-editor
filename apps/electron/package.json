@@ -1,6 +1,6 @@
 {
     "name": "wemd-electron",
-    "version": "1.1.5",
+    "version": "1.1.7",
     "description": "WeMD - 更优雅的 Markdown 公众号排版工具",
     "main": "main.js",
     "homepage": "https://wemd.app",
@@ -18,7 +18,7 @@
     ],
     "license": "MIT",
     "build": {
-        "appId": "app.wemd.desktop",
+        "appId": "com.wemd.app",
         "productName": "WeMD",
         "linux": {
             "target": [
@@ -29,7 +29,7 @@
         }
     },
     "devDependencies": {
-        "electron": "^28.0.0",
-        "electron-builder": "^24.9.1"
+        "electron": "^29.4.6",
+        "electron-builder": "^24.13.3"
     }
 }

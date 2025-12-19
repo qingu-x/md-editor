@@ -114,7 +114,7 @@ export const normalTheme = `/* 全局属性
 #wemd .multiquote-3 p {
 }
 
-/* 链接 
+/* 链接
  * border-bottom: 1px solid #009688;
  */
 #wemd a {
@@ -159,7 +159,7 @@ export const normalTheme = `/* 全局属性
 #wemd p code, #wemd li code {
 }
 
-/* 
+/*
  * 代码块不换行 display: -webkit-box !important;
  * 代码块换行 display: block;
  */
@@ -176,7 +176,7 @@ export const normalTheme = `/* 全局属性
 #wemd table tr td {
 }
 
-/* 
+/*
  * 某一列表格列宽控制
  * n 可以修改为具体数字，不修改时表示所有列
  * 最小列宽 min-width: 85px;
@@ -193,7 +193,7 @@ export const normalTheme = `/* 全局属性
 #wemd .footnote-ref {
 }
 
-/* "参考资料"四个字 
+/* "参考资料"四个字
  * 内容 content: "参考资料";
  */
 #wemd .footnotes-sep:before {
@@ -204,7 +204,7 @@ export const normalTheme = `/* 全局属性
 }
 
 /* 参考资料文字 */
-#wemd .footnote-item p { 
+#wemd .footnote-item p {
 }
 
 /* 参考资料解释 */
@@ -219,6 +219,6 @@ export const normalTheme = `/* 全局属性
 
 /* 行内公式
  */
-#wemd .inline-equation svg { 
+#wemd .inline-equation svg {
 }
 `;

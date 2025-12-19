@@ -24,7 +24,7 @@ export const sunsetFilmTheme = `/* 落日胶片风格 */
     font-size: 16px;
 }
 
-/* 
+/*
  * 一级标题 - 电影片名风格
  * 上下双线装饰
  */
@@ -52,7 +52,7 @@ export const sunsetFilmTheme = `/* 落日胶片风格 */
     display: none;
 }
 
-/* 
+/*
  * 二级标题 - 邮票/标签风格
  * 实心背景 + 白字
  */
@@ -82,7 +82,7 @@ export const sunsetFilmTheme = `/* 落日胶片风格 */
     display: none;
 }
 
-/* 
+/*
  * 三级标题 - 像书本的小节
  * 咖啡色文字 + 左侧装饰
  */
@@ -106,7 +106,7 @@ export const sunsetFilmTheme = `/* 落日胶片风格 */
     display: none;
 }
 
-/* 
+/*
  * 四级标题 - 极简下划线
  */
 #wemd h4 {
@@ -181,7 +181,7 @@ export const sunsetFilmTheme = `/* 落日胶片风格 */
     color: #B33D25;
 }
 
-/* 
+/*
  * 引用 - 泛黄的旧报纸
  * 深米色背景 + 棕色边框
  */
@@ -233,7 +233,7 @@ export const sunsetFilmTheme = `/* 落日胶片风格 */
     transition: opacity 0.2s;
 }
 
-/* 
+/*
  * 加粗 - 重点标记
  * 像是用深色马克笔划过
  */
@@ -278,7 +278,7 @@ export const sunsetFilmTheme = `/* 落日胶片风格 */
     width: 100%;
 }
 
-/* 
+/*
  * 图片 - 老照片风格
  * 加上白色边框和阴影
  */

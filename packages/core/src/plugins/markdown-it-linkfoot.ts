@@ -46,7 +46,13 @@ function renderFootnoteOpen(tokens, idx, options, env, slf) {
     id += ":" + tokens[idx].meta.subId;
   }
 
-  return '<span id="fn' + id + '" class="footnote-item"><span class="footnote-num">[' + id + "] </span>";
+  return (
+    '<span id="fn' +
+    id +
+    '" class="footnote-item"><span class="footnote-num">[' +
+    id +
+    "] </span>"
+  );
 }
 
 function renderFootnoteClose() {
@@ -68,10 +74,7 @@ function normalizeReference(str) {
   // use .toUpperCase() instead of .toLowerCase()
   // here to avoid a conflict with Object.prototype
   // members (most notably, `__proto__`)
-  return str
-    .trim()
-    .replace(/\s+/g, " ")
-    .toUpperCase();
+  return str.trim().replace(/\s+/g, " ").toUpperCase();
 }
 
 function linkFoot(state, silent) {
@@ -231,15 +234,20 @@ function linkFoot(state, silent) {
       const footnoteId = state.env.footnotes.list.length;
 
       // *用来让链接倾斜
-      state.md.inline.parse(`${title}: *${footnoteContent}*`, state.md, state.env, (tokens = []));
+      state.md.inline.parse(
+        `${title}: *${footnoteContent}*`,
+        state.md,
+        state.env,
+        (tokens = [])
+      );
 
       token = state.push("footnote_word", "", 0);
       token.content = state.src.slice(labelStart, labelEnd);
 
       token = state.push("footnote_ref", "", 0);
-      token.meta = {id: footnoteId};
+      token.meta = { id: footnoteId };
 
-      state.env.footnotes.list[footnoteId] = {tokens: tokens};
+      state.env.footnotes.list[footnoteId] = { tokens: tokens };
     }
     // 不存在标题则判断域名
     else {
@@ -311,7 +319,7 @@ function footnoteTail(state) {
 
   for (i = 0, l = list.length; i < l; i++) {
     token = new state.Token("footnote_open", "", 1);
-    token.meta = {id: i, label: list[i].label};
+    token.meta = { id: i, label: list[i].label };
     state.tokens.push(token);
 
     if (list[i].tokens) {

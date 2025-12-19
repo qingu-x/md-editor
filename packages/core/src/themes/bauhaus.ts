@@ -231,8 +231,8 @@ export const bauhausTheme = `/* 包豪斯风格 */
     background: #000;
 }
 
-/* 
- * 行内代码 - 黄色高亮 (修复重点) 
+/*
+ * 行内代码 - 黄色高亮 (修复重点)
  * 亮黄背景 + 黑色文字 + 粗体
  */
 #wemd p code,
@@ -388,27 +388,27 @@ export const bauhausTheme = `/* 包豪斯风格 */
     margin-right: 6px;
 }
 
-#wemd .callout-note { 
-    border-left: 10px solid #1976D2; 
+#wemd .callout-note {
+    border-left: 10px solid #1976D2;
 }
 
-#wemd .callout-info { 
-    border-left: 10px solid #1976D2; 
+#wemd .callout-info {
+    border-left: 10px solid #1976D2;
 }
 
-#wemd .callout-tip { 
-    border-left: 10px solid #FBC02D; 
+#wemd .callout-tip {
+    border-left: 10px solid #FBC02D;
 }
 
-#wemd .callout-success { 
-    border-left: 10px solid #1976D2; 
+#wemd .callout-success {
+    border-left: 10px solid #1976D2;
 }
 
-#wemd .callout-warning { 
-    border-left: 10px solid #FBC02D; 
+#wemd .callout-warning {
+    border-left: 10px solid #FBC02D;
 }
 
-#wemd .callout-danger { 
-    border-left: 10px solid #D32F2F; 
+#wemd .callout-danger {
+    border-left: 10px solid #D32F2F;
 }
 `;

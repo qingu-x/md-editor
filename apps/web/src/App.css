@@ -18,7 +18,9 @@
   margin: 0 auto;
   box-sizing: border-box;
   overflow: hidden;
-  transition: padding 0.35s ease, grid-template-columns 0.35s ease;
+  transition:
+    padding 0.35s ease,
+    grid-template-columns 0.35s ease;
   position: relative;
 }
 

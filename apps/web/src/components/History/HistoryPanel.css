@@ -72,7 +72,9 @@
   white-space: nowrap;
   opacity: 0;
   visibility: hidden;
-  transition: opacity 0.15s, visibility 0.15s;
+  transition:
+    opacity 0.15s,
+    visibility 0.15s;
   pointer-events: none;
   z-index: 9999;
 }
@@ -141,7 +143,7 @@
 }
 
 .history-item {
-  border: 1px solid transparent;
+  border: 1px solid var(--border-light);
   border-radius: var(--radius-lg);
   /* 半透明卡片背景 */
   background: color-mix(in srgb, var(--bg-primary) 80%, transparent);
@@ -287,7 +289,9 @@
   border-radius: var(--radius-sm);
   color: var(--text-secondary);
   cursor: pointer;
-  transition: background 0.2s, color 0.2s;
+  transition:
+    background 0.2s,
+    color 0.2s;
   display: flex;
   align-items: center;
   gap: 6px;

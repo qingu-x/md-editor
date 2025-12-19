@@ -21,7 +21,7 @@ export const auroraGlassTheme = `/* 极光玻璃风格 */
   font-size: 16px;
 }
 
-/* 
+/*
  * 一级标题 - 渐变流光文字
  * 使用 background-clip 实现文字渐变
  */
@@ -53,7 +53,7 @@ export const auroraGlassTheme = `/* 极光玻璃风格 */
   display: none;
 }
 
-/* 
+/*
  * 二级标题 - 悬浮渐变按钮
  * 看起来像一个精致的 APP 图标或按钮
  */
@@ -84,7 +84,7 @@ export const auroraGlassTheme = `/* 极光玻璃风格 */
   display: none;
 }
 
-/* 
+/*
  * 三级标题 - 渐变下划线
  */
 #wemd h3 {
@@ -113,7 +113,7 @@ export const auroraGlassTheme = `/* 极光玻璃风格 */
   display: none;
 }
 
-/* 
+/*
  * 四级标题 - 极简圆点
  */
 #wemd h4 {
@@ -138,7 +138,7 @@ export const auroraGlassTheme = `/* 极光玻璃风格 */
   display: none;
 }
 
-/* 
+/*
  * 列表 - 炫彩圆点
  */
 #wemd ul {
@@ -192,7 +192,7 @@ export const auroraGlassTheme = `/* 极光玻璃风格 */
   font-size: 16px;
 }
 
-/* 
+/*
  * 引用 - 磨砂玻璃卡片
  * 白底 + 柔和彩色投影 + 细微边框
  */
@@ -229,7 +229,7 @@ export const auroraGlassTheme = `/* 极光玻璃风格 */
   padding-bottom: 1px;
 }
 
-/* 
+/*
  * 加粗 - 渐变文字
  * 与 H1 呼应，非常高级
  */

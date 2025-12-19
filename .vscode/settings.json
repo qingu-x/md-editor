@@ -1,0 +1,75 @@
+{
+  // 保存时自动修复 ESLint 问题
+  "editor.codeActionsOnSave": {
+    "source.fixAll.eslint": "explicit"
+  },
+
+  // 启用 ESLint
+  "eslint.enable": true,
+
+  // ESLint 验证的文件类型
+  "eslint.validate": ["javascript", "javascriptreact", "typescript", "typescriptreact", "vue"],
+
+  // 保存时自动格式化（可选）
+  "editor.formatOnSave": true,
+
+  // 默认格式化工具
+  "editor.defaultFormatter": "esbenp.prettier-vscode",
+
+  // Vue 文件配置：禁用格式化，只用 ESLint 修复
+  "[vue]": {
+    "editor.formatOnSave": false,
+    "editor.defaultFormatter": null
+  },
+
+  // TypeScript 文件配置
+  "[typescript]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode",
+    "editor.codeActionsOnSave": {
+      "source.organizeImports": "never"
+    }
+  },
+
+  "[javascript]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+
+  // 其他推荐设置
+  "files.eol": "\n",
+  "files.insertFinalNewline": true,
+  "files.trimTrailingWhitespace": true,
+
+  // 搜索排除
+  "search.exclude": {
+    "**/node_modules": true,
+    "**/dist": true,
+    "**/.turbo": true,
+    "**/coverage": true,
+    "pnpm-lock.yaml": true
+  },
+
+  // 文件监视排除
+  "files.watcherExclude": {
+    "**/node_modules/**": true,
+    "**/dist/**": true,
+    "**/.turbo/**": true
+  },
+  "[jsonc]": {
+    "editor.suggest.insertMode": "replace",
+    "editor.codeActionsOnSave": {
+      "source.organizeImports": "never"
+    }
+  },
+
+  // TypeScript 配置
+  "typescript.tsdk": "apps/web/node_modules/typescript/lib",
+
+  // Vue/Volar 配置
+  "vue.server.hybridMode": false,
+  "typescript.enablePromptUseWorkspaceTsdk": true,
+
+  // 禁用 Vetur (如果安装了)
+  "vetur.validation.template": false,
+  "vetur.validation.script": false,
+  "vetur.validation.style": false
+}

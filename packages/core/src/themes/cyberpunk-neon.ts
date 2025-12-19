@@ -244,8 +244,8 @@ export const cyberpunkNeonTheme = `/* 赛博朋克风格 */
     box-shadow: 0 0 10px rgba(0, 243, 255, 0.5);
 }
 
-/* 
- * 行内代码 - 黑客终端指令 (修复重点) 
+/*
+ * 行内代码 - 黑客终端指令 (修复重点)
  * 纯黑底 + 青色字 + 等宽字体 + 微发光
  */
 #wemd p code,
@@ -282,7 +282,7 @@ export const cyberpunkNeonTheme = `/* 赛博朋克风格 */
     white-space: pre;
   min-width: max-content;
     /* 微妙的发光效果 */
-    box-shadow: 
+    box-shadow:
         0 0 10px rgba(0, 243, 255, 0.2),
         inset 0 0 20px rgba(0, 243, 255, 0.05);
     /* 外发光 + 内发光 */
@@ -418,7 +418,7 @@ export const cyberpunkNeonTheme = `/* 赛博朋克风格 */
     background: #161B22;
     border: 1px solid #00F3FF;
     border-left: 3px solid #00F3FF;
-    box-shadow: 
+    box-shadow:
         0 0 10px rgba(0, 243, 255, 0.2),
         inset 0 0 20px rgba(0, 243, 255, 0.05);
 }
@@ -523,32 +523,32 @@ export const cyberpunkNeonTheme = `/* 赛博朋克风格 */
     margin-right: 6px;
 }
 
-#wemd .callout-note { 
+#wemd .callout-note {
     border-left: 3px solid #00F3FF;
     box-shadow: 0 0 10px rgba(0, 243, 255, 0.2);
 }
 
-#wemd .callout-info { 
+#wemd .callout-info {
     border-left: 3px solid #00F3FF;
     box-shadow: 0 0 10px rgba(0, 243, 255, 0.2);
 }
 
-#wemd .callout-tip { 
+#wemd .callout-tip {
     border-left: 3px solid #FF00C1;
     box-shadow: 0 0 10px rgba(255, 0, 193, 0.2);
 }
 
-#wemd .callout-success { 
+#wemd .callout-success {
     border-left: 3px solid #00F3FF;
     box-shadow: 0 0 10px rgba(0, 243, 255, 0.2);
 }
 
-#wemd .callout-warning { 
+#wemd .callout-warning {
     border-left: 3px solid #FFB84D;
     box-shadow: 0 0 10px rgba(255, 184, 77, 0.2);
 }
 
-#wemd .callout-danger { 
+#wemd .callout-danger {
     border-left: 3px solid #FF00C1;
     box-shadow: 0 0 10px rgba(255, 0, 193, 0.2);
 }

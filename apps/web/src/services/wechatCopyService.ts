@@ -1,65 +1,71 @@
-import toast from 'react-hot-toast';
-import { processHtml, createMarkdownParser } from '@wemd/core';
-import katexCss from 'katex/dist/katex.min.css?raw';
-import { loadMathJax } from '../utils/mathJaxLoader';
-import { hasMathFormula } from '../utils/katexRenderer';
+import { toast } from 'vue-sonner'
+import { processHtml, createMarkdownParser } from '@wemd/core'
+import katexCss from 'katex/dist/katex.min.css?raw'
+import { loadMathJax } from '../utils/mathJaxLoader'
+import { hasMathFormula } from '../utils/katexRenderer'
 
 const buildCopyCss = (themeCss: string) => {
-    if (!themeCss) return katexCss;
-    return `${themeCss}\n${katexCss}`;
-};
+  if (!themeCss) return katexCss
+  return `${themeCss}\n${katexCss}`
+}
+
+// 缓存 parser 实例,避免重复创建
+let cachedParser: ReturnType<typeof createMarkdownParser> | null = null
+const getParser = () => {
+  if (!cachedParser) {
+    cachedParser = createMarkdownParser()
+  }
+  return cachedParser
+}
 
 export async function copyToWechat(markdown: string, css: string): Promise<void> {
-    const container = document.createElement('div');
-    container.style.position = 'absolute';
-    container.style.top = '-9999px';
-    container.style.left = '-9999px';
-    document.body.appendChild(container);
+  const container = document.createElement('div')
+  container.style.position = 'absolute'
+  container.style.top = '-9999px'
+  container.style.left = '-9999px'
+  document.body.appendChild(container)
 
-    try {
-        const shouldLoadMath = hasMathFormula(markdown);
-        if (shouldLoadMath) {
-            await loadMathJax();
-        }
-        const parser = createMarkdownParser();
-        const rawHtml = parser.render(markdown);
-        const themedCss = buildCopyCss(css);
-        const styledHtml = processHtml(rawHtml, themedCss);
-
-        container.innerHTML = styledHtml;
-
-        const selection = window.getSelection();
-        const range = document.createRange();
-        range.selectNodeContents(container);
-        selection?.removeAllRanges();
-        selection?.addRange(range);
-
-        document.execCommand('copy');
-
-        if (navigator.clipboard && window.ClipboardItem) {
-            try {
-                const blob = new Blob([container.innerHTML], { type: 'text/html' });
-                const textBlob = new Blob([markdown], { type: 'text/plain' });
-                await navigator.clipboard.write([
-                    new ClipboardItem({
-                        'text/html': blob,
-                        'text/plain': textBlob
-                    })
-                ]);
-            } catch (e) {
-                console.error('Clipboard API 失败，使用回退方案', e);
-            }
-        }
-
-        toast.success('已复制，可以直接粘贴至微信公众号', {
-            duration: 3000,
-            icon: '✅',
-        });
-    } catch (error) {
-        console.error('复制失败:', error);
-        toast.error('复制失败，请重试');
-        throw error;
-    } finally {
-        document.body.removeChild(container);
+  try {
+    const shouldLoadMath = hasMathFormula(markdown)
+    if (shouldLoadMath) {
+      await loadMathJax()
     }
+    const parser = getParser()
+    const rawHtml = parser.render(markdown)
+    const themedCss = buildCopyCss(css)
+    const styledHtml = processHtml(rawHtml, themedCss)
+
+    container.innerHTML = styledHtml
+
+    const selection = window.getSelection()
+    const range = document.createRange()
+    range.selectNodeContents(container)
+    selection?.removeAllRanges()
+    selection?.addRange(range)
+
+    document.execCommand('copy')
+
+    if (navigator.clipboard && window.ClipboardItem) {
+      try {
+        const blob = new Blob([container.innerHTML], { type: 'text/html' })
+        const textBlob = new Blob([markdown], { type: 'text/plain' })
+        await navigator.clipboard.write([
+          new ClipboardItem({
+            'text/html': blob,
+            'text/plain': textBlob,
+          }),
+        ])
+      } catch (e) {
+        console.error('Clipboard API 失败，使用回退方案', e)
+      }
+    }
+
+    toast.success('已复制，可以直接粘贴至微信公众号')
+  } catch (error) {
+    console.error('复制失败:', error)
+    toast.error('复制失败，请重试')
+    throw error
+  } finally {
+    document.body.removeChild(container)
+  }
 }

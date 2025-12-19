@@ -270,8 +270,8 @@ export const luxuryGoldTheme = `/* 黑金奢华风格 */
     font-family: serif;
 }
 
-/* 
- * 行内代码 - 香槟金吊牌风格 (修复重点) 
+/*
+ * 行内代码 - 香槟金吊牌风格 (修复重点)
  * 极淡的金色背景 + 细边框，精致感拉满
  */
 #wemd p code,

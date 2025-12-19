@@ -1,171 +1,398 @@
+/* Overlay */
+.image-host-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 2000;
+  padding: 20px;
+}
+
+/* Modal */
+.image-host-modal {
+  background: var(--bg-primary);
+  border-radius: var(--radius-xl);
+  width: min(500px, 90vw);
+  max-height: 85vh;
+  overflow: hidden;
+  box-shadow: var(--shadow-xl);
+  border: var(--border-width) solid var(--border-light);
+  display: flex;
+  flex-direction: column;
+}
+
+.image-host-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px 20px;
+  border-bottom: 1px solid var(--border-light);
+}
+
+.image-host-header h3 {
+  margin: 0;
+  font-size: 18px;
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.image-host-header .close-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  border: none;
+  background: transparent;
+  border-radius: var(--radius-md);
+  cursor: pointer;
+  color: var(--text-secondary);
+  transition: all 0.2s;
+}
+
+.image-host-header .close-btn:hover {
+  background: var(--bg-hover);
+  color: var(--text-primary);
+}
+
+.image-host-body {
+  padding: 20px;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.image-host-body .form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.image-host-body .form-group label {
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--text-primary);
+}
+
+.image-host-body .form-group select,
+.image-host-body .form-group input {
+  padding: 10px 12px;
+  border: 1px solid var(--border-light);
+  border-radius: var(--radius-md);
+  font-size: 14px;
+  outline: none;
+  transition: border-color 0.2s;
+  background: var(--bg-primary);
+  color: var(--text-primary);
+}
+
+.image-host-body .form-group select:focus,
+.image-host-body .form-group input:focus {
+  border-color: var(--accent-primary);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--accent-primary) 25%, transparent);
+}
+
+.image-host-body .input-with-icon {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.image-host-body .input-with-icon input {
+  flex: 1;
+  padding-right: 40px;
+}
+
+.image-host-body .input-with-icon .icon-btn {
+  position: absolute;
+  right: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  border: none;
+  background: transparent;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  color: var(--text-secondary);
+}
+
+.image-host-body .input-with-icon .icon-btn:hover {
+  background: var(--bg-hover);
+  color: var(--text-primary);
+}
+
+.image-host-body .info-box {
+  padding: 12px 16px;
+  background: var(--bg-secondary);
+  border-radius: var(--radius-md);
+  border: 1px solid var(--border-light);
+}
+
+.image-host-body .info-box p {
+  margin: 0;
+  font-size: 14px;
+  color: var(--text-primary);
+}
+
+.image-host-body .info-box p.text-muted {
+  margin-top: 8px;
+  font-size: 13px;
+  color: var(--text-secondary);
+}
+
+.image-host-footer {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 16px 20px;
+  border-top: 1px solid var(--border-light);
+}
+
+.image-host-footer .flex-spacer {
+  flex: 1;
+}
+
+.image-host-footer .spinning {
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.image-host-footer .btn-primary,
+.image-host-footer .btn-secondary {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  padding: 10px 20px;
+  border: none;
+  border-radius: var(--radius-md);
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.image-host-footer .btn-primary {
+  background: var(--accent-primary);
+  color: #ffffff;
+}
+
+.image-host-footer .btn-primary:hover:not(:disabled) {
+  background: color-mix(in srgb, var(--accent-primary) 85%, #000000);
+}
+
+.image-host-footer .btn-primary:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.image-host-footer .btn-secondary {
+  background: var(--bg-secondary);
+  color: var(--text-primary);
+  border: 1px solid var(--border-light);
+}
+
+.image-host-footer .btn-secondary:hover:not(:disabled) {
+  background: var(--bg-hover);
+}
+
+.image-host-footer .btn-secondary:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+/* Legacy styles */
 .image-host-settings {
-    padding: 0;
-    max-width: 900px;
+  padding: 0;
+  max-width: 900px;
 }
 
 .settings-layout {
-    display: flex;
-    gap: 24px;
-    min-height: 300px;
-    max-height: calc(85vh - 120px);
+  display: flex;
+  gap: 24px;
+  min-height: 300px;
+  max-height: calc(85vh - 120px);
 }
 
 .host-type-selector {
-    flex: 0 0 240px;
-    display: flex;
-    flex-direction: column;
-    gap: 12px;
+  flex: 0 0 240px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
 }
 
 .host-type-selector label {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    padding: 16px;
-    border: 2px solid var(--border-light);
-    border-radius: var(--radius-lg);
-    cursor: pointer;
-    transition: all 0.2s;
-    background: var(--bg-primary);
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 16px;
+  border: 2px solid var(--border-light);
+  border-radius: var(--radius-lg);
+  cursor: pointer;
+  transition: all 0.2s;
+  background: var(--bg-primary);
 }
 
 .host-type-selector label:hover {
-    border-color: var(--border-color);
-    background: var(--bg-secondary);
+  border-color: var(--border-color);
+  background: var(--bg-secondary);
 }
 
 .host-type-selector label:has(input:checked) {
-    border-color: var(--accent-primary);
-    background: var(--bg-hover);
+  border-color: var(--accent-primary);
+  background: var(--bg-hover);
 }
 
 .host-option {
-    flex: 1;
-    display: flex;
-    flex-direction: column;
-    gap: 4px;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
 }
 
 .host-option strong {
-    font-size: 15px;
-    color: var(--text-primary);
+  font-size: 15px;
+  color: var(--text-primary);
 }
 
 .host-option span {
-    font-size: 13px;
-    color: var(--text-secondary);
+  font-size: 13px;
+  color: var(--text-secondary);
 }
 
 .host-config-panel {
-    flex: 1;
-    display: flex;
-    flex-direction: column;
-    overflow-y: auto;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  overflow-y: auto;
 }
 
 .config-empty {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    height: 100%;
-    padding: 40px;
-    background: var(--bg-secondary);
-    border-radius: var(--radius-lg);
-    border: 2px dashed var(--border-light);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  padding: 40px;
+  background: var(--bg-secondary);
+  border-radius: var(--radius-lg);
+  border: 2px dashed var(--border-light);
 }
 
 .config-empty p {
-    margin: 0;
-    font-size: 15px;
-    color: var(--text-secondary);
+  margin: 0;
+  font-size: 15px;
+  color: var(--text-secondary);
 }
 
 .host-config {
-    padding: 20px;
-    background: var(--bg-secondary);
-    border-radius: var(--radius-lg);
-    display: flex;
-    flex-direction: column;
-    gap: 16px;
+  padding: 20px;
+  background: var(--bg-secondary);
+  border-radius: var(--radius-lg);
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
 }
 
 .config-field {
-    display: flex;
-    flex-direction: column;
-    gap: 8px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
 }
 
 .config-field label {
-    font-size: 14px;
-    font-weight: 500;
-    color: var(--text-primary);
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--text-primary);
 }
 
 .config-field input {
-    padding: 10px 12px;
-    border: 1px solid var(--border-light);
-    border-radius: var(--radius-md);
-    font-size: 14px;
-    outline: none;
-    transition: border-color 0.2s;
-    background: var(--bg-primary);
-    color: var(--text-primary);
+  padding: 10px 12px;
+  border: 1px solid var(--border-light);
+  border-radius: var(--radius-md);
+  font-size: 14px;
+  outline: none;
+  transition: border-color 0.2s;
+  background: var(--bg-primary);
+  color: var(--text-primary);
 }
 
 .config-field input:focus {
-    border-color: var(--accent-primary);
-    box-shadow: 0 0 0 3px color-mix(in srgb, var(--accent-primary) 25%, transparent);
+  border-color: var(--accent-primary);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--accent-primary) 25%, transparent);
 }
 
 .config-field small {
-    font-size: 12px;
-    color: var(--text-tertiary);
+  font-size: 12px;
+  color: var(--text-tertiary);
 }
 
 .config-field small a {
-    color: var(--accent-primary);
-    text-decoration: none;
+  color: var(--accent-primary);
+  text-decoration: none;
 }
 
 .config-field small a:hover {
-    text-decoration: underline;
+  text-decoration: underline;
 }
 
-.host-config>small {
-    font-size: 12px;
-    color: var(--text-tertiary);
+.host-config > small {
+  font-size: 12px;
+  color: var(--text-tertiary);
 }
 
-.host-config>small a {
-    color: var(--accent-primary);
-    text-decoration: none;
+.host-config > small a {
+  color: var(--accent-primary);
+  text-decoration: none;
 }
 
-.host-config>small a:hover {
-    text-decoration: underline;
+.host-config > small a:hover {
+  text-decoration: underline;
 }
 
 .host-config button {
-    padding: 10px 20px;
-    background: var(--accent-primary);
-    color: #ffffff;
-    border: none;
-    border-radius: var(--radius-pill);
-    font-size: 14px;
-    font-weight: 500;
-    cursor: pointer;
-    transition: background 0.2s;
-    align-self: flex-start;
+  padding: 10px 20px;
+  background: var(--accent-primary);
+  color: #ffffff;
+  border: none;
+  border-radius: var(--radius-pill);
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background 0.2s;
+  align-self: flex-start;
 }
 
 .host-config button:hover {
-    background: color-mix(in srgb, var(--accent-primary) 85%, #000000);
+  background: color-mix(in srgb, var(--accent-primary) 85%, #000000);
 }
 
 .test-result {
-    padding: 12px;
-    border-radius: var(--radius-md);
-    font-size: 14px;
-    background: var(--bg-secondary);
-    color: var(--text-secondary);
+  padding: 12px;
+  border-radius: var(--radius-md);
+  font-size: 14px;
+  background: var(--bg-secondary);
+  color: var(--text-secondary);
+}
+
+.test-result.success {
+  background: color-mix(in srgb, #22c55e 15%, transparent);
+  color: #16a34a;
+}
+
+.test-result.error {
+  background: color-mix(in srgb, #ef4444 15%, transparent);
+  color: #dc2626;
 }

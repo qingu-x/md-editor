@@ -1,10 +1,11 @@
-// 缩小highlight包大小，按需引入，900kb->90kb
-import highlightjs from "highlight.js/lib/highlight";
+// 缩小highlight包大小，按需引入
+// highlight.js v11+ 使用 lib/core 代替 lib/highlight
+import hljs from "highlight.js/lib/core";
 
 import bash from "highlight.js/lib/languages/bash";
 import clojure from "highlight.js/lib/languages/clojure";
 import cpp from "highlight.js/lib/languages/cpp";
-import cs from "highlight.js/lib/languages/cs";
+import csharp from "highlight.js/lib/languages/csharp";
 import css from "highlight.js/lib/languages/css";
 import dart from "highlight.js/lib/languages/dart";
 import dockerfile from "highlight.js/lib/languages/dockerfile";
@@ -34,7 +35,7 @@ import scala from "highlight.js/lib/languages/scala";
 import shell from "highlight.js/lib/languages/shell";
 import sql from "highlight.js/lib/languages/sql";
 import swift from "highlight.js/lib/languages/swift";
-import tex from "highlight.js/lib/languages/tex";
+import latex from "highlight.js/lib/languages/latex";
 import typescript from "highlight.js/lib/languages/typescript";
 import verilog from "highlight.js/lib/languages/verilog";
 import vhdl from "highlight.js/lib/languages/vhdl";
@@ -43,46 +44,51 @@ import yaml from "highlight.js/lib/languages/yaml";
 import diff from "highlight.js/lib/languages/diff";
 import protobuf from "highlight.js/lib/languages/protobuf";
 
-highlightjs.registerLanguage("bash", bash);
-highlightjs.registerLanguage("clojure", clojure);
-highlightjs.registerLanguage("cpp", cpp);
-highlightjs.registerLanguage("cs", cs);
-highlightjs.registerLanguage("css", css);
-highlightjs.registerLanguage("dart", dart);
-highlightjs.registerLanguage("dockerfile", dockerfile);
-highlightjs.registerLanguage("erlang", erlang);
-highlightjs.registerLanguage("go", go);
-highlightjs.registerLanguage("gradle", gradle);
-highlightjs.registerLanguage("groovy", groovy);
-highlightjs.registerLanguage("haskell", haskell);
-highlightjs.registerLanguage("java", java);
-highlightjs.registerLanguage("javascript", javascript);
-highlightjs.registerLanguage("json", json);
-highlightjs.registerLanguage("julia", julia);
-highlightjs.registerLanguage("kotlin", kotlin);
-highlightjs.registerLanguage("lisp", lisp);
-highlightjs.registerLanguage("lua", lua);
-highlightjs.registerLanguage("makefile", makefile);
-highlightjs.registerLanguage("markdown", markdown);
-highlightjs.registerLanguage("matlab", matlab);
-highlightjs.registerLanguage("objectivec", objectivec);
-highlightjs.registerLanguage("perl", perl);
-highlightjs.registerLanguage("php", php);
-highlightjs.registerLanguage("python", python);
-highlightjs.registerLanguage("r", r);
-highlightjs.registerLanguage("ruby", ruby);
-highlightjs.registerLanguage("rust", rust);
-highlightjs.registerLanguage("scala", scala);
-highlightjs.registerLanguage("shell", shell);
-highlightjs.registerLanguage("sql", sql);
-highlightjs.registerLanguage("swift", swift);
-highlightjs.registerLanguage("tex", tex);
-highlightjs.registerLanguage("typescript", typescript);
-highlightjs.registerLanguage("verilog", verilog);
-highlightjs.registerLanguage("vhdl", vhdl);
-highlightjs.registerLanguage("xml", xml);
-highlightjs.registerLanguage("yaml", yaml);
-highlightjs.registerLanguage("diff", diff);
-highlightjs.registerLanguage("protobuf", protobuf);
+hljs.registerLanguage("bash", bash);
+hljs.registerLanguage("clojure", clojure);
+hljs.registerLanguage("cpp", cpp);
+hljs.registerLanguage("csharp", csharp);
+hljs.registerLanguage("cs", csharp); // 别名
+hljs.registerLanguage("css", css);
+hljs.registerLanguage("dart", dart);
+hljs.registerLanguage("dockerfile", dockerfile);
+hljs.registerLanguage("erlang", erlang);
+hljs.registerLanguage("go", go);
+hljs.registerLanguage("gradle", gradle);
+hljs.registerLanguage("groovy", groovy);
+hljs.registerLanguage("haskell", haskell);
+hljs.registerLanguage("java", java);
+hljs.registerLanguage("javascript", javascript);
+hljs.registerLanguage("js", javascript); // 别名
+hljs.registerLanguage("json", json);
+hljs.registerLanguage("julia", julia);
+hljs.registerLanguage("kotlin", kotlin);
+hljs.registerLanguage("lisp", lisp);
+hljs.registerLanguage("lua", lua);
+hljs.registerLanguage("makefile", makefile);
+hljs.registerLanguage("markdown", markdown);
+hljs.registerLanguage("matlab", matlab);
+hljs.registerLanguage("objectivec", objectivec);
+hljs.registerLanguage("perl", perl);
+hljs.registerLanguage("php", php);
+hljs.registerLanguage("python", python);
+hljs.registerLanguage("r", r);
+hljs.registerLanguage("ruby", ruby);
+hljs.registerLanguage("rust", rust);
+hljs.registerLanguage("scala", scala);
+hljs.registerLanguage("shell", shell);
+hljs.registerLanguage("sql", sql);
+hljs.registerLanguage("swift", swift);
+hljs.registerLanguage("latex", latex);
+hljs.registerLanguage("tex", latex); // 别名
+hljs.registerLanguage("typescript", typescript);
+hljs.registerLanguage("ts", typescript); // 别名
+hljs.registerLanguage("verilog", verilog);
+hljs.registerLanguage("vhdl", vhdl);
+hljs.registerLanguage("xml", xml);
+hljs.registerLanguage("html", xml); // 别名
+hljs.registerLanguage("yaml", yaml);
+hljs.registerLanguage("diff", diff);
+hljs.registerLanguage("protobuf", protobuf);
 
-export default highlightjs;
+export default hljs;

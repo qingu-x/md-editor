@@ -3,7 +3,7 @@
   max-width: 677px;
   margin: 0 auto;
   font-family: "Optima", "Georgia", "PingFang SC", "Microsoft YaHei", serif;
-  color: #2F3E32;
+  color: #2f3e32;
   background-color: transparent;
   /* 透明背景，兼容微信深色模式 */
   word-break: break-word;
@@ -13,10 +13,10 @@
 #wemd p {
   margin-top: 26px;
   margin-bottom: 26px;
-  line-height: 2.0;
+  line-height: 2;
   letter-spacing: 0.5px;
   text-align: justify;
-  color: #3A4D39;
+  color: #3a4d39;
   font-size: 16px;
 }
 
@@ -31,11 +31,11 @@
   display: inline-block;
   font-size: 24px;
   font-weight: normal;
-  color: #1A261D;
+  color: #1a261d;
   padding: 12px 24px;
   border: 1px solid #739072;
   border-radius: 2px;
-  background-color: #F1F4F0;
+  background-color: #f1f4f0;
   letter-spacing: 2px;
 }
 
@@ -49,7 +49,7 @@
   margin-top: 50px;
   margin-bottom: 24px;
   text-align: left;
-  border-bottom: 1px solid #E8EBE9;
+  border-bottom: 1px solid #e8ebe9;
   padding-bottom: 10px;
 }
 
@@ -57,9 +57,9 @@
   display: inline-block;
   font-size: 19px;
   font-weight: 700;
-  color: #4F6F52;
+  color: #4f6f52;
   padding-left: 12px;
-  border-left: 5px solid #4F6F52;
+  border-left: 5px solid #4f6f52;
   line-height: 1.2;
   letter-spacing: 1px;
 }
@@ -102,7 +102,7 @@
   font-size: 15px;
   font-weight: 700;
   color: #fff;
-  background-color: #86A789;
+  background-color: #86a789;
   padding: 4px 10px;
   border-radius: 4px;
   line-height: 1.4;
@@ -118,7 +118,7 @@
   list-style-type: disc;
   padding-left: 20px;
   margin: 20px 0;
-  color: #86A789;
+  color: #86a789;
 }
 
 #wemd ul li {
@@ -127,7 +127,7 @@
 }
 
 #wemd li section {
-  color: #3A4D39;
+  color: #3a4d39;
   font-size: 16px;
 }
 
@@ -136,13 +136,13 @@
   list-style-type: decimal;
   padding-left: 20px;
   margin: 20px 0;
-  color: #4F6F52;
+  color: #4f6f52;
   font-weight: bold;
 }
 
 #wemd ul ul {
   list-style-type: circle;
-  color: #4F6F52;
+  color: #4f6f52;
   margin-top: 8px;
 }
 
@@ -157,7 +157,7 @@
 }
 
 #wemd ol li section {
-  color: #3A4D39;
+  color: #3a4d39;
   font-weight: normal;
   font-size: 16px;
 }
@@ -168,7 +168,7 @@
 #wemd .multiquote-3 {
   margin: 36px 0;
   padding: 24px;
-  background-color: #F6F8F6;
+  background-color: #f6f8f6;
   border: 1px dashed #739072;
   border-radius: 8px;
   overflow: visible !important;
@@ -178,7 +178,7 @@
 #wemd .multiquote-2 p,
 #wemd .multiquote-3 p {
   margin: 0;
-  color: #556B58;
+  color: #556b58;
   font-size: 15px;
   line-height: 1.8;
   font-family: "KaiTi", "STKaiti", serif;
@@ -186,18 +186,22 @@
 
 /* 链接 */
 #wemd a {
-  color: #4F6F52;
+  color: #4f6f52;
   text-decoration: none;
-  border-bottom: 1px solid #4F6F52;
+  border-bottom: 1px solid #4f6f52;
   font-weight: 600;
   padding-bottom: 0px;
 }
 
 /* 加粗 */
 #wemd strong {
-  color: #1A261D;
+  color: #1a261d;
   font-weight: 700;
-  background: linear-gradient(to top, rgba(134, 167, 137, 0.4) 50%, transparent 50%);
+  background: linear-gradient(
+    to top,
+    rgba(134, 167, 137, 0.4) 50%,
+    transparent 50%
+  );
   margin: 0 2px;
   padding: 0 2px;
 }
@@ -209,31 +213,35 @@
 }
 
 #wemd em strong {
-  color: #4F6F52;
+  color: #4f6f52;
 }
 
 /* 高亮 - 浅绿背景 */
 #wemd mark {
-  background: linear-gradient(to top, rgba(134, 167, 137, 0.3) 50%, transparent 50%);
-  color: #1A261D;
+  background: linear-gradient(
+    to top,
+    rgba(134, 167, 137, 0.3) 50%,
+    transparent 50%
+  );
+  color: #1a261d;
   padding: 0 2px;
 }
 
 /* 删除线 */
 #wemd del {
   text-decoration: line-through;
-  color: #889E8B;
+  color: #889e8b;
 }
 
-/* 
- * 分隔线 
+/*
+ * 分隔线
  * 修复了这里无效的颜色代码 #D2DSD4
  */
 #wemd hr {
   margin: 60px auto;
   border: 0;
   height: 1px;
-  background-color: #D2D4D4;
+  background-color: #d2d4d4;
   /* 已修正 */
   width: 60%;
 }
@@ -252,7 +260,7 @@
 
 #wemd figcaption {
   font-size: 13px;
-  color: #889E8B;
+  color: #889e8b;
   margin-top: 10px;
   font-family: serif;
 }
@@ -260,8 +268,8 @@
 /* 行内代码 */
 #wemd p code,
 #wemd li code {
-  color: #4F6F52;
-  background: #EDF1EE;
+  color: #4f6f52;
+  background: #edf1ee;
   border: none;
   padding: 3px 6px;
   margin: 0 4px;
@@ -275,7 +283,7 @@
 #wemd pre code.hljs {
   display: block;
   padding: 20px;
-  background: #F0F2F0;
+  background: #f0f2f0;
   /* color 由 .hljs 语法高亮主题控制 */
   font-size: 13px;
   line-height: 1.6;
@@ -284,18 +292,18 @@
   overflow-x: auto;
   white-space: pre;
   min-width: max-content;
-  border: 1px solid #DCE3DD;
+  border: 1px solid #dce3dd;
 }
 
 /* 如果没有语法高亮，设置默认深绿色 */
 #wemd pre code:not(.hljs) {
-  color: #3A4D39;
-  background: #F0F2F0;
-  border: 1px solid #DCE3DD;
+  color: #3a4d39;
+  background: #f0f2f0;
+  border: 1px solid #dce3dd;
 }
 
-/* 
- * 表格 
+/*
+ * 表格
  * 修复了这里无效的颜色代码 #D2DSD4
  */
 #wemd table {
@@ -303,22 +311,22 @@
   border-collapse: collapse;
   margin: 40px 0;
   font-size: 14px;
-  border: 1px solid #D2D4D4;
+  border: 1px solid #d2d4d4;
   /* 已修正 */
 }
 
 #wemd table tr th {
-  background: #EDF1EE;
-  color: #4F6F52;
+  background: #edf1ee;
+  color: #4f6f52;
   font-weight: 700;
-  border: 1px solid #D2D4D4;
+  border: 1px solid #d2d4d4;
   /* 已修正 */
   padding: 12px 10px;
   text-align: left;
 }
 
 #wemd table tr td {
-  border: 1px solid #D2D4D4;
+  border: 1px solid #d2d4d4;
   /* 已修正 */
   padding: 12px 10px;
   color: #555;
@@ -328,15 +336,15 @@
 /* 脚注 */
 #wemd .footnote-word,
 #wemd .footnote-ref {
-  color: #4F6F52;
+  color: #4f6f52;
 }
 
 #wemd .footnotes-sep {
-  border-top: 1px solid #E8EBE9;
+  border-top: 1px solid #e8ebe9;
   padding-top: 20px;
   margin-top: 60px;
   font-size: 12px;
-  color: #B0BEB3;
+  color: #b0beb3;
   text-align: center;
 }
 
@@ -347,7 +355,7 @@
 }
 
 #wemd .footnote-item p {
-  color: #889E8B;
+  color: #889e8b;
   font-size: 12px;
   margin: 4px 0;
 }
@@ -366,7 +374,7 @@
 #wemd .callout {
   margin: 30px 0;
   padding: 20px;
-  background: #F6F8F6;
+  background: #f6f8f6;
   border: 1px dashed #739072;
   border-radius: 8px;
 }
@@ -374,7 +382,7 @@
 #wemd .callout-title {
   font-weight: 700;
   margin-bottom: 10px;
-  color: #4F6F52;
+  color: #4f6f52;
   font-size: 15px;
 }
 
@@ -382,10 +390,21 @@
   margin-right: 6px;
 }
 
-#wemd .callout-note { border-left: 4px solid #739072; }
-#wemd .callout-info { border-left: 4px solid #4F6F52; }
-#wemd .callout-tip { border-left: 4px solid #86A789; }
-#wemd .callout-success { border-left: 4px solid #4F6F52; }
-#wemd .callout-warning { border-left: 4px solid #D98C45; }
-#wemd .callout-danger { border-left: 4px solid #B33D25; }
-
+#wemd .callout-note {
+  border-left: 4px solid #739072;
+}
+#wemd .callout-info {
+  border-left: 4px solid #4f6f52;
+}
+#wemd .callout-tip {
+  border-left: 4px solid #86a789;
+}
+#wemd .callout-success {
+  border-left: 4px solid #4f6f52;
+}
+#wemd .callout-warning {
+  border-left: 4px solid #d98c45;
+}
+#wemd .callout-danger {
+  border-left: 4px solid #b33d25;
+}

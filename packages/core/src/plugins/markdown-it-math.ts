@@ -1,10 +1,13 @@
 import katex from "katex";
 
 const escapeHtml = (str: string) =>
-  str.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
+  str
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;");
 
-const escapeAttribute = (str: string) =>
-  escapeHtml(str).replace(/'/g, "&#39;");
+const escapeAttribute = (str: string) => escapeHtml(str).replace(/'/g, "&#39;");
 
 const renderMathJax = (latex: string, display: boolean): string | null => {
   if (typeof window === "undefined") return null;
@@ -193,12 +196,7 @@ function math_block(state, start, end, silent) {
       break;
     }
 
-    if (
-      state.src
-        .slice(pos, max)
-        .trim()
-        .slice(-2) === "$$"
-    ) {
+    if (state.src.slice(pos, max).trim().slice(-2) === "$$") {
       lastPos = state.src.slice(0, max).lastIndexOf("$$");
       lastLine = state.src.slice(pos, lastPos);
       found = true;
@@ -224,7 +222,7 @@ export default (md, options) => {
   options = options || {};
 
   // set KaTeX as the renderer for markdown-it-simplemath
-  var katexInline = function(latex) {
+  var katexInline = function (latex) {
     options.displayMode = false;
     const mathJaxContent = renderMathJax(latex, false);
     if (mathJaxContent) {
@@ -244,11 +242,11 @@ export default (md, options) => {
     }
   };
 
-  var inlineRenderer = function(tokens, idx) {
+  var inlineRenderer = function (tokens, idx) {
     return katexInline(tokens[idx].content);
   };
 
-  var katexBlock = function(latex) {
+  var katexBlock = function (latex) {
     options.displayMode = true;
     const mathJaxContent = renderMathJax(latex, true);
     if (mathJaxContent) {
@@ -268,7 +266,7 @@ export default (md, options) => {
     }
   };
 
-  var blockRenderer = function(tokens, idx) {
+  var blockRenderer = function (tokens, idx) {
     return katexBlock(tokens[idx].content) + "\n";
   };
 

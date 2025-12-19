@@ -226,8 +226,8 @@ export const morandiForestTheme = `/* 莫兰迪森林风格 */
   color: #889E8B;
 }
 
-/* 
- * 分隔线 
+/*
+ * 分隔线
  * 修复了这里无效的颜色代码 #D2DSD4
  */
 #wemd hr {
@@ -295,8 +295,8 @@ export const morandiForestTheme = `/* 莫兰迪森林风格 */
   border: 1px solid #DCE3DD;
 }
 
-/* 
- * 表格 
+/*
+ * 表格
  * 修复了这里无效的颜色代码 #D2DSD4
  */
 #wemd table {

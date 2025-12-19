@@ -23,7 +23,7 @@ export const receiptTheme = `/* 购物小票风格 */
     font-size: 15px;
 }
 
-/* 
+/*
  * 一级标题 - 店铺招牌风格
  * 改为：上下双虚线包裹，居中，加大字重
  */
@@ -275,7 +275,7 @@ export const receiptTheme = `/* 购物小票风格 */
     padding-top: 6px;
 }
 
-/* 
+/*
  * 代码块 - 暴力修复版
  * 1. !important 强制覆盖编辑器的深色主题
  * 2. 去除圆角和阴影

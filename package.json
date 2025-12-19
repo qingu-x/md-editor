@@ -1,20 +1,70 @@
 {
-    "name": "wemd-monorepo",
-    "private": true,
-    "packageManager": "pnpm@9.0.2",
-    "scripts": {
-        "build": "turbo run build",
-        "dev": "turbo run dev",
-        "dev:web": "pnpm --filter @wemd/web run dev",
-        "dev:electron": "ELECTRON_START_URL=http://localhost:5173 NODE_ENV=development pnpm --filter wemd-electron run dev -- --dev",
-        "dev:desktop": "node scripts/run-desktop-dev.mjs",
-        "lint": "turbo run lint",
-        "format": "prettier --write \"**/*.{ts,tsx,md}\""
+  "name": "wemd-monorepo",
+  "private": true,
+  "version": "1.1.7",
+  "description": "WeMD - 更优雅的 Markdown 公众号排版工具",
+  "packageManager": "pnpm@9.0.2",
+  "engines": {
+    "node": ">=18.0.0",
+    "pnpm": ">=9.0.0"
+  },
+  "scripts": {
+    "build": "turbo run build",
+    "build:web": "pnpm --filter @wemd/web run build",
+    "build:server": "pnpm --filter @wemd/server run build",
+    "build:electron": "pnpm --filter wemd-electron run build:mac",
+    "dev": "turbo run dev",
+    "dev:web": "pnpm --filter @wemd/web run dev",
+    "dev:server": "pnpm --filter @wemd/server run dev",
+    "dev:electron": "ELECTRON_START_URL=http://localhost:5173 NODE_ENV=development pnpm --filter wemd-electron run dev -- --dev",
+    "dev:desktop": "node scripts/run-desktop-dev.mjs",
+    "lint": "turbo run lint",
+    "lint:fix": "turbo run lint -- --fix",
+    "type-check": "turbo run type-check",
+    "format": "prettier --write \"**/*.{ts,tsx,vue,js,json,md}\"",
+    "format:check": "prettier --check \"**/*.{ts,tsx,vue,js,json,md}\"",
+    "clean": "turbo run clean && rm -rf node_modules",
+    "clean:cache": "turbo daemon clean && rm -rf .turbo node_modules/.cache",
+    "prepare": "husky install || true"
+  },
+  "devDependencies": {
+    "@types/node": "^22.0.0",
+    "eslint": "^9.0.0",
+    "eslint-config-prettier": "^10.0.0",
+    "eslint-plugin-prettier": "^5.0.0",
+    "husky": "^9.0.0",
+    "lint-staged": "^15.0.0",
+    "prettier": "^3.3.0",
+    "turbo": "^2.0.0",
+    "typescript": "^5.6.0",
+    "wait-on": "^7.0.1"
+  },
+  "pnpm": {
+    "overrides": {
+      "glob@<8": ">=10.0.0",
+      "inflight": ">=2.0.0",
+      "uuid@<8": ">=10.0.0",
+      "core-js@<3": ">=3.0.0",
+      "request": "npm:@cypress/request@^3.0.0",
+      "har-validator": ">=5.1.6",
+      "boolean": ">=3.2.0",
+      "lodash.pick": "npm:lodash@^4.17.21",
+      "querystring": "npm:qs@^6.13.0"
     },
-    "devDependencies": {
-        "wait-on": "^7.0.1",
-        "turbo": "^2.0.0",
-        "prettier": "^3.0.0",
-        "typescript": "^5.0.0"
+    "peerDependencyRules": {
+      "ignoreMissing": [
+        "@algolia/client-search",
+        "search-insights"
+      ]
     }
+  },
+  "lint-staged": {
+    "*.{ts,tsx,vue}": [
+      "eslint --fix",
+      "prettier --write"
+    ],
+    "*.{js,json,md}": [
+      "prettier --write"
+    ]
+  }
 }

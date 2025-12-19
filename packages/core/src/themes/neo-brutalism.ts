@@ -23,7 +23,7 @@ export const neoBrutalismTheme = `/* 新粗野主义风格 */
     font-weight: 400;
 }
 
-/* 
+/*
  * 一级标题 - 像一个醒目的标签盒子
  * 设计：粗边框 + 荧光黄背景 + 硬阴影
  */
@@ -53,7 +53,7 @@ export const neoBrutalismTheme = `/* 新粗野主义风格 */
     display: none;
 }
 
-/* 
+/*
  * 二级标题 - 下划线高亮
  * 设计：文字下方的厚实色块
  */
@@ -85,7 +85,7 @@ export const neoBrutalismTheme = `/* 新粗野主义风格 */
     display: none;
 }
 
-/* 
+/*
  * 三级标题 - 几何引导
  */
 #wemd h3 {
@@ -109,7 +109,7 @@ export const neoBrutalismTheme = `/* 新粗野主义风格 */
     display: none;
 }
 
-/* 
+/*
  * 四级标题 - 反色黑盒
  */
 #wemd h4 {
@@ -136,7 +136,7 @@ export const neoBrutalismTheme = `/* 新粗野主义风格 */
     display: none;
 }
 
-/* 
+/*
  * 列表 - 强烈的几何感
  * 必须使用正方形
  */
@@ -196,7 +196,7 @@ export const neoBrutalismTheme = `/* 新粗野主义风格 */
     font-weight: 900;
 }
 
-/* 
+/*
  * 引用 - 视窗风格 (Window Style)
  * 这是一个带粗边框和硬阴影的盒子
  */
@@ -253,7 +253,7 @@ export const neoBrutalismTheme = `/* 新粗野主义风格 */
     transition: all 0.2s;
 }
 
-/* 
+/*
  * 加粗 - 故障风效果
  * 紫色背景 + 白字
  */
@@ -304,7 +304,7 @@ export const neoBrutalismTheme = `/* 新粗野主义风格 */
     width: 100%;
 }
 
-/* 
+/*
  * 图片 - 拍立得效果
  * 粗框 + 硬阴影
  */

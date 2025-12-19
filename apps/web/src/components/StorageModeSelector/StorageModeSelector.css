@@ -115,3 +115,51 @@
   cursor: pointer;
   color: var(--text-secondary);
 }
+
+.storage-modal-close:hover {
+  color: var(--text-primary);
+}
+
+.storage-modal-footer {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 12px;
+  margin-top: 20px;
+  padding-top: 16px;
+  border-top: 1px solid var(--border-light);
+}
+
+.storage-modal-footer .btn-primary,
+.storage-modal-footer .btn-secondary {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  padding: 10px 20px;
+  border: none;
+  border-radius: var(--radius-md);
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.storage-modal-footer .btn-primary {
+  background: var(--accent-primary);
+  color: #ffffff;
+}
+
+.storage-modal-footer .btn-primary:hover {
+  background: color-mix(in srgb, var(--accent-primary) 85%, #000000);
+}
+
+.storage-modal-footer .btn-secondary {
+  background: var(--bg-secondary);
+  color: var(--text-primary);
+  border: 1px solid var(--border-light);
+}
+
+.storage-modal-footer .btn-secondary:hover {
+  background: var(--bg-hover);
+}

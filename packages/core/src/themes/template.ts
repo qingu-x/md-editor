@@ -2,33 +2,33 @@ export const templateTheme = `/*
  * ============================================
  * WeMD 主题模板
  * ============================================
- * 
+ *
  * 使用说明：
  * 1. 修改下方的样式定义，创建你的自定义主题
  * 2. 所有选择器必须以 #wemd 开头
  * 3. 代码块使用 #wemd pre code.hljs，不要设置全局 color
- * 
+ *
  * ============================================
  * 🌙 深色模式说明（微信兼容）
  * ============================================
- * 
+ *
  * ✅ 支持自动转换的颜色格式：
  *   - HEX: #333333, #fff
  *   - RGB: rgb(51, 51, 51), rgba(0, 0, 0, 0.5)
  *   - HSL: hsl(0, 0%, 20%), hsla(0, 0%, 0%, 0.5)
  *   - 渐变: linear-gradient(), radial-gradient() 中的色值
- * 
+ *
  * 🔄 智能转换规则（色彩语义保全）：
  *   - 灰度背景 → 映射到深色区间 (10%-20% 亮度)
  *   - 高饱和色彩 (S>15%) → 保持鲜艳，亮度钳制在 35%-55%
  *   - 深色阴影/边框 (L<20) → 锚定为暗色，不反转
  *   - 文字颜色 → 动态对比度调整以保证可读性
- * 
+ *
  * ⚠️ 不会被转换：
  *   - CSS 变量: var(--xxx)
  *   - 图片: url()
  *   - 颜色名称: white, black（请使用 HEX 格式）
- * 
+ *
  * 💡 设计建议：
  *   - 背景色用透明或浅灰，利于自动适配
  *   - 彩色装饰保持原值，算法自动保护
@@ -76,7 +76,7 @@ export const templateTheme = `/*
  *   <span class="content">标题文字</span>
  *   <span class="suffix"></span>
  * </h1>
- * 
+ *
  * 可以通过 .prefix 和 .suffix 添加装饰元素
  */
 
@@ -323,19 +323,19 @@ export const templateTheme = `/*
 /* ============================================
  * 9. 代码块样式（重要！）
  * ============================================
- * 
+ *
  * ⚠️ 重要提示：
  * 1. 必须使用 #wemd pre code.hljs 选择器，不要使用 #wemd pre code
  * 2. 不要设置全局 color 属性，让语法高亮主题控制文字颜色
  * 3. 如果设置了 color，会覆盖语法高亮的颜色，导致代码看不清
  * 4. 使用 #wemd pre code:not(.hljs) 作为后备样式（无语法高亮时）
- * 
+ *
  * 示例（正确）：
  * #wemd pre code.hljs {
  *     background: #f5f5f5;
  *     // 不设置 color
  * }
- * 
+ *
  * 示例（错误）：
  * #wemd pre code {
  *     color: #333;  // ❌ 这会覆盖语法高亮
@@ -514,7 +514,7 @@ export const templateTheme = `/*
 /* ============================================
  * 16. 提示块样式（Callout）
  * ============================================
- * 
+ *
  * 提示块用于显示不同类型的提示信息
  * 支持的类型：note、info、tip、success、warning、danger
  */
@@ -540,34 +540,34 @@ export const templateTheme = `/*
 }
 
 /* 不同类型的提示块 */
-#wemd .callout-note { 
-    border-left-color: #6366f1; 
-    background: #f5f5ff; 
+#wemd .callout-note {
+    border-left-color: #6366f1;
+    background: #f5f5ff;
 }
 
-#wemd .callout-info { 
-    border-left-color: #0ea5e9; 
-    background: #f0f9ff; 
+#wemd .callout-info {
+    border-left-color: #0ea5e9;
+    background: #f0f9ff;
 }
 
-#wemd .callout-tip { 
-    border-left-color: #10b981; 
-    background: #ecfdf5; 
+#wemd .callout-tip {
+    border-left-color: #10b981;
+    background: #ecfdf5;
 }
 
-#wemd .callout-success { 
-    border-left-color: #10b981; 
-    background: #ecfdf5; 
+#wemd .callout-success {
+    border-left-color: #10b981;
+    background: #ecfdf5;
 }
 
-#wemd .callout-warning { 
-    border-left-color: #f59e0b; 
-    background: #fffbeb; 
+#wemd .callout-warning {
+    border-left-color: #f59e0b;
+    background: #fffbeb;
 }
 
-#wemd .callout-danger { 
-    border-left-color: #ef4444; 
-    background: #fff5f5; 
+#wemd .callout-danger {
+    border-left-color: #ef4444;
+    background: #fff5f5;
 }
 
 /* ============================================

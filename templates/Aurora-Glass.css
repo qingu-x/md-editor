@@ -2,7 +2,9 @@
   padding: 24px 20px;
   max-width: 677px;
   margin: 0 auto;
-  font-family: -apple-system, BlinkMacSystemFont, "Helvetica Neue", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
+  font-family:
+    -apple-system, BlinkMacSystemFont, "Helvetica Neue", "PingFang SC",
+    "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
   color: #333;
   /* 背景透明，兼容微信深色模式 */
   background-color: transparent;
@@ -20,7 +22,7 @@
   font-size: 16px;
 }
 
-/* 
+/*
  * 一级标题 - 渐变流光文字
  * 使用 background-clip 实现文字渐变
  */
@@ -35,7 +37,12 @@
   font-weight: 800;
   display: inline-block;
   /* 核心渐变色：蓝 -> 紫 -> 粉 */
-  background-image: linear-gradient(135deg, #4158D0 0%, #C850C0 46%, #FFCC70 100%);
+  background-image: linear-gradient(
+    135deg,
+    #4158d0 0%,
+    #c850c0 46%,
+    #ffcc70 100%
+  );
   -webkit-background-clip: text;
   background-clip: text;
   color: transparent;
@@ -44,7 +51,7 @@
   padding-bottom: 10px;
   /* 底部加一条极细的渐变线 */
   border-bottom: 2px solid #eee;
-  border-image: linear-gradient(135deg, #4158D0 0%, #C850C0 100%) 1;
+  border-image: linear-gradient(135deg, #4158d0 0%, #c850c0 100%) 1;
 }
 
 #wemd h1 .prefix,
@@ -52,7 +59,7 @@
   display: none;
 }
 
-/* 
+/*
  * 二级标题 - 悬浮渐变按钮
  * 看起来像一个精致的 APP 图标或按钮
  */
@@ -69,7 +76,7 @@
   color: #fff;
   /* 白字 */
   /* 同样的极光渐变背景 */
-  background-image: linear-gradient(90deg, #4158D0 0%, #C850C0 100%);
+  background-image: linear-gradient(90deg, #4158d0 0%, #c850c0 100%);
   padding: 8px 18px;
   border-radius: 20px 20px 20px 4px;
   /* 不对称圆角，更灵动 */
@@ -83,7 +90,7 @@
   display: none;
 }
 
-/* 
+/*
  * 三级标题 - 渐变下划线
  */
 #wemd h3 {
@@ -98,7 +105,11 @@
   display: inline-block;
   position: relative;
   /* 使用 background 模拟只有一半高度的下划线 */
-  background: linear-gradient(90deg, rgba(65, 88, 208, 0.2) 0%, rgba(200, 80, 192, 0.2) 100%);
+  background: linear-gradient(
+    90deg,
+    rgba(65, 88, 208, 0.2) 0%,
+    rgba(200, 80, 192, 0.2) 100%
+  );
   background-size: 100% 40%;
   /* 宽度100%，高度40% */
   background-repeat: no-repeat;
@@ -112,7 +123,7 @@
   display: none;
 }
 
-/* 
+/*
  * 四级标题 - 极简圆点
  */
 #wemd h4 {
@@ -125,7 +136,7 @@
   display: inline-block;
   font-size: 16px;
   font-weight: 700;
-  color: #4158D0;
+  color: #4158d0;
   background-color: #f0f2ff;
   padding: 4px 12px;
   border-radius: 12px;
@@ -137,14 +148,14 @@
   display: none;
 }
 
-/* 
+/*
  * 列表 - 炫彩圆点
  */
 #wemd ul {
   list-style-type: disc;
   padding-left: 20px;
   margin: 20px 0;
-  color: #C850C0;
+  color: #c850c0;
   /* 列表符号粉紫色 */
 }
 
@@ -164,20 +175,20 @@
   list-style-type: decimal;
   padding-left: 20px;
   margin: 20px 0;
-  color: #4158D0;
+  color: #4158d0;
   /* 数字深蓝 */
   font-weight: bold;
 }
 
 #wemd ul ul {
   list-style-type: circle;
-  color: #4158D0;
+  color: #4158d0;
   margin-top: 8px;
 }
 
 #wemd ol ol {
   list-style-type: lower-roman;
-  color: #C850C0;
+  color: #c850c0;
 }
 
 #wemd ol li {
@@ -191,7 +202,7 @@
   font-size: 16px;
 }
 
-/* 
+/*
  * 引用 - 磨砂玻璃卡片
  * 白底 + 柔和彩色投影 + 细微边框
  */
@@ -203,10 +214,12 @@
   background-color: #fff;
   border: 1px solid rgba(255, 255, 255, 0.8);
   /* 关键：双重投影，一层白光，一层彩光 */
-  box-shadow: -4px -4px 10px rgba(255, 255, 255, 0.8), 4px 4px 20px rgba(65, 88, 208, 0.1);
+  box-shadow:
+    -4px -4px 10px rgba(255, 255, 255, 0.8),
+    4px 4px 20px rgba(65, 88, 208, 0.1);
   border-radius: 16px;
   /* 顶部渐变装饰条 */
-  border-top: 4px solid #C850C0;
+  border-top: 4px solid #c850c0;
   overflow: visible !important;
 }
 
@@ -221,20 +234,20 @@
 
 /* 链接 - 渐变虚线 */
 #wemd a {
-  color: #C850C0;
+  color: #c850c0;
   text-decoration: none;
-  border-bottom: 1px dashed #C850C0;
+  border-bottom: 1px dashed #c850c0;
   font-weight: 600;
   padding-bottom: 1px;
 }
 
-/* 
+/*
  * 加粗 - 渐变文字
  * 与 H1 呼应，非常高级
  */
 #wemd strong {
   font-weight: 700;
-  background-image: linear-gradient(135deg, #4158D0 0%, #C850C0 100%);
+  background-image: linear-gradient(135deg, #4158d0 0%, #c850c0 100%);
   -webkit-background-clip: text;
   background-clip: text;
   color: transparent;
@@ -247,27 +260,31 @@
 
 /* 斜体 */
 #wemd em {
-  color: #C850C0;
+  color: #c850c0;
   font-style: italic;
 }
 
 #wemd em strong {
-  color: #C850C0;
+  color: #c850c0;
 }
 
 /* 高亮 - 渐变背景 */
 #wemd mark {
-    background: linear-gradient(135deg, rgba(65, 88, 208, 0.15), rgba(200, 80, 192, 0.15));
-    color: #4158D0;
-    padding: 2px 4px;
-    border-radius: 3px;
+  background: linear-gradient(
+    135deg,
+    rgba(65, 88, 208, 0.15),
+    rgba(200, 80, 192, 0.15)
+  );
+  color: #4158d0;
+  padding: 2px 4px;
+  border-radius: 3px;
 }
 
 /* 删除线 - 渐变色 */
 #wemd del {
-    text-decoration: line-through;
-    color: #999;
-    text-decoration-color: #C850C0;
+  text-decoration: line-through;
+  color: #999;
+  text-decoration-color: #c850c0;
 }
 
 /* 分隔线 - 渐变光束 */
@@ -275,7 +292,12 @@
   margin: 60px auto;
   border: 0;
   height: 2px;
-  background-image: linear-gradient(90deg, rgba(247, 249, 252, 0) 0%, #C850C0 50%, rgba(247, 249, 252, 0) 100%);
+  background-image: linear-gradient(
+    90deg,
+    rgba(247, 249, 252, 0) 0%,
+    #c850c0 50%,
+    rgba(247, 249, 252, 0) 100%
+  );
   width: 80%;
 }
 
@@ -292,7 +314,7 @@
 /* 行内代码 - 气泡风格 */
 #wemd p code,
 #wemd li code {
-  color: #4158D0;
+  color: #4158d0;
   background: #f0f2ff;
   border: 1px solid rgba(65, 88, 208, 0.1);
   padding: 3px 6px;
@@ -374,7 +396,7 @@
 
 #wemd table tr th {
   background: #f4f6f9;
-  color: #4158D0;
+  color: #4158d0;
   font-weight: 700;
   border: 1px solid #f0f0f0;
   padding: 12px 10px;
@@ -391,7 +413,7 @@
 /* 脚注 */
 #wemd .footnote-word,
 #wemd .footnote-ref {
-  color: #4158D0;
+  color: #4158d0;
 }
 
 #wemd .footnotes-sep {
@@ -406,7 +428,7 @@
 #wemd .footnote-num {
   font-weight: bold;
   color: #fff;
-  background: #C850C0;
+  background: #c850c0;
   border-radius: 50%;
   width: 16px;
   height: 16px;
@@ -448,7 +470,7 @@
 #wemd .callout-title {
   font-weight: 700;
   margin-bottom: 10px;
-  background: linear-gradient(135deg, #4158D0, #C850C0);
+  background: linear-gradient(135deg, #4158d0, #c850c0);
   -webkit-background-clip: text;
   background-clip: text;
   color: transparent;
@@ -464,11 +486,11 @@
 }
 
 #wemd .callout-info {
-  border-left: 4px solid #4158D0;
+  border-left: 4px solid #4158d0;
 }
 
 #wemd .callout-tip {
-  border-left: 4px solid #C850C0;
+  border-left: 4px solid #c850c0;
 }
 
 #wemd .callout-success {
@@ -476,10 +498,9 @@
 }
 
 #wemd .callout-warning {
-  border-left: 4px solid #FFCC70;
+  border-left: 4px solid #ffcc70;
 }
 
 #wemd .callout-danger {
   border-left: 4px solid #ef4444;
 }
-

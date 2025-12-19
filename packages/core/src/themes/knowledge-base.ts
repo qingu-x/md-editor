@@ -23,7 +23,7 @@ export const knowledgeBaseTheme = `/* 知识库风格 */
     font-size: 16px;
 }
 
-/* 
+/*
  * 一级标题 - 页面标题感
  * 就像笔记页面的最顶端标题
  */
@@ -49,7 +49,7 @@ export const knowledgeBaseTheme = `/* 知识库风格 */
     display: none;
 }
 
-/* 
+/*
  * 二级标题 - 区块分割
  * 带有浅灰色背景条，类似 Notion 的 H1 block
  */
@@ -77,7 +77,7 @@ export const knowledgeBaseTheme = `/* 知识库风格 */
     display: none;
 }
 
-/* 
+/*
  * 三级标题 - 重点标记
  * 像是给文字加了颜色标记
  */
@@ -123,7 +123,7 @@ export const knowledgeBaseTheme = `/* 知识库风格 */
     display: none;
 }
 
-/* 
+/*
  * 列表 - 结构化缩进
  */
 #wemd ul {
@@ -172,7 +172,7 @@ export const knowledgeBaseTheme = `/* 知识库风格 */
     font-size: 16px;
 }
 
-/* 
+/*
  * 引用 - Callout 提示框风格
  * 这是这款主题的灵魂
  */
@@ -223,7 +223,7 @@ export const knowledgeBaseTheme = `/* 知识库风格 */
     transition: border-color 0.2s;
 }
 
-/* 
+/*
  * 加粗 - 黄色高光笔
  * 完全复刻 Notion 的 Highlight 效果
  */
@@ -292,7 +292,7 @@ export const knowledgeBaseTheme = `/* 知识库风格 */
     font-size: 14px;
 }
 
-/* 
+/*
  * 行内代码 - 经典的红字灰底
  */
 #wemd p code,
@@ -415,32 +415,32 @@ export const knowledgeBaseTheme = `/* 知识库风格 */
     margin-right: 6px;
 }
 
-#wemd .callout-note { 
+#wemd .callout-note {
     background: #F1F1EF;
     border-left-color: #37352F;
 }
 
-#wemd .callout-info { 
+#wemd .callout-info {
     background: #E7F3F8;
     border-left-color: #2D9CDB;
 }
 
-#wemd .callout-tip { 
+#wemd .callout-tip {
     background: #FDF5F2;
     border-left-color: #F2994A;
 }
 
-#wemd .callout-success { 
+#wemd .callout-success {
     background: #EDF7ED;
     border-left-color: #4CAF50;
 }
 
-#wemd .callout-warning { 
+#wemd .callout-warning {
     background: #FFF4E5;
     border-left-color: #FF9800;
 }
 
-#wemd .callout-danger { 
+#wemd .callout-danger {
     background: #FFEBEE;
     border-left-color: #F44336;
 }

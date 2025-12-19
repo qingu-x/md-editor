@@ -219,7 +219,7 @@ export const academicPaperTheme = `/* 学术论文风格 */
     font-style: italic;
 }
 
-/* 
+/*
  * 行内代码 - LaTeX \texttt 风格 (修复重点)
  * 纯黑文字 + 极淡灰底 + 等宽字体
  */
@@ -349,33 +349,33 @@ export const academicPaperTheme = `/* 学术论文风格 */
     margin-right: 6px;
 }
 
-#wemd .callout-note { 
-    border-left: 4px solid #666; 
+#wemd .callout-note {
+    border-left: 4px solid #666;
     background: #f5f5f5;
 }
 
-#wemd .callout-info { 
-    border-left: 4px solid #888; 
+#wemd .callout-info {
+    border-left: 4px solid #888;
     background: #f5f5f5;
 }
 
-#wemd .callout-tip { 
-    border-left: 4px solid #555; 
+#wemd .callout-tip {
+    border-left: 4px solid #555;
     background: #f5f5f5;
 }
 
-#wemd .callout-success { 
-    border-left: 4px solid #333; 
+#wemd .callout-success {
+    border-left: 4px solid #333;
     background: #f5f5f5;
 }
 
-#wemd .callout-warning { 
-    border-left: 4px solid #999; 
+#wemd .callout-warning {
+    border-left: 4px solid #999;
     background: #f5f5f5;
 }
 
-#wemd .callout-danger { 
-    border-left: 4px solid #000; 
+#wemd .callout-danger {
+    border-left: 4px solid #000;
     background: #f5f5f5;
 }
 `;
