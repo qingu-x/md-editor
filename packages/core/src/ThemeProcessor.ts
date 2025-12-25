@@ -63,6 +63,23 @@ export const processHtml = (
   html = html.replace(/class="mjx-solid"/g, 'fill="none" stroke-width="70"');
   html = html.replace(/<mjx-assistive-mml.+?<\/mjx-assistive-mml>/g, "");
 
+  // 保护代码块中的空格，防止微信清洗时删除
+  html = html.replace(
+    /<code([^>]*class="[^"]*\bhljs\b[^"]*"[^>]*)>([\s\S]*?)<\/code>/g,
+    (match, attrs: string, inner: string) => {
+      let protected_ = inner;
+      protected_ = protected_.replace(/\t/g, "&nbsp;&nbsp;");
+      protected_ = protected_.replace(/<\/span> <span/g, " </span><span");
+      protected_ = protected_.replace(/\n( +)/g, (m, spaces: string) => {
+        return "\n" + "&nbsp;".repeat(spaces.length);
+      });
+      protected_ = protected_.replace(/^( +)/, (m, spaces: string) => {
+        return "&nbsp;".repeat(spaces.length);
+      });
+      return `<code${attrs}>${protected_}</code>`;
+    },
+  );
+
   // 将 HTML 包裹在 id="wemd" 的 section 中，以便 juice 能够匹配以 #wemd 开头的选择器
   const wrappedHtml = `<section id="${SECTION_ID}">${html}</section>`;
 

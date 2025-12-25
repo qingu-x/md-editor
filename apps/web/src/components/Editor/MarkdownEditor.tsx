@@ -3,6 +3,7 @@ import { EditorView, minimalSetup } from "codemirror";
 import { keymap } from "@codemirror/view";
 import { markdown, markdownLanguage } from "@codemirror/lang-markdown";
 import { EditorState, Prec } from "@codemirror/state";
+import { indentWithTab } from "@codemirror/commands";
 import { githubLight } from "@uiw/codemirror-theme-github";
 import {
   wechatMarkdownHighlighting,
@@ -51,6 +52,7 @@ const markdownKeymap = Prec.highest(
   keymap.of([
     { key: "Mod-b", run: (view) => wrapSelection(view, "**", "**") },
     { key: "Mod-i", run: (view) => wrapSelection(view, "*", "*") },
+    indentWithTab,
   ]),
 );
 
