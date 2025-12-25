@@ -19,6 +19,12 @@ interface EditorStore {
   markdown: string;
   setMarkdown: (markdown: string) => void;
 
+  // 编辑状态跟踪（通用，不依赖文件系统）
+  lastAutoSavedAt: Date | null; // 最后自动保存时间
+  isEditing: boolean; // 是否正在编辑（用于显示"编辑中"）
+  setLastAutoSavedAt: (time: Date | null) => void;
+  setIsEditing: (editing: boolean) => void;
+
   // 文件路径（本地文件模式）
   currentFilePath?: string;
   workspaceDir?: string;
@@ -145,7 +151,14 @@ $$
 
 export const useEditorStore = create<EditorStore>((set, get) => ({
   markdown: defaultMarkdown,
-  setMarkdown: (markdown) => set({ markdown }),
+  setMarkdown: (markdown) => set({ markdown, isEditing: true }),
+
+  // 编辑状态跟踪
+  lastAutoSavedAt: null,
+  isEditing: false,
+  setLastAutoSavedAt: (time) =>
+    set({ lastAutoSavedAt: time, isEditing: false }),
+  setIsEditing: (editing) => set({ isEditing: editing }),
 
   currentFilePath: undefined,
   workspaceDir: undefined,

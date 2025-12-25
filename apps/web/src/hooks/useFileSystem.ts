@@ -83,6 +83,7 @@ export function useFileSystem() {
     setLoading,
     setSaving,
     setLastSavedContent,
+    setLastSavedAt,
     setIsDirty,
     setIsRestoring, // 获取 setter
   } = useFileStore();
@@ -213,6 +214,7 @@ export function useFileSystem() {
             if (res.success) {
               setIsDirty(false);
               setLastSavedContent(fullContent);
+              setLastSavedAt(new Date());
               await refreshFiles();
             } else {
               console.error("切换前保存失败:", res.error);
@@ -225,6 +227,7 @@ export function useFileSystem() {
             await adapter.writeFile(currentCurrentFile.path, fullContent);
             setIsDirty(false); // 保存成功后重置脏状态
             setLastSavedContent(fullContent);
+            setLastSavedAt(new Date());
             // 刷新文件列表以更新 themeName 显示
             await refreshFiles();
           } catch (e) {
@@ -388,6 +391,7 @@ themeName: ${themeName}
 
       if (success) {
         setLastSavedContent(fullContent); // 更新全局已保存内容
+        setLastSavedAt(new Date()); // 记录保存时间
         setIsDirty(false); // 重置全局脏状态
         if (showToast) toast.success("已保存");
       } else {
