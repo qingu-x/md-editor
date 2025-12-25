@@ -1,10 +1,19 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useEditorStore } from "../../store/editorStore";
 import { ThemePanel } from "../Theme/ThemePanel";
 import { StorageModeSelector } from "../StorageModeSelector/StorageModeSelector";
 import { ImageHostSettings } from "../Settings/ImageHostSettings";
 import "./Header.css";
-import { Layers, Palette, Send, ImageIcon, Sun, Moon } from "lucide-react";
+import {
+  Layers,
+  Palette,
+  Send,
+  ImageIcon,
+  Sun,
+  Moon,
+  ChevronsUp,
+  ChevronsDown,
+} from "lucide-react";
 import { useUITheme } from "../../hooks/useUITheme";
 import { useWindowControls } from "../../hooks/useWindowControls";
 
@@ -40,6 +49,55 @@ const StructuralismLogoMark = () => (
   />
 );
 
+// 独立组件：窗口控制按钮
+const WindowControls = ({ fixed = false }: { fixed?: boolean }) => {
+  const { minimize, maximize, close } = useWindowControls();
+
+  return (
+    <div className={fixed ? "window-controls-fixed" : "window-controls"}>
+      <button
+        className="win-btn win-minimize"
+        onClick={() => minimize?.()}
+        aria-label="最小化"
+      >
+        <svg width="10" height="1" viewBox="0 0 10 1">
+          <rect width="10" height="1" fill="currentColor" />
+        </svg>
+      </button>
+      <button
+        className="win-btn win-maximize"
+        onClick={() => maximize?.()}
+        aria-label="最大化"
+      >
+        <svg width="10" height="10" viewBox="0 0 10 10">
+          <rect
+            width="9"
+            height="9"
+            x="0.5"
+            y="0.5"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="1"
+          />
+        </svg>
+      </button>
+      <button
+        className="win-btn win-close"
+        onClick={() => close?.()}
+        aria-label="关闭"
+      >
+        <svg width="10" height="10" viewBox="0 0 10 10">
+          <path
+            d="M0,0 L10,10 M10,0 L0,10"
+            stroke="currentColor"
+            strokeWidth="1.2"
+          />
+        </svg>
+      </button>
+    </div>
+  );
+};
+
 export function Header() {
   const { copyToWechat } = useEditorStore();
   const [showThemePanel, setShowThemePanel] = useState(false);
@@ -49,8 +107,32 @@ export function Header() {
   const setTheme = useUITheme((state) => state.setTheme);
   const isStructuralismUI = uiTheme === "dark";
 
-  const { isElectron, isWindows, platform, minimize, maximize, close } =
-    useWindowControls();
+  const { isElectron, isWindows, platform } = useWindowControls();
+
+  // 自动隐藏标题栏状态
+  const [autoHide, setAutoHide] = useState(() => {
+    if (typeof window === "undefined") return false;
+    try {
+      return localStorage.getItem("wemd-header-autohide") === "true";
+    } catch {
+      return false;
+    }
+  });
+
+  // 保存状态到 localStorage
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    try {
+      localStorage.setItem("wemd-header-autohide", String(autoHide));
+    } catch {
+      // 忽略存储不可用的场景（如隐私模式）
+    }
+  }, [autoHide]);
+
+  // 切换标题栏显示/隐藏
+  const handleHideHeader = () => {
+    setAutoHide(true);
+  };
 
   // Mac 平台使用内联样式强制避让
   const headerStyle =
@@ -58,7 +140,86 @@ export function Header() {
 
   return (
     <>
-      <header className="app-header" style={headerStyle}>
+      {/* 隐藏状态下的持久化窗口控制 (Windows only) */}
+      {autoHide && isWindows && <WindowControls fixed />}
+
+      {/* 隐藏状态下的浮动工具栏 */}
+      {autoHide && (
+        <div
+          className={`floating-toolbar ${isWindows ? "floating-toolbar-win" : ""}`}
+        >
+          <button
+            className="floating-btn floating-btn-show"
+            onClick={() => setAutoHide(false)}
+            aria-label="显示标题栏"
+            title="显示标题栏"
+            data-tooltip="显示标题栏"
+          >
+            <ChevronsUp size={18} strokeWidth={2} />
+          </button>
+
+          <button
+            className="floating-btn"
+            onClick={() => setTheme(uiTheme === "dark" ? "default" : "dark")}
+            aria-label={uiTheme === "dark" ? "亮色模式" : "暗色模式"}
+            title={uiTheme === "dark" ? "亮色模式" : "暗色模式"}
+            data-tooltip={uiTheme === "dark" ? "亮色模式" : "暗色模式"}
+          >
+            {uiTheme === "dark" ? (
+              <Sun size={18} strokeWidth={2} />
+            ) : (
+              <Moon size={18} strokeWidth={2} />
+            )}
+          </button>
+
+          {!isElectron && (
+            <button
+              className="floating-btn"
+              onClick={() => setShowStorageModal(true)}
+              aria-label="存储模式"
+              title="存储模式"
+              data-tooltip="存储模式"
+            >
+              <Layers size={18} strokeWidth={2} />
+            </button>
+          )}
+
+          <button
+            className="floating-btn"
+            onClick={() => setShowImageHostModal(true)}
+            aria-label="图床设置"
+            title="图床设置"
+            data-tooltip="图床设置"
+          >
+            <ImageIcon size={18} strokeWidth={2} />
+          </button>
+
+          <button
+            className="floating-btn"
+            onClick={() => setShowThemePanel(true)}
+            aria-label="主题管理"
+            title="主题管理"
+            data-tooltip="主题管理"
+          >
+            <Palette size={18} strokeWidth={2} />
+          </button>
+
+          <button
+            className="floating-btn floating-btn-primary"
+            onClick={copyToWechat}
+            aria-label="复制到公众号"
+            title="复制到公众号"
+            data-tooltip="复制到公众号"
+          >
+            <Send size={18} strokeWidth={2} />
+          </button>
+        </div>
+      )}
+
+      <header
+        className={`app-header ${autoHide ? "header-auto-hide" : ""}`}
+        style={headerStyle}
+      >
         <div className="header-left">
           <div className="logo">
             {isStructuralismUI ? (
@@ -117,52 +278,19 @@ export function Header() {
               <Send size={18} strokeWidth={2} />
               <span>复制到公众号</span>
             </button>
+
+            <button
+              className="btn-ghost"
+              onClick={handleHideHeader}
+              aria-label="隐藏标题栏"
+              title="隐藏标题栏"
+            >
+              <ChevronsDown size={18} strokeWidth={2} />
+            </button>
           </div>
 
           {/* Windows 自定义标题栏按钮 */}
-          {isWindows && (
-            <div className="window-controls">
-              <button
-                className="win-btn win-minimize"
-                onClick={() => minimize?.()}
-                aria-label="最小化"
-              >
-                <svg width="10" height="1" viewBox="0 0 10 1">
-                  <rect width="10" height="1" fill="currentColor" />
-                </svg>
-              </button>
-              <button
-                className="win-btn win-maximize"
-                onClick={() => maximize?.()}
-                aria-label="最大化"
-              >
-                <svg width="10" height="10" viewBox="0 0 10 10">
-                  <rect
-                    width="9"
-                    height="9"
-                    x="0.5"
-                    y="0.5"
-                    fill="none"
-                    stroke="currentColor"
-                    strokeWidth="1"
-                  />
-                </svg>
-              </button>
-              <button
-                className="win-btn win-close"
-                onClick={() => close?.()}
-                aria-label="关闭"
-              >
-                <svg width="10" height="10" viewBox="0 0 10 10">
-                  <path
-                    d="M0,0 L10,10 M10,0 L0,10"
-                    stroke="currentColor"
-                    strokeWidth="1.2"
-                  />
-                </svg>
-              </button>
-            </div>
-          )}
+          {isWindows && <WindowControls />}
         </div>
       </header>
 
