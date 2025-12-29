@@ -67,6 +67,8 @@ describe("ThemePanel", () => {
         updateTheme: mockUpdateTheme,
         deleteTheme: mockDeleteTheme,
         duplicateTheme: mockDuplicateTheme,
+        exportTheme: vi.fn(),
+        importTheme: vi.fn().mockResolvedValue(true),
       };
       return selector(state);
     });
