@@ -49,6 +49,7 @@ export interface DesignerVariables {
   inlineCodeColor: string;
   inlineCodeBackground: string;
   inlineCodeStyle: string;
+  codeContainerStyle: "simple" | "card" | "flat" | "mac-pro";
   showMacBar: boolean;
   codeTheme: string;
 

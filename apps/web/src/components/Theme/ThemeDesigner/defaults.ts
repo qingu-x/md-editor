@@ -74,6 +74,7 @@ export const defaultVariables: DesignerVariables = {
   inlineCodeColor: "#c7254e",
   inlineCodeBackground: "#f9f2f4",
   inlineCodeStyle: "simple",
+  codeContainerStyle: "simple",
   showMacBar: true,
   codeTheme: "github",
 

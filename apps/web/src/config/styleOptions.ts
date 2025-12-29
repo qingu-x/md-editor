@@ -344,6 +344,11 @@ export const codeBlockThemeOptions = [
   { id: "monokai", label: "Monokai" },
   { id: "vscode", label: "Atom One Dark" },
   { id: "night-owl", label: "Night Owl" },
+  { id: "dracula", label: "Dracula" },
+  { id: "solarized-dark", label: "Solarized Dark" },
+  { id: "solarized-light", label: "Solarized Light" },
+  { id: "xcode", label: "Xcode" },
+  { id: "atom-one-light", label: "Atom One Light" },
 ];
 
 // 8 大分类定义

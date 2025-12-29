@@ -298,6 +298,17 @@ export function ThemePanel({ open, onClose }: ThemePanelProps) {
   };
 
   const handleApply = async () => {
+    // 自动保存逻辑：如果是自定义主题且有未保存的更改，先执行保存
+    if (isCustomTheme && hasChanges) {
+      const cssToVerify =
+        editorMode === "visual" ? visualCss || cssInput : cssInput;
+      if (!nameInput.trim() || !cssToVerify.trim()) {
+        toast.error("无法保存更改：主题名称或内容不能为空");
+        return;
+      }
+      await handleSave();
+    }
+
     selectTheme(selectedThemeId);
     if (platformActions.shouldPersistHistory()) {
       const state = useEditorStore.getState();
