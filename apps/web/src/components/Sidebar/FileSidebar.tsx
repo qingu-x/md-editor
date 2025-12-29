@@ -269,16 +269,16 @@ export function FileSidebar() {
       {deleteTarget &&
         createPortal(
           <div
-            className="history-confirm-backdrop"
+            className="fs-confirm-backdrop"
             onClick={() => !deleting && setDeleteTarget(null)}
           >
             <div
-              className="history-confirm-modal"
+              className="fs-confirm-modal"
               onClick={(e) => e.stopPropagation()}
             >
               <h4>删除文件</h4>
               <p>确定要删除“{deleteTarget.name}”吗？此操作不可撤销。</p>
-              <div className="history-confirm-actions">
+              <div className="fs-confirm-actions">
                 <button
                   className="btn-secondary"
                   onClick={() => setDeleteTarget(null)}
