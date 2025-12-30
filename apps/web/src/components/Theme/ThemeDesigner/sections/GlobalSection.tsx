@@ -61,6 +61,21 @@ export function GlobalSection({
       </div>
 
       <div className="designer-field">
+        <label>页面边距: {variables.pagePadding}px</label>
+        <input
+          type="range"
+          className="designer-slider"
+          min={0}
+          max={48}
+          step={1}
+          value={variables.pagePadding || 0}
+          onChange={(e) =>
+            updateVariable("pagePadding", Number(e.target.value))
+          }
+        />
+      </div>
+
+      <div className="designer-field">
         <label>正文颜色</label>
         <ColorSelector
           value={variables.paragraphColor}

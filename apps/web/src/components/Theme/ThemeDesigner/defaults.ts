@@ -17,6 +17,7 @@ export const defaultVariables: DesignerVariables = {
   fontSize: fontSizeOptions[2].value,
   primaryColor: primaryColorOptions[0].value,
   lineHeight: lineHeightOptions[2].value,
+  pagePadding: 8,
 
   // 标题
   h1: {

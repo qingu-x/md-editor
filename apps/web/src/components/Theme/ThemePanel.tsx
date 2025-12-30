@@ -21,7 +21,11 @@ import { useThemeStore } from "../../store/themeStore";
 import { useHistoryStore } from "../../store/historyStore";
 import { useUITheme } from "../../hooks/useUITheme";
 import { platformActions } from "../../lib/platformAdapter";
-import { ThemeDesigner, type DesignerVariables } from "./ThemeDesigner";
+import {
+  ThemeDesigner,
+  type DesignerVariables,
+  defaultVariables,
+} from "./ThemeDesigner";
 import "./ThemePanel.css";
 
 // 主题预览用的示例 Markdown
@@ -90,7 +94,7 @@ function ThemeLivePreview({ css }: { css: string }) {
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body { 
           font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-          padding: 16px;
+          padding: 0;
           font-size: 14px;
           line-height: 1.6;
           transition: background 0.2s, color 0.2s;
@@ -231,7 +235,10 @@ export function ThemePanel({ open, onClose }: ThemePanelProps) {
         setCssInput(currentTheme.css);
         // 从主题读取编辑模式和变量
         setEditorMode(currentTheme.editorMode || "css");
-        setDesignerVariables(currentTheme.designerVariables);
+        setDesignerVariables({
+          ...defaultVariables,
+          ...currentTheme.designerVariables,
+        });
         // 记录原始值用于比较
         setOriginalName(currentTheme.name);
         setOriginalCss(currentTheme.css);
