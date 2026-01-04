@@ -1,0 +1,203 @@
+/* Minimal CSS reset */
+html,
+body,
+#app {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  width: 100%;
+}
+
+:root {
+  font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
+  line-height: 1.5;
+  font-weight: 400;
+
+  color-scheme: light;
+
+  /* ========================================
+     DEFAULT UI THEME (Current Style)
+     ======================================== */
+
+  /* Colors */
+  --ui-bg-page-rgb: 248, 249, 250;
+  --ui-bg-page: rgb(var(--ui-bg-page-rgb));
+  --ui-bg-primary-rgb: 255, 255, 255;
+  --ui-bg-primary: rgb(var(--ui-bg-primary-rgb));
+  --ui-bg-secondary-rgb: 246, 248, 251;
+  --ui-bg-secondary: rgb(var(--ui-bg-secondary-rgb));
+  --ui-bg-tertiary-rgb: 238, 242, 246;
+  --ui-bg-tertiary: rgb(var(--ui-bg-tertiary-rgb));
+  --ui-bg-card-muted-rgb: 241, 245, 249;
+  --ui-bg-card-muted: rgb(var(--ui-bg-card-muted-rgb));
+  --ui-bg-hover-rgb: 230, 245, 235;
+  --ui-bg-hover: rgb(var(--ui-bg-hover-rgb));
+
+  --ui-text-primary-rgb: 15, 23, 42;
+  --ui-text-primary: rgb(var(--ui-text-primary-rgb));
+  --ui-text-secondary-rgb: 51, 65, 85;
+  --ui-text-secondary: rgb(var(--ui-text-secondary-rgb));
+  --ui-text-tertiary-rgb: 100, 116, 139;
+  --ui-text-tertiary: rgb(var(--ui-text-tertiary-rgb));
+
+  --ui-border-color-rgb: 226, 232, 240;
+  --ui-border-color: rgb(var(--ui-border-color-rgb));
+  --ui-border-light-rgb: 226, 232, 240;
+  --ui-border-light: rgb(var(--ui-border-light-rgb));
+
+  --ui-accent-primary-rgb: 7, 193, 96;
+  --ui-accent-primary: rgb(var(--ui-accent-primary-rgb));
+  --ui-accent-gradient: linear-gradient(135deg, #07c160 0%, #05a850 100%);
+
+  --ui-success-rgb: 16, 185, 129;
+  --ui-success: rgb(var(--ui-success-rgb));
+  --ui-warning-rgb: 245, 158, 11;
+  --ui-warning: rgb(var(--ui-warning-rgb));
+  --ui-error-rgb: 239, 68, 68;
+  --ui-error: rgb(var(--ui-error-rgb));
+
+  --success-rgb: var(--ui-success-rgb);
+  --success: var(--ui-success);
+  --success-bg: rgba(var(--ui-success-rgb), 0.1);
+  --success-bg: color-mix(in srgb, var(--ui-success) 10%, transparent);
+  --warning-rgb: var(--ui-warning-rgb);
+  --warning: var(--ui-warning);
+  --error-rgb: var(--ui-error-rgb);
+  --error: var(--ui-error);
+
+  /* Borders & Radius */
+  --ui-border-width: 1px;
+  --ui-radius-sm: 8px;
+  --ui-radius-md: 12px;
+  --ui-radius-lg: 16px;
+  --ui-radius-xl: 24px;
+  --ui-radius-pill: 999px;
+
+  /* Shadows */
+  --ui-shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+  --ui-shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  --ui-shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+  --ui-shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+
+  /* Fonts */
+  --ui-font-sans: -apple-system, BlinkMacSystemFont, 'SF Pro Text', 'Segoe UI', 'Roboto', 'Helvetica Neue', sans-serif;
+  --ui-font-mono: 'SF Mono', 'Monaco', 'Inconsolata', 'Fira Code', monospace;
+
+  /* Spacing */
+  --ui-spacing-unit: 8px;
+  --ui-glass-blur: blur(20px);
+
+  /* Legacy variables for backward compatibility */
+  --bg-page-rgb: var(--ui-bg-page-rgb);
+  --bg-page: var(--ui-bg-page);
+  --bg-primary-rgb: var(--ui-bg-primary-rgb);
+  --bg-primary: var(--ui-bg-primary);
+  --bg-secondary-rgb: var(--ui-bg-secondary-rgb);
+  --bg-secondary: var(--ui-bg-secondary);
+  --bg-tertiary-rgb: var(--ui-bg-tertiary-rgb);
+  --bg-tertiary: var(--ui-bg-tertiary);
+  --bg-card-muted-rgb: var(--ui-bg-card-muted-rgb);
+  --bg-card-muted: var(--ui-bg-card-muted);
+  --bg-hover-rgb: var(--ui-bg-hover-rgb);
+  --bg-hover: var(--ui-bg-hover);
+  --text-primary-rgb: var(--ui-text-primary-rgb);
+  --text-primary: var(--ui-text-primary);
+  --text-secondary-rgb: var(--ui-text-secondary-rgb);
+  --text-secondary: var(--ui-text-secondary);
+  --text-tertiary-rgb: var(--ui-text-tertiary-rgb);
+  --text-tertiary: var(--ui-text-tertiary);
+  --border-light-rgb: var(--ui-border-light-rgb);
+  --border-light: var(--ui-border-light);
+  --border-color-rgb: var(--ui-border-color-rgb);
+  --border-color: var(--ui-border-color);
+  --accent-primary-rgb: var(--ui-accent-primary-rgb);
+  --accent-primary: var(--ui-accent-primary);
+  --accent-gradient: var(--ui-accent-gradient);
+  --shadow-sm: var(--ui-shadow-sm);
+  --shadow-md: var(--ui-shadow-md);
+  --shadow-lg: var(--ui-shadow-lg);
+  --shadow-xl: var(--ui-shadow-xl);
+  --radius-sm: var(--ui-radius-sm);
+  --radius-md: var(--ui-radius-md);
+  --radius-lg: var(--ui-radius-lg);
+  --radius-xl: var(--ui-radius-xl);
+  --radius-pill: var(--ui-radius-pill);
+  --border-width: var(--ui-border-width);
+  --spacing-xs: calc(var(--ui-spacing-unit) * 0.5);
+  --spacing-sm: var(--ui-spacing-unit);
+  --spacing-md: calc(var(--ui-spacing-unit) * 2);
+  --spacing-lg: calc(var(--ui-spacing-unit) * 3);
+  --spacing-xl: calc(var(--ui-spacing-unit) * 4);
+  --spacing-xxl: calc(var(--ui-spacing-unit) * 5);
+  --font-mono: var(--ui-font-mono);
+
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* ========================================
+   DARK UI THEME (参考 VS Code 配色)
+   ======================================== */
+[data-ui-theme="dark"] {
+  color-scheme: dark;
+
+  /* Colors - VS Code 风格深色背景（不那么刺眼） */
+  --ui-bg-page-rgb: 30, 30, 30;
+  --ui-bg-page: rgb(var(--ui-bg-page-rgb));
+  --ui-bg-primary-rgb: 37, 37, 38;
+  --ui-bg-primary: rgb(var(--ui-bg-primary-rgb));
+  --ui-bg-secondary-rgb: 45, 45, 48;
+  --ui-bg-secondary: rgb(var(--ui-bg-secondary-rgb));
+  --ui-bg-tertiary-rgb: 51, 51, 51;
+  --ui-bg-tertiary: rgb(var(--ui-bg-tertiary-rgb));
+  --ui-bg-card-muted-rgb: 42, 42, 43;
+  --ui-bg-card-muted: rgb(var(--ui-bg-card-muted-rgb));
+  --ui-bg-hover-rgb: 42, 58, 46;
+  --ui-bg-hover: rgb(var(--ui-bg-hover-rgb));
+
+  /* Colors - 柔和的浅色文字 */
+  --ui-text-primary-rgb: 212, 212, 212;
+  --ui-text-primary: rgb(var(--ui-text-primary-rgb));
+  --ui-text-secondary-rgb: 157, 157, 157;
+  --ui-text-secondary: rgb(var(--ui-text-secondary-rgb));
+  --ui-text-tertiary-rgb: 106, 106, 106;
+  --ui-text-tertiary: rgb(var(--ui-text-tertiary-rgb));
+
+  /* 边框 - 柔和的深色调 */
+  --ui-border-color-rgb: 60, 60, 60;
+  --ui-border-color: rgb(var(--ui-border-color-rgb));
+  --ui-border-light-rgb: 64, 64, 64;
+  --ui-border-light: rgb(var(--ui-border-light-rgb));
+
+  /* 保持微信绿作为强调色 */
+  --ui-accent-primary-rgb: 7, 193, 96;
+  --ui-accent-primary: rgb(var(--ui-accent-primary-rgb));
+  --ui-accent-gradient: linear-gradient(135deg, #07c160 0%, #05a850 100%);
+
+  /* Borders & Radius - 保持与默认主题一致 */
+  --ui-border-width: 1px;
+  --ui-radius-sm: 8px;
+  --ui-radius-md: 12px;
+  --ui-radius-lg: 16px;
+  --ui-radius-xl: 24px;
+  --ui-radius-pill: 999px;
+
+  /* Shadows - 深色模式阴影 */
+  --ui-shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.3);
+  --ui-shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.4), 0 2px 4px -1px rgba(0, 0, 0, 0.3);
+  --ui-shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.5), 0 4px 6px -2px rgba(0, 0, 0, 0.3);
+  --ui-shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.5), 0 10px 10px -5px rgba(0, 0, 0, 0.3);
+
+  /* Fonts - 保持默认 */
+  --ui-font-sans: -apple-system, BlinkMacSystemFont, 'SF Pro Text', 'Segoe UI', 'Roboto', 'Helvetica Neue', sans-serif;
+  --ui-font-mono: 'SF Mono', 'Monaco', 'Inconsolata', 'Fira Code', monospace;
+  --ui-spacing-unit: 8px;
+  --ui-glass-blur: blur(20px);
+
+  /* 玻璃效果变量 - 深色模式 */
+  --glass-bg: rgba(37, 37, 38, 0.95);
+  --glass-border: rgba(60, 60, 60, 0.6);
+  --glass-shadow: 0 10px 15px -3px rgba(0, 0, 0, .5), 0 4px 6px -2px rgba(0, 0, 0, .3);
+}

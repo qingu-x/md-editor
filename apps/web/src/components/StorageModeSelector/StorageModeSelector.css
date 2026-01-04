@@ -1,0 +1,76 @@
+.storage-mode-selector {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  padding: 4px 0;
+}
+
+.storage-mode-tip {
+  margin: 0 0 4px;
+  color: var(--text-secondary);
+  font-size: 13px;
+}
+
+.storage-mode-options {
+  display: grid;
+  gap: 12px;
+}
+
+.storage-mode-option {
+  text-align: left;
+  border-radius: var(--radius-lg);
+  border: var(--border-width) solid var(--border-light);
+  padding: 14px;
+  background: var(--bg-primary);
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.storage-mode-option.active {
+  border-color: var(--accent-primary);
+  box-shadow: var(--shadow-md);
+}
+
+.storage-mode-option:disabled {
+  cursor: not-allowed;
+  opacity: 0.5;
+}
+
+.storage-mode-option__label {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.storage-mode-option__label small {
+  font-size: 11px;
+  color: var(--accent-primary);
+}
+
+.storage-mode-option p {
+  margin: 8px 0 0;
+  color: var(--text-secondary);
+  font-size: 13px;
+}
+
+.storage-mode-notice {
+  margin-top: 6px;
+  font-size: 12px;
+  color: var(--warning);
+  background: rgba(var(--warning-rgb), 0.2);
+  background: color-mix(in srgb, var(--warning) 20%, transparent);
+  padding: 6px 10px;
+  border-radius: var(--radius-md);
+}
+
+.storage-mode-status {
+  padding: 10px 12px;
+  border-radius: var(--radius-md);
+  background: rgba(var(--accent-primary-rgb), 0.12);
+  background: color-mix(in srgb, var(--accent-primary) 12%, transparent);
+  color: rgba(var(--accent-primary-rgb), 0.65);
+  color: color-mix(in srgb, var(--accent-primary) 65%, transparent);
+  font-size: 13px;
+}

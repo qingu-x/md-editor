@@ -1,0 +1,68 @@
+{
+  "appId": "com.wemd.app",
+  "productName": "WeMD",
+  "directories": {
+    "output": "release"
+  },
+  "files": ["dist/**/*", "assets/**/*", "package.json", "!**/.DS_Store"],
+  "extraResources": [
+    {
+      "from": "../web/dist",
+      "to": "web-dist",
+      "filter": ["**/*", "!**/.DS_Store"]
+    }
+  ],
+  "mac": {
+    "category": "public.app-category.productivity",
+    "target": [
+      {
+        "target": "dmg",
+        "arch": ["x64", "arm64"]
+      },
+      {
+        "target": "zip",
+        "arch": ["x64", "arm64"]
+      }
+    ],
+    "icon": "assets/icon.icns"
+  },
+  "dmg": {
+    "title": "WeMD ${version}",
+    "backgroundColor": "#ffffff",
+    "icon": "assets/icon.icns",
+    "contents": [
+      {
+        "x": 130,
+        "y": 150,
+        "type": "file"
+      },
+      {
+        "x": 410,
+        "y": 150,
+        "type": "link",
+        "path": "/Applications"
+      }
+    ],
+    "window": {
+      "width": 540,
+      "height": 380
+    }
+  },
+  "win": {
+    "target": ["nsis", "zip"],
+    "icon": "assets/icon.ico"
+  },
+  "nsis": {
+    "oneClick": false,
+    "allowToChangeInstallationDirectory": true,
+    "perMachine": false,
+    "createDesktopShortcut": true,
+    "createStartMenuShortcut": true
+  },
+  "linux": {
+    "target": ["AppImage", "deb"],
+    "category": "Office",
+    "icon": "assets/icon.png",
+    "maintainer": "WeMD Team"
+  }
+}

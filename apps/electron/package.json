@@ -1,0 +1,29 @@
+{
+  "name": "wemd-electron",
+  "version": "1.1.9",
+  "description": "WeMD - 更优雅的 Markdown 公众号排版工具",
+  "main": "dist/main.js",
+  "homepage": "https://wemd.app",
+  "author": "WeMD Team",
+  "scripts": {
+    "build": "rimraf dist && tsc",
+    "dev": "rimraf dist && tsc && electron .",
+    "start": "electron .",
+    "build:mac": "npm run build && electron-builder --mac -c electron-builder.json",
+    "build:win": "npm run build && electron-builder --win -c electron-builder.json",
+    "build:linux": "npm run build && electron-builder --linux -c electron-builder.json"
+  },
+  "keywords": [
+    "markdown",
+    "wechat",
+    "editor"
+  ],
+  "license": "MIT",
+  "devDependencies": {
+    "@types/node": "^20.0.0",
+    "electron": "^28.3.3",
+    "electron-builder": "^24.13.3",
+    "rimraf": "^6.0.0",
+    "typescript": "^5.0.0"
+  }
+}

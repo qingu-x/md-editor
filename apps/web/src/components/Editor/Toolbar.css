@@ -1,0 +1,113 @@
+.md-toolbar {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    padding: 8px 12px;
+    background: var(--bg-secondary);
+    border-bottom: var(--border-width) solid var(--border-light);
+    flex-wrap: wrap;
+}
+
+[data-ui-theme="dark"] .md-toolbar {
+    border-bottom-color: #3c3c3c;
+}
+
+.md-toolbar-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 32px;
+    height: 32px;
+    padding: 0;
+    border: none;
+    border-radius: var(--radius-sm);
+    background: transparent;
+    color: var(--text-secondary);
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.md-toolbar-btn:hover {
+    background: rgba(var(--accent-primary-rgb), 0.12);
+    background: color-mix(in srgb, var(--accent-primary) 12%, transparent);
+    color: var(--accent-primary);
+}
+
+.md-toolbar-btn.active {
+    background: rgba(var(--accent-primary-rgb), 0.2);
+    background: color-mix(in srgb, var(--accent-primary) 20%, transparent);
+    color: var(--accent-primary);
+}
+
+.md-toolbar-btn.active:hover {
+    background: rgba(var(--accent-primary-rgb), 0.25);
+    background: color-mix(in srgb, var(--accent-primary) 25%, transparent);
+    color: var(--accent-primary);
+}
+
+.md-toolbar-btn:active {
+    transform: scale(0.95);
+}
+
+.md-toolbar-btn:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+    color: var(--text-tertiary);
+}
+
+.md-toolbar-btn:disabled:hover {
+    background: transparent;
+    color: var(--text-tertiary);
+}
+
+.spinning {
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    from {
+        transform: rotate(0deg);
+    }
+
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+/* 自定义快速 Tooltip */
+.md-toolbar-btn {
+    position: relative;
+}
+
+.md-toolbar-btn::after {
+    content: attr(data-tooltip);
+    position: absolute;
+    bottom: 100%;
+    left: 50%;
+    transform: translateX(-50%) translateY(-4px);
+    padding: 4px 8px;
+    background: var(--text-primary);
+    color: var(--bg-primary);
+    font-size: 11px;
+    font-weight: 500;
+    border-radius: var(--radius-sm);
+    white-space: nowrap;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.15s, visibility 0.15s;
+    pointer-events: none;
+    z-index: 100;
+}
+
+.md-toolbar-btn:hover::after {
+    opacity: 1;
+    visibility: visible;
+}
+
+/* 分隔符 */
+.md-toolbar-divider {
+    width: 1px;
+    height: 20px;
+    background: var(--border-light);
+    margin: 0 8px;
+}
