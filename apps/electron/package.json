@@ -1,10 +1,10 @@
 {
-  "name": "wemd-electron",
+  "name": "md-beautify-electron",
   "version": "1.1.9",
-  "description": "WeMD - 更优雅的 Markdown 公众号排版工具",
+  "description": "MD Beautify - 更优雅的 Markdown 公众号排版工具",
   "main": "dist/main.js",
-  "homepage": "https://wemd.app",
-  "author": "WeMD Team",
+  "homepage": "https://mdbeautify.com",
+  "author": "MD Beautify Team",
   "scripts": {
     "build": "rimraf dist && tsc",
     "dev": "rimraf dist && tsc && electron .",

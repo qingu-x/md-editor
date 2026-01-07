@@ -1,6 +1,6 @@
 {
-  "appId": "com.wemd.app",
-  "productName": "WeMD",
+  "appId": "com.mdbeautify.app",
+  "productName": "MD Beautify",
   "directories": {
     "output": "release"
   },
