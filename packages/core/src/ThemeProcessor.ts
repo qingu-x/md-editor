@@ -29,6 +29,7 @@ const BLOCK_TAGS = [
  * @param css - CSS 样式字符串
  * @param inlineStyles - 是否内联样式 (使用 juice)，默认为 true。预览模式建议设为 false 以提高性能。
  * @param inlinePseudoElements - 是否内联伪元素内容（如 ::before / ::after），默认为 false。复制到微信时建议设为 true。
+ * @param replaceLocalImages - 是否替换本地图片为占位图，默认为 false。预览模式建议设为 true。
  * @returns 处理后的 HTML 字符串
  */
 export const processHtml = (
@@ -36,9 +37,29 @@ export const processHtml = (
   css: string,
   inlineStyles: boolean = true,
   inlinePseudoElements: boolean = false,
+  replaceLocalImages: boolean = false,
 ): string => {
   if (!html || !css) {
     return html || "";
+  }
+
+  // 替换本地图片为占位图
+  if (replaceLocalImages) {
+    const placeholderUrl =
+      "https://img.wemd.app/wemd/local-image-placeholder.png";
+    html = html.replace(
+      /<img\s+([^>]*?)src="([^"]+)"([^>]*?)>/gi,
+      (match, p1, src, p3) => {
+        if (
+          !src.startsWith("http://") &&
+          !src.startsWith("https://") &&
+          !src.startsWith("data:")
+        ) {
+          return `<img ${p1}src="${placeholderUrl}"${p3} data-original-src="${src}" title="Local image - Upload required for WeChat">`;
+        }
+        return match;
+      },
+    );
   }
 
   // 为顶级块元素添加 data-tool 属性
@@ -107,6 +128,121 @@ export const processHtml = (
       /#wemd[^{]*pre[^{]*::before\s*\{[^}]*#ff5f56[^}]*\}/gi,
       "",
     );
+  }
+
+  // 处理引用的伪元素 (大引号、直角边框等)
+  if (inlinePseudoElements) {
+    // 1. 大引号样式 (Quotation Marks)
+    if (css.includes("blockquote::before") && css.includes('content: "“"')) {
+      const quoteColorMatch = css.match(
+        /#wemd\s+blockquote::before\s*\{[^}]*color:\s*([^;}]+)/i,
+      );
+      const quoteColor = quoteColorMatch
+        ? quoteColorMatch[1].trim()
+        : "inherit";
+
+      html = html.replace(
+        /<blockquote([^>]*)>([\s\S]*?)<\/blockquote>/gi,
+        (match, attrs, content) => {
+          // 如果已经有 data-tool 或其他标识，说明可能是我们处理过的
+          const beforeHtml = `<span style="display:block;height:0;font-size:60px;color:${quoteColor};font-family:Georgia,serif;line-height:1;margin-left:-40px;margin-top:-6px;opacity:0.3;pointer-events:none;">“</span>`;
+          return `<blockquote${attrs} style="position:relative;">${beforeHtml}<section style="position:relative;z-index:1;">${content}</section></blockquote>`;
+        },
+      );
+
+      // 移除 CSS 中的伪元素规则
+      css = css.replace(
+        /#wemd\s+blockquote::before\s*\{[^}]*content:\s*"“"[^}]*\}/gi,
+        "",
+      );
+    }
+
+    // 2. 直角边框样式 (Corner Frame)
+    if (
+      css.includes("blockquote::before") &&
+      css.includes("border-top") &&
+      css.includes("border-left")
+    ) {
+      const beforeMatch = css.match(
+        /#wemd\s+blockquote::before\s*\{([^}]*border-top:[^}]*border-left:[^}]*)\}/i,
+      );
+      const afterMatch = css.match(
+        /#wemd\s+blockquote::after\s*\{([^}]*border-bottom:[^}]*border-right:[^}]*)\}/i,
+      );
+
+      if (beforeMatch && afterMatch) {
+        const beforeStyle = beforeMatch[1]
+          .trim()
+          .replace(/\n/g, "")
+          .replace(/\s+/g, " ");
+        const afterStyle = afterMatch[1]
+          .trim()
+          .replace(/\n/g, "")
+          .replace(/\s+/g, " ");
+
+        html = html.replace(
+          /<blockquote([^>]*)>([\s\S]*?)<\/blockquote>/gi,
+          (match, attrs, content) => {
+            const beforeHtml = `<span style="display:block;position:absolute;top:0;left:0;width:20px;height:20px;${beforeStyle}"></span>`;
+            const afterHtml = `<span style="display:block;position:absolute;bottom:0;right:0;width:20px;height:20px;${afterStyle}"></span>`;
+            return `<blockquote${attrs} style="position:relative;">${beforeHtml}${content}${afterHtml}</blockquote>`;
+          },
+        );
+
+        // 移除 CSS 中的伪元素规则
+        css = css.replace(
+          /#wemd\s+blockquote::before\s*\{[^}]*border-top:[^}]*border-left:[^}]*\}/gi,
+          "",
+        );
+        css = css.replace(
+          /#wemd\s+blockquote::after\s*\{[^}]*border-bottom:[^}]*border-right:[^}]*\}/gi,
+          "",
+        );
+      }
+    }
+
+    // 3. 中心强调样式 (Center Accent)
+    if (
+      css.includes("blockquote::before") &&
+      css.includes("margin: 0 auto 15px")
+    ) {
+      const beforeMatch = css.match(
+        /#wemd\s+blockquote::before\s*\{([^}]*background:[^}]*margin:\s*0\s+auto\s+15px[^}]*)\}/i,
+      );
+      const afterMatch = css.match(
+        /#wemd\s+blockquote::after\s*\{([^}]*background:[^}]*margin:\s*15px\s+auto\s+0[^}]*)\}/i,
+      );
+
+      if (beforeMatch && afterMatch) {
+        const beforeStyle = beforeMatch[1]
+          .trim()
+          .replace(/\n/g, "")
+          .replace(/\s+/g, " ");
+        const afterStyle = afterMatch[1]
+          .trim()
+          .replace(/\n/g, "")
+          .replace(/\s+/g, " ");
+
+        html = html.replace(
+          /<blockquote([^>]*)>([\s\S]*?)<\/blockquote>/gi,
+          (match, attrs, content) => {
+            const beforeHtml = `<span style="display:block;width:40px;${beforeStyle}"></span>`;
+            const afterHtml = `<span style="display:block;width:40px;${afterStyle}"></span>`;
+            return `<blockquote${attrs} style="text-align:center;">${beforeHtml}${content}${afterHtml}</blockquote>`;
+          },
+        );
+
+        // 移除 CSS 中的伪元素规则
+        css = css.replace(
+          /#wemd\s+blockquote::before\s*\{[^}]*margin:\s*0\s+auto\s+15px[^}]*\}/gi,
+          "",
+        );
+        css = css.replace(
+          /#wemd\s+blockquote::after\s*\{[^}]*margin:\s*15px\s+auto\s+0[^}]*\}/gi,
+          "",
+        );
+      }
+    }
   }
 
   // 将 HTML 包裹在 id="wemd" 的 section 中，以便 juice 能够匹配以 #wemd 开头的选择器

@@ -8,6 +8,7 @@
           type="text"
           class="search-input"
           placeholder="查找"
+          @input="handleInputChange"
           @keydown.enter="handleFindNext"
           @keydown.esc="onClose"
         />
@@ -16,6 +17,9 @@
         </div>
         <div v-else-if="hasSearched && matches.length === 0" class="match-count">
           无结果
+        </div>
+        <div v-else-if="searchText" class="match-count">
+          按回车搜索
         </div>
       </div>
 
@@ -182,9 +186,16 @@ const doSearch = () => {
   }
 };
 
+// 输入变化时重置搜索状态
+const handleInputChange = () => {
+  hasSearched.value = false;
+};
+
 // 监听搜索条件变化
-watch([searchText, caseSensitive, useRegexp], () => {
-  doSearch();
+watch([caseSensitive, useRegexp], () => {
+  if (hasSearched.value) {
+    doSearch();
+  }
 });
 
 // 高亮当前匹配项并滚动到视图

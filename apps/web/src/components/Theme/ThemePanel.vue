@@ -208,11 +208,16 @@
                 <Copy :size="16" /> 复制
               </button>
               <button
-                v-if="selectedTheme?.editorMode === 'visual'"
                 class="btn-icon-text"
                 @click="handleExport"
               >
                 <Download :size="16" /> 导出
+              </button>
+              <button
+                class="btn-icon-text"
+                @click="handleExportCSS"
+              >
+                <Download :size="16" /> 导出 CSS
               </button>
               <button
                 class="btn-icon-text btn-danger"
@@ -238,6 +243,12 @@
             <template v-else>
               <button class="btn-icon-text" @click="handleDuplicate">
                 <Copy :size="16" /> 复制
+              </button>
+              <button
+                class="btn-icon-text"
+                @click="handleExportCSS"
+              >
+                <Download :size="16" /> 导出 CSS
               </button>
               <div class="flex-spacer"></div>
               <button class="btn-secondary" @click="$emit('close')">
@@ -327,6 +338,10 @@ const handleExport = () => {
   themeStore.exportTheme(selectedThemeId.value);
 };
 
+const handleExportCSS = () => {
+  themeStore.exportThemeCSS(selectedThemeId.value);
+};
+
 // Used for change detection
 const originalName = ref("");
 const originalCss = ref("");
@@ -412,6 +427,10 @@ const handleCancelCreation = () => {
 };
 
 const handleApply = async () => {
+  if (hasChanges.value && canSave.value) {
+    await handleSave();
+  }
+
   themeStore.selectTheme(selectedThemeId.value);
   if (platformActions.shouldPersistHistory()) {
     await historyStore.persistActiveSnapshot({
@@ -450,6 +469,9 @@ const handleSave = async () => {
     originalCss.value = cssToSave;
     isCreating.value = false;
     toast.success("主题创建成功");
+    
+    // 创建成功后自动应用并关闭面板
+    emit('close');
   } else if (isCustomTheme.value) {
     const updates: any = {
       name: nameInput.value.trim() || "未命名主题",
@@ -473,6 +495,9 @@ const handleSave = async () => {
     originalName.value = nameInput.value.trim() || "未命名主题";
     originalCss.value = cssInput.value;
     toast.success("主题已保存");
+    
+    // 保存成功后自动关闭面板
+    emit('close');
   }
 };
 

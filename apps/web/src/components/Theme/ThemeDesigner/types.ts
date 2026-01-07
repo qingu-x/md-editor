@@ -33,6 +33,7 @@ export interface DesignerVariables {
 
   // 段落
   paragraphMargin: number;
+  paragraphPadding: number;
   paragraphColor: string;
   textIndent: boolean;
   textJustify: boolean;
@@ -42,6 +43,13 @@ export interface DesignerVariables {
   quoteBorderColor: string;
   quoteTextColor: string;
   quotePreset: string;
+  quoteBorderWidth: number;
+  quoteBorderStyle: "solid" | "dashed" | "dotted" | "double";
+  quotePaddingX: number;
+  quotePaddingY: number;
+  quoteFontSize: number;
+  quoteLineHeight: number;
+  quoteTextCentered: boolean;
 
   // 代码
   codeBackground: string;

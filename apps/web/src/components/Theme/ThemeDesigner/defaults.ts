@@ -59,6 +59,7 @@ export const defaultVariables: DesignerVariables = {
 
   // 段落
   paragraphMargin: 16,
+  paragraphPadding: 0,
   paragraphColor: "#333",
   textIndent: false,
   textJustify: true,
@@ -68,6 +69,13 @@ export const defaultVariables: DesignerVariables = {
   quoteBorderColor: "#ddd",
   quoteTextColor: "#666",
   quotePreset: "left-border",
+  quoteBorderWidth: 4,
+  quoteBorderStyle: "solid",
+  quotePaddingX: 16,
+  quotePaddingY: 12,
+  quoteFontSize: 16,
+  quoteLineHeight: 1.6,
+  quoteTextCentered: false,
 
   // 代码
   codeBackground: "#f5f5f5",

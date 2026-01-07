@@ -17,9 +17,8 @@ export const basicTheme = `/* 默认样式，最佳实践 */
 /* 段落 */
 #wemd p {
   font-size: 16px;
-  padding-top: 8px;
-  padding-bottom: 8px;
-  margin: 0;
+  margin-top: 10px;
+  margin-bottom: 10px;
   line-height: 26px;
   color: #000000;
 }

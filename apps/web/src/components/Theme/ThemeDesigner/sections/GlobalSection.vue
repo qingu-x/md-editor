@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import { computed } from "vue";
 import ColorSelector from "../ColorSelector.vue";
 import {
   fontFamilyOptions,
@@ -79,13 +78,26 @@ const handlePrimaryColorChange = (color: string) => {
     </div>
 
     <div class="designer-field">
-      <label>页面边距: {{ variables.pagePadding }}px</label>
+      <label>段落内部间距: {{ variables.paragraphPadding ?? 0 }}px</label>
+      <input
+        type="range"
+        class="designer-slider"
+        :min="0"
+        :max="20"
+        :step="0.1"
+        :value="variables.paragraphPadding ?? 0"
+        @input="updateVariable('paragraphPadding', Number(($event.target as HTMLInputElement).value))"
+      />
+    </div>
+
+    <div class="designer-field">
+      <label>页面两侧间距: {{ variables.pagePadding }}px</label>
       <input
         type="range"
         class="designer-slider"
         :min="0"
         :max="48"
-        :step="1"
+        :step="0.1"
         :value="variables.pagePadding || 0"
         @input="updateVariable('pagePadding', Number(($event.target as HTMLInputElement).value))"
       />

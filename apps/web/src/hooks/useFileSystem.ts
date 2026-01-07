@@ -1,11 +1,11 @@
-import { ref, computed, watch, onMounted, onUnmounted } from 'vue';
-import { useFileStore } from '../store/fileStore';
-import { useEditorStore } from '../store/editorStore';
-import { useThemeStore } from '../store/themeStore';
-import { useStorageStore } from '../store/storageStore';
-import type { FileItem as StoreFileItem } from '../store/fileTypes';
-import type { FileItem as StorageFileItem } from '../storage/types';
-import { toast } from './useToast';
+import { ref, computed, watch, onMounted, onUnmounted } from "vue";
+import { useFileStore } from "../store/fileStore";
+import { useEditorStore } from "../store/editorStore";
+import { useThemeStore } from "../store/themeStore";
+import { useStorageStore } from "../store/storageStore";
+import type { FileItem as StoreFileItem } from "../store/fileTypes";
+import type { FileItem as StorageFileItem } from "../storage/types";
+import { toast } from "./useToast";
 
 // 本地定义 Electron API 类型以确保类型安全
 interface ElectronFileItem {
@@ -67,7 +67,7 @@ export function useFileSystem(options: { registerListeners?: boolean } = {}) {
   const fileStore = useFileStore();
   const editorStore = useEditorStore();
   const themeStore = useThemeStore();
-  
+
   const electron = getElectron();
   const isCreating = ref(false);
 
@@ -90,7 +90,7 @@ export function useFileSystem(options: { registerListeners?: boolean } = {}) {
       } finally {
         fileStore.setLoading(false);
       }
-    } else if (storageStore.type === 'filesystem' && storageStore.ready) {
+    } else if (storageStore.type === "filesystem" && storageStore.ready) {
       // Browser filesystem mode
       await refreshFiles();
     }
@@ -103,13 +103,13 @@ export function useFileSystem(options: { registerListeners?: boolean } = {}) {
       try {
         const res = await electron.fs.listFiles(fileStore.workspacePath);
         if (res.success && res.files) {
-          const formattedFiles: StoreFileItem[] = res.files.map(f => ({
+          const formattedFiles: StoreFileItem[] = res.files.map((f) => ({
             name: f.name,
             path: f.path,
             createdAt: new Date(f.createdAt),
             updatedAt: new Date(f.updatedAt),
             size: f.size || 0,
-            themeName: f.themeName
+            themeName: f.themeName,
           }));
           fileStore.setFiles(formattedFiles);
         }
@@ -120,14 +120,16 @@ export function useFileSystem(options: { registerListeners?: boolean } = {}) {
       // Browser mode (filesystem or indexeddb)
       try {
         const list = await storageStore.adapter.listFiles();
-        const formattedFiles: StoreFileItem[] = list.map((f: StorageFileItem) => ({
-          name: f.name,
-          path: f.path,
-          createdAt: new Date(f.updatedAt || Date.now()), // Browser adapters might not have createdAt
-          updatedAt: new Date(f.updatedAt || Date.now()),
-          size: f.size || 0,
-          themeName: (f.meta?.themeName as string) || undefined
-        }));
+        const formattedFiles: StoreFileItem[] = list.map(
+          (f: StorageFileItem) => ({
+            name: f.name,
+            path: f.path,
+            createdAt: new Date(f.updatedAt || Date.now()), // Browser adapters might not have createdAt
+            updatedAt: new Date(f.updatedAt || Date.now()),
+            size: f.size || 0,
+            themeName: (f.meta?.themeName as string) || undefined,
+          }),
+        );
         fileStore.setFiles(formattedFiles);
       } catch (error) {
         console.error("Failed to refresh files in browser:", error);
@@ -152,7 +154,7 @@ export function useFileSystem(options: { registerListeners?: boolean } = {}) {
     } else {
       // Browser mode: switch to filesystem adapter
       try {
-        const res = await storageStore.select('filesystem');
+        const res = await storageStore.select("filesystem");
         if (res.ready) {
           await refreshFiles();
           toast.success("已选择本地文件夹");
@@ -193,7 +195,7 @@ export function useFileSystem(options: { registerListeners?: boolean } = {}) {
   // 5. 打开文件
   const openFile = async (file: StoreFileItem) => {
     if (fileStore.currentFile?.path === file.path) return;
-    
+
     // 如果有未保存的内容，提示
     if (fileStore.isDirty) {
       const confirm = window.confirm("当前文件有未保存的更改，确定要切换吗？");
@@ -205,15 +207,15 @@ export function useFileSystem(options: { registerListeners?: boolean } = {}) {
       fileStore.setCurrentFile(file);
       fileStore.setLastSavedContent(content);
       fileStore.setIsDirty(false);
-      
+
       // 解析 frontmatter (如果有)
       const { body, themeId, themeName } = parseFsFrontmatter(content);
       editorStore.setMarkdown(body);
-      
+
       if (themeId) {
         themeStore.setTheme(themeId);
       }
-      
+
       localStorage.setItem(LAST_FILE_KEY, file.path);
     }
   };
@@ -222,23 +224,23 @@ export function useFileSystem(options: { registerListeners?: boolean } = {}) {
   const createFile = async () => {
     if (isCreating.value) return;
     if (!electron && !storageStore.adapter) {
-        toast.error("存储未就绪");
-        return;
+      toast.error("存储未就绪");
+      return;
     }
-    
+
     isCreating.value = true;
     try {
       const initialContent = `---\ntheme: default\nthemeName: 默认主题\n---\n\n# 新文章\n\n`;
-      
+
       if (electron) {
         const res = await electron.fs.createFile({
-          content: initialContent
+          content: initialContent,
         });
-        
+
         if (res.success && res.filePath) {
           await refreshFiles();
           // 自动打开新文件
-          const newFile = fileStore.files.find(f => f.path === res.filePath);
+          const newFile = fileStore.files.find((f) => f.path === res.filePath);
           if (newFile) {
             await openFile(newFile);
           }
@@ -249,16 +251,16 @@ export function useFileSystem(options: { registerListeners?: boolean } = {}) {
         const defaultName = "未命名文章.md";
         let filename = defaultName;
         let counter = 1;
-        
+
         while (await storageStore.adapter.exists(filename)) {
-            filename = `未命名文章 (${counter}).md`;
-            counter++;
+          filename = `未命名文章 (${counter}).md`;
+          counter++;
         }
 
         await storageStore.adapter.writeFile(filename, initialContent);
         await refreshFiles();
-        
-        const newFile = fileStore.files.find(f => f.path === filename);
+
+        const newFile = fileStore.files.find((f) => f.path === filename);
         if (newFile) {
           await openFile(newFile);
         }
@@ -276,18 +278,25 @@ export function useFileSystem(options: { registerListeners?: boolean } = {}) {
   const saveFile = async () => {
     if (!fileStore.currentFile) return;
     if (!electron && !storageStore.adapter) return;
-    
+
     fileStore.setSaving(true);
     try {
       const frontmatter = `---\ntheme: ${themeStore.themeId}\nthemeName: ${themeStore.themeName}\n---\n`;
       const content = `${frontmatter}\n${editorStore.markdown}`;
-      
+
+      // 检查内容是否有变化
+      if (content === fileStore.lastSavedContent) {
+        fileStore.setSaving(false);
+        toast.success("内容无变化");
+        return;
+      }
+
       if (electron) {
         const res = await electron.fs.saveFile({
           filePath: fileStore.currentFile.path,
-          content
+          content,
         });
-        
+
         if (res.success) {
           fileStore.setLastSavedContent(content);
           fileStore.setIsDirty(false);
@@ -298,7 +307,10 @@ export function useFileSystem(options: { registerListeners?: boolean } = {}) {
           toast.error(res.error || "保存失败");
         }
       } else if (storageStore.adapter) {
-        await storageStore.adapter.writeFile(fileStore.currentFile.path, content);
+        await storageStore.adapter.writeFile(
+          fileStore.currentFile.path,
+          content,
+        );
         fileStore.setLastSavedContent(content);
         fileStore.setIsDirty(false);
         fileStore.setLastSavedAt(new Date());
@@ -316,18 +328,23 @@ export function useFileSystem(options: { registerListeners?: boolean } = {}) {
   // 8. 重命名文件
   const renameFile = async (oldPath: string, newName: string) => {
     if (!electron && !storageStore.adapter) return;
-    
+
     try {
       // 确保新名字以 .md 结尾
-      const safeName = newName.endsWith('.md') ? newName : `${newName}.md`;
+      const safeName = newName.endsWith(".md") ? newName : `${newName}.md`;
 
       if (electron) {
-        const res = await electron.fs.renameFile({ oldPath, newName: safeName });
+        const res = await electron.fs.renameFile({
+          oldPath,
+          newName: safeName,
+        });
         if (res.success && res.filePath) {
           await refreshFiles();
           // 如果是当前文件，更新当前文件状态
           if (fileStore.currentFile?.path === oldPath) {
-            const updatedFile = fileStore.files.find(f => f.path === res.filePath);
+            const updatedFile = fileStore.files.find(
+              (f) => f.path === res.filePath,
+            );
             if (updatedFile) {
               fileStore.setCurrentFile(updatedFile);
             }
@@ -338,21 +355,23 @@ export function useFileSystem(options: { registerListeners?: boolean } = {}) {
         }
       } else if (storageStore.adapter) {
         // Browser mode rename
-        const dir = oldPath.includes('/') ? oldPath.substring(0, oldPath.lastIndexOf('/') + 1) : '';
+        const dir = oldPath.includes("/")
+          ? oldPath.substring(0, oldPath.lastIndexOf("/") + 1)
+          : "";
         const newPath = dir + safeName;
-        
+
         if (oldPath === newPath) return;
-        
+
         if (await storageStore.adapter.exists(newPath)) {
-            toast.error("文件名已存在");
-            return;
+          toast.error("文件名已存在");
+          return;
         }
 
         await storageStore.adapter.renameFile(oldPath, newPath);
         await refreshFiles();
-        
+
         if (fileStore.currentFile?.path === oldPath) {
-          const updatedFile = fileStore.files.find(f => f.path === newPath);
+          const updatedFile = fileStore.files.find((f) => f.path === newPath);
           if (updatedFile) {
             fileStore.setCurrentFile(updatedFile);
           }
@@ -368,7 +387,7 @@ export function useFileSystem(options: { registerListeners?: boolean } = {}) {
   // 9. 删除文件
   const deleteFile = async (path: string) => {
     if (!electron && !storageStore.adapter) return;
-    
+
     try {
       if (electron) {
         const res = await electron.fs.deleteFile(path);
@@ -388,7 +407,7 @@ export function useFileSystem(options: { registerListeners?: boolean } = {}) {
       } else if (storageStore.adapter) {
         await storageStore.adapter.deleteFile(path);
         await refreshFiles();
-        
+
         if (fileStore.currentFile?.path === path) {
           fileStore.setCurrentFile(null);
           fileStore.setLastSavedContent("");
@@ -413,19 +432,21 @@ export function useFileSystem(options: { registerListeners?: boolean } = {}) {
 
     if (electron) {
       await loadWorkspace();
-      
+
       // 恢复上次打开的文件
       const lastFilePath = localStorage.getItem(LAST_FILE_KEY);
       if (lastFilePath) {
         // 等待文件列表刷新完成
         const checkFiles = setInterval(() => {
-            if (fileStore.files.length > 0) {
-                const lastFile = fileStore.files.find(f => f.path === lastFilePath);
-                if (lastFile) {
-                  openFile(lastFile);
-                }
-                clearInterval(checkFiles);
+          if (fileStore.files.length > 0) {
+            const lastFile = fileStore.files.find(
+              (f) => f.path === lastFilePath,
+            );
+            if (lastFile) {
+              openFile(lastFile);
             }
+            clearInterval(checkFiles);
+          }
         }, 100);
         setTimeout(() => clearInterval(checkFiles), 2000); // 最多等2秒
       }
@@ -434,32 +455,37 @@ export function useFileSystem(options: { registerListeners?: boolean } = {}) {
       cleanupListeners.value.push(electron.fs.onRefresh(refreshFiles));
       cleanupListeners.value.push(electron.fs.onMenuNewFile(createFile));
       cleanupListeners.value.push(electron.fs.onMenuSave(saveFile));
-      cleanupListeners.value.push(electron.fs.onMenuSwitchWorkspace(selectWorkspace));
+      cleanupListeners.value.push(
+        electron.fs.onMenuSwitchWorkspace(selectWorkspace),
+      );
     } else {
       // Browser mode
       if (storageStore.ready) {
-          await refreshFiles();
-          const lastFilePath = localStorage.getItem(LAST_FILE_KEY);
-          if (lastFilePath) {
-            const lastFile = fileStore.files.find(f => f.path === lastFilePath);
-            if (lastFile) {
-              await openFile(lastFile);
-            }
+        await refreshFiles();
+        const lastFilePath = localStorage.getItem(LAST_FILE_KEY);
+        if (lastFilePath) {
+          const lastFile = fileStore.files.find((f) => f.path === lastFilePath);
+          if (lastFile) {
+            await openFile(lastFile);
           }
+        }
       }
-      
+
       // 监听 storageStore 就绪
-      watch(() => storageStore.ready, async (ready) => {
+      watch(
+        () => storageStore.ready,
+        async (ready) => {
           if (ready) {
-              await refreshFiles();
+            await refreshFiles();
           }
-      });
+        },
+      );
     }
   });
 
   onUnmounted(() => {
     if (electron && registerListeners) {
-      cleanupListeners.value.forEach(cleanup => cleanup());
+      cleanupListeners.value.forEach((cleanup) => cleanup());
       cleanupListeners.value = [];
     }
   });
@@ -479,7 +505,7 @@ export function useFileSystem(options: { registerListeners?: boolean } = {}) {
     createFile,
     saveFile,
     renameFile,
-    deleteFile
+    deleteFile,
   };
 }
 
@@ -489,11 +515,15 @@ function parseFsFrontmatter(content: string) {
   if (!match) {
     return { body: content, themeId: null, themeName: null };
   }
-  
+
   const body = content.slice(match[0].length);
   const raw = match[1];
   const themeId = raw.match(/theme:\s*(.+)/)?.[1]?.trim() ?? null;
-  const themeName = raw.match(/themeName:\s*(.+)/)?.[1]?.trim()?.replace(/^['"]|['"]$/g, '') ?? null;
-  
+  const themeName =
+    raw
+      .match(/themeName:\s*(.+)/)?.[1]
+      ?.trim()
+      ?.replace(/^['"]|['"]$/g, "") ?? null;
+
   return { body, themeId, themeName };
 }

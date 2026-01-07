@@ -1,0 +1,10 @@
+{
+  "id": "md-beautify",
+  "name": "MD Beautify",
+  "version": "1.0.0",
+  "minAppVersion": "0.15.0",
+  "description": "A powerful markdown editor and beautifier integrated into Obsidian.",
+  "author": "MD Beautify",
+  "authorUrl": "https://github.com/lucas-lh/md-editor",
+  "isDesktopOnly": false
+}

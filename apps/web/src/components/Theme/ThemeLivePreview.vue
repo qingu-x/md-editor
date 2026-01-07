@@ -99,39 +99,46 @@ const shellDoc = `
 </html>
 `;
 
+const rawHtml = computed(() => parser.render(PREVIEW_MARKDOWN));
+
 const finalCss = computed(() => (isDarkMode.value ? convertCssToWeChatDarkMode(props.css) : props.css));
 
 const html = computed(() => {
-  const rawHtml = parser.render(PREVIEW_MARKDOWN);
-  return processHtml(rawHtml, finalCss.value, false);
+  return processHtml(rawHtml.value, finalCss.value, false);
 });
 
-const updateContent = () => {
-  const iframe = iframeRef.value;
-  if (!iframe) return;
+const updateContent = (() => {
+  let timer: any = null;
+  return () => {
+    if (timer) clearTimeout(timer);
+    timer = setTimeout(() => {
+      const iframe = iframeRef.value;
+      if (!iframe) return;
 
-  const doc = iframe.contentDocument || iframe.contentWindow?.document;
-  if (!doc) return;
+      const doc = iframe.contentDocument || iframe.contentWindow?.document;
+      if (!doc) return;
 
-  const themeStyle = doc.getElementById("theme-style");
-  const root = doc.getElementById("preview-root");
+      const themeStyle = doc.getElementById("theme-style");
+      const root = doc.getElementById("preview-root");
 
-  if (themeStyle && root) {
-    // 保存当前滚动位置
-    const scrollY = iframe.contentWindow?.scrollY || 0;
+      if (themeStyle && root) {
+        // 保存当前滚动位置
+        const scrollY = iframe.contentWindow?.scrollY || 0;
 
-    // 更新颜色
-    doc.body.style.background = isDarkMode.value ? "#252526" : "#fff";
-    doc.body.style.color = isDarkMode.value ? "#d4d4d4" : "#000";
+        // 更新颜色
+        doc.body.style.background = isDarkMode.value ? "#252526" : "#fff";
+        doc.body.style.color = isDarkMode.value ? "#d4d4d4" : "#000";
 
-    // 更新样式和 HTML
-    themeStyle.textContent = finalCss.value;
-    root.innerHTML = html.value;
+        // 更新样式和 HTML
+        themeStyle.textContent = finalCss.value;
+        root.innerHTML = html.value;
 
-    // 恢复滚动位置
-    iframe.contentWindow?.scrollTo(0, scrollY);
-  }
-};
+        // 恢复滚动位置
+        iframe.contentWindow?.scrollTo(0, scrollY);
+      }
+    }, 100);
+  };
+})();
 
 watch([html, finalCss, isDarkMode], () => {
   updateContent();

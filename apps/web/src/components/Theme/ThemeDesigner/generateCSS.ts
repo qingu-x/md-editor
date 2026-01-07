@@ -15,7 +15,9 @@ export function getHeadingPresetCSS(
   color: string,
   tag: string,
 ): { content: string; extra: string } {
-  const preset = headingStylePresets.find((p: HeadingPreset) => p.id === presetId);
+  const preset = headingStylePresets.find(
+    (p: HeadingPreset) => p.id === presetId,
+  );
   if (!preset) return { content: "", extra: "" };
   const css = preset.cssTemplate(color, tag);
   return { content: css.content || "", extra: css.extra || "" };
@@ -29,10 +31,22 @@ export function getQuotePresetCSS(
   color: string,
   bgColor: string,
   textColor: string,
+  borderWidth: number,
+  borderStyle: string,
+  padding: number,
+  centered?: boolean,
 ): { base: string; extra: string } {
   const preset = quoteStylePresets.find((p: QuotePreset) => p.id === presetId);
   if (!preset) return { base: "", extra: "" };
-  const css = preset.cssTemplate(color, bgColor, textColor);
+  const css = preset.cssTemplate(
+    color,
+    bgColor,
+    textColor,
+    borderWidth,
+    borderStyle,
+    padding,
+    centered,
+  );
   return { base: css.base || "", extra: css.extra || "" };
 }
 
@@ -178,9 +192,13 @@ export function generateCSS(v: DesignerVariables): string {
   );
   const quotePreset = getQuotePresetCSS(
     v.quotePreset,
-    v.primaryColor,
+    v.quoteBorderColor,
     v.quoteBackground,
     v.quoteTextColor,
+    v.quoteBorderWidth,
+    v.quoteBorderStyle,
+    v.quotePaddingX,
+    v.quoteTextCentered,
   );
   const headingExtras = [
     h1Preset.extra,
@@ -194,6 +212,7 @@ export function generateCSS(v: DesignerVariables): string {
   return `/* 可视化设计器生成 */
 #wemd {
   font-family: ${v.fontFamily};
+  padding: 0 ${v.pagePadding ?? 8}px;
   color: ${v.paragraphColor};
 }
 #wemd figcaption {
@@ -217,6 +236,7 @@ export function generateCSS(v: DesignerVariables): string {
   font-size: ${v.fontSize};
   line-height: ${v.lineHeight};
   margin: ${v.paragraphMargin}px 0;
+  padding: ${v.paragraphPadding ?? 0}px 0;
   ${v.textIndent ? "text-indent: 2em;" : ""}
   ${v.textJustify ? "text-align: justify;" : ""}
 }

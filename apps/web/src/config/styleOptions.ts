@@ -1,3 +1,10 @@
+function expandHexColor(color: string): string {
+  if (color.length === 4 && color.startsWith("#")) {
+    return `#${color[1]}${color[1]}${color[2]}${color[2]}${color[3]}${color[3]}`;
+  }
+  return color;
+}
+
 // 可视化主题编辑器 - 预设选项配置
 
 export interface StyleOption<T = string> {
@@ -203,6 +210,10 @@ export interface QuotePreset {
     color: string,
     bgColor: string,
     textColor: string,
+    borderWidth: number,
+    borderStyle: string,
+    padding: number,
+    centered?: boolean,
   ) => QuotePresetCss;
 }
 
@@ -210,28 +221,40 @@ export const quoteStylePresets: QuotePreset[] = [
   {
     id: "left-border",
     label: "经典竖线",
-    cssTemplate: (color, bgColor, textColor) => ({
+    cssTemplate: (
+      _color,
+      bgColor,
+      _textColor,
+      borderWidth,
+      borderStyle,
+      _padding,
+      _centered,
+    ) => ({
       base: `
-            border-left: 4px solid ${color};
             background: ${bgColor};
-            padding: 12px 16px;
-            color: ${textColor};
-            margin: 20px 0;
+            border-left-style: ${borderStyle};
+            border-left-width: ${borderWidth}px;
         `,
     }),
   },
   {
     id: "top-bottom-border",
     label: "上下双线",
-    cssTemplate: (color, bgColor, textColor) => ({
+    cssTemplate: (
+      color,
+      bgColor,
+      _textColor,
+      borderWidth,
+      borderStyle,
+      _padding,
+      _centered,
+    ) => ({
       base: `
-            border-top: 1px solid ${color};
-            border-bottom: 1px solid ${color};
+            border-top: ${borderWidth}px ${borderStyle} ${color};
+            border-bottom: ${borderWidth}px ${borderStyle} ${color};
+            border-left: none !important;
             background: ${bgColor};
-            padding: 20px 16px;
-            color: ${textColor};
             text-align: center;
-            margin: 20px 0;
         `,
       extra: `
         #wemd blockquote p { text-align: center !important; }
@@ -241,54 +264,89 @@ export const quoteStylePresets: QuotePreset[] = [
   {
     id: "quotation-marks",
     label: "大引号",
-    cssTemplate: (color, bgColor, textColor) => ({
-      base: `
+    cssTemplate: (
+      color,
+      bgColor,
+      _textColor,
+      _borderWidth,
+      _borderStyle,
+      padding,
+      _centered,
+    ) => {
+      const c = expandHexColor(color);
+
+      // 基础 padding + 40px 用于避让引号
+      const leftPadding = (padding || 20) + 40;
+
+      return {
+        base: `
             background: ${bgColor};
-            padding: 25px 20px;
-            color: ${textColor};
-            position: relative;
+            border-left: none !important;
             border-radius: 4px;
-            margin: 20px 0;
+            padding-left: ${leftPadding}px !important;
         `,
-      extra: `
+        extra: `
         #wemd blockquote::before {
             content: "“";
-            position: absolute;
-            top: 5px;
-            left: 10px;
-            font-size: 40px;
-            color: ${color}40;
+            display: block;
+            height: 0;
+            font-size: 60px;
+            color: ${c};
             font-family: Georgia, serif;
             line-height: 1;
+            margin-left: -40px;
+            margin-top: -6px;
+            opacity: 0.3;
+            pointer-events: none;
+        }
+        #wemd blockquote p {
+            position: relative;
+            z-index: 1;
         }
         `,
-    }),
+      };
+    },
   },
   {
     id: "boxed",
     label: "极简边框",
-    cssTemplate: (color, bgColor, textColor) => ({
-      base: `
-            border: 1px solid ${color}40;
+    cssTemplate: (
+      color,
+      bgColor,
+      _textColor,
+      borderWidth,
+      borderStyle,
+      _padding,
+      _centered,
+    ) => {
+      const c = expandHexColor(color);
+      return {
+        base: `
+            border: ${borderWidth}px ${borderStyle} ${c}40;
+            border-left: ${borderWidth}px ${borderStyle} ${c}40 !important;
             background: ${bgColor};
-            padding: 16px;
-            color: ${textColor};
             border-radius: 8px;
             box-shadow: 0 4px 12px rgba(0,0,0,0.03);
-            margin: 20px 0;
         `,
-    }),
+      };
+    },
   },
   {
     id: "center-accent",
     label: "中心强调",
-    cssTemplate: (color, bgColor, textColor) => ({
+    cssTemplate: (
+      color,
+      _bgColor,
+      _textColor,
+      borderWidth,
+      _borderStyle,
+      _padding,
+      _centered,
+    ) => ({
       base: `
             background: transparent;
-            padding: 30px 0;
-            color: ${textColor};
+            border-left: none !important;
             text-align: center;
-            margin: 20px 0;
             position: relative;
         `,
       extra: `
@@ -297,7 +355,7 @@ export const quoteStylePresets: QuotePreset[] = [
             content: "";
             display: block;
             width: 40px;
-            height: 2px;
+            height: ${borderWidth}px;
             background: ${color};
             margin: 0 auto 15px;
             opacity: 0.8;
@@ -306,13 +364,119 @@ export const quoteStylePresets: QuotePreset[] = [
             content: "";
             display: block;
             width: 40px;
-            height: 2px;
+            height: ${borderWidth}px;
             background: ${color};
             margin: 15px auto 0;
             opacity: 0.8;
         }
         `,
     }),
+  },
+  {
+    id: "straight-border",
+    label: "直角竖线",
+    cssTemplate: (
+      color,
+      bgColor,
+      _textColor,
+      borderWidth,
+      borderStyle,
+      _padding,
+      _centered,
+    ) => ({
+      base: `
+            background: ${bgColor};
+            border-left: ${borderWidth}px ${borderStyle} ${color} !important;
+            border-radius: 0 !important;
+        `,
+    }),
+  },
+  {
+    id: "centered-boxed",
+    label: "居中色块",
+    cssTemplate: (
+      color,
+      bgColor,
+      _textColor,
+      borderWidth,
+      borderStyle,
+      _padding,
+      _centered,
+    ) => ({
+      base: `
+            background: ${bgColor};
+            border: ${borderWidth}px ${borderStyle} ${color}40;
+            border-left: ${borderWidth}px ${borderStyle} ${color}40 !important;
+            text-align: center;
+            border-radius: 8px;
+        `,
+      extra: `
+        #wemd blockquote p { text-align: center !important; }
+        `,
+    }),
+  },
+  {
+    id: "minimal-transparent",
+    label: "透明背景",
+    cssTemplate: (
+      color,
+      _bgColor,
+      _textColor,
+      borderWidth,
+      borderStyle,
+      _padding,
+      _centered,
+    ) => ({
+      base: `
+            background: transparent !important;
+            border-left: ${borderWidth}px ${borderStyle} ${color} !important;
+            border-radius: 0;
+        `,
+    }),
+  },
+  {
+    id: "corner-frame",
+    label: "直角边框",
+    cssTemplate: (
+      color,
+      bgColor,
+      _textColor,
+      borderWidth,
+      borderStyle,
+      _padding,
+      _centered,
+    ) => {
+      const c = expandHexColor(color);
+      return {
+        base: `
+            background: ${bgColor};
+            border-left: none !important;
+            position: relative;
+        `,
+        extra: `
+        #wemd blockquote::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 20px;
+            height: 20px;
+            border-top: ${borderWidth}px ${borderStyle} ${c};
+            border-left: ${borderWidth}px ${borderStyle} ${c};
+        }
+        #wemd blockquote::after {
+            content: "";
+            position: absolute;
+            bottom: 0;
+            right: 0;
+            width: 20px;
+            height: 20px;
+            border-bottom: ${borderWidth}px ${borderStyle} ${c};
+            border-right: ${borderWidth}px ${borderStyle} ${c};
+        }
+        `,
+      };
+    },
   },
 ];
 

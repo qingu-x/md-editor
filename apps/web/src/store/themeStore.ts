@@ -2,14 +2,13 @@
  * 主题状态管理
  * 管理主题选择、自定义主题 CRUD、主题持久化
  */
-import { defineStore } from 'pinia';
-import { ref, computed, watch } from 'vue';
-import {
-  builtInThemes,
-} from "./themes/builtInThemes";
+import { defineStore } from "pinia";
+import { ref, computed, watch } from "vue";
+import { builtInThemes } from "./themes/builtInThemes";
 import type { CustomTheme, DesignerVariables } from "../types/theme";
 import { convertCssToWeChatDarkMode } from "@wemd/core";
 import { generateCSS } from "../components/Theme/ThemeDesigner/generateCSS";
+import { defaultVariables } from "../components/Theme/ThemeDesigner/defaults";
 
 // 深色转换缓存，避免重复转换同一段 CSS
 const darkCssCache = new Map<string, string>();
@@ -35,6 +34,33 @@ const SELECTED_THEME_KEY = "wemd-selected-theme";
 const canUseLocalStorage = () =>
   typeof window !== "undefined" && typeof window.localStorage !== "undefined";
 
+/**
+ * 迁移旧版本主题数据
+ */
+const migrateTheme = (t: CustomTheme): CustomTheme => {
+  const editorMode = t.editorMode || (t.designerVariables ? "visual" : "css");
+
+  let designerVariables = t.designerVariables;
+  if (editorMode === "visual" && designerVariables) {
+    // 确保包含所有最新的设计器变量，缺失的使用默认值
+    designerVariables = {
+      ...defaultVariables,
+      ...designerVariables,
+      // 嵌套对象也需要合并
+      h1: { ...defaultVariables.h1, ...designerVariables.h1 },
+      h2: { ...defaultVariables.h2, ...designerVariables.h2 },
+      h3: { ...defaultVariables.h3, ...designerVariables.h3 },
+      h4: { ...defaultVariables.h4, ...designerVariables.h4 },
+    };
+  }
+
+  return {
+    ...t,
+    editorMode,
+    designerVariables,
+  };
+};
+
 // 从 localStorage 加载自定义主题
 const loadCustomThemes = (): CustomTheme[] => {
   if (!canUseLocalStorage()) return [];
@@ -42,10 +68,7 @@ const loadCustomThemes = (): CustomTheme[] => {
     const stored = localStorage.getItem(CUSTOM_THEMES_KEY);
     if (!stored) return [];
     const themes = JSON.parse(stored) as CustomTheme[];
-    return themes.map((t) => ({
-      ...t,
-      editorMode: t.editorMode || (t.designerVariables ? "visual" : "css"),
-    }));
+    return themes.map(migrateTheme);
   } catch (error) {
     console.error("加载自定义主题失败:", error);
     return [];
@@ -65,14 +88,14 @@ const loadSelectedTheme = (): { id: string; name: string } | null => {
   }
 };
 
-export const useThemeStore = defineStore('theme', () => {
+export const useThemeStore = defineStore("theme", () => {
   const customThemes = ref<CustomTheme[]>(loadCustomThemes());
-  
+
   const savedSelected = loadSelectedTheme();
   const initialTheme = (() => {
     if (savedSelected) {
       const found = [...builtInThemes, ...customThemes.value].find(
-        (t) => t.id === savedSelected.id
+        (t) => t.id === savedSelected.id,
       );
       if (found) return found;
     }
@@ -82,29 +105,40 @@ export const useThemeStore = defineStore('theme', () => {
   const selectedThemeId = ref(initialTheme.id);
   const selectedThemeName = ref(initialTheme.name);
   const customCSS = ref(initialTheme.css);
-  const designerVariables = ref<DesignerVariables | undefined>(initialTheme.designerVariables);
+  const designerVariables = ref<DesignerVariables | undefined>(
+    initialTheme.designerVariables,
+  );
 
   // 计算属性
   const allThemes = computed(() => [...builtInThemes, ...customThemes.value]);
-  
-  const currentTheme = computed(() => 
-    allThemes.value.find(t => t.id === selectedThemeId.value) || builtInThemes[0]
+
+  const currentTheme = computed(
+    () =>
+      allThemes.value.find((t) => t.id === selectedThemeId.value) ||
+      builtInThemes[0],
   );
 
-  const isBuiltIn = computed(() => 
-    builtInThemes.some(t => t.id === selectedThemeId.value)
+  const isBuiltIn = computed(() =>
+    builtInThemes.some((t) => t.id === selectedThemeId.value),
   );
 
   // 持久化
-  watch(customThemes, (newThemes) => {
-    if (canUseLocalStorage()) {
-      localStorage.setItem(CUSTOM_THEMES_KEY, JSON.stringify(newThemes));
-    }
-  }, { deep: true });
+  watch(
+    customThemes,
+    (newThemes) => {
+      if (canUseLocalStorage()) {
+        localStorage.setItem(CUSTOM_THEMES_KEY, JSON.stringify(newThemes));
+      }
+    },
+    { deep: true },
+  );
 
   watch([selectedThemeId, selectedThemeName], ([newId, newName]) => {
     if (canUseLocalStorage()) {
-      localStorage.setItem(SELECTED_THEME_KEY, JSON.stringify({ id: newId, name: newName }));
+      localStorage.setItem(
+        SELECTED_THEME_KEY,
+        JSON.stringify({ id: newId, name: newName }),
+      );
     }
   });
 
@@ -130,13 +164,16 @@ export const useThemeStore = defineStore('theme', () => {
       if (selectedThemeId.value === id) {
         if (updates.css !== undefined) customCSS.value = updates.css;
         if (updates.name !== undefined) selectedThemeName.value = updates.name;
-        if (updates.designerVariables !== undefined) designerVariables.value = updates.designerVariables;
+        if (updates.designerVariables !== undefined)
+          designerVariables.value = updates.designerVariables;
       }
     }
   }
 
   function deleteCustomTheme(id: string) {
-    customThemes.value = customThemes.value.filter((t: CustomTheme) => t.id !== id);
+    customThemes.value = customThemes.value.filter(
+      (t: CustomTheme) => t.id !== id,
+    );
     if (selectedThemeId.value === id) {
       setTheme(builtInThemes[0].id);
     }
@@ -154,7 +191,8 @@ export const useThemeStore = defineStore('theme', () => {
   }
 
   function getThemeCSS(themeId: string, isDarkMode: boolean) {
-    const theme = allThemes.value.find((t) => t.id === themeId) || currentTheme.value;
+    const theme =
+      allThemes.value.find((t) => t.id === themeId) || currentTheme.value;
     if (isDarkMode) {
       return getWechatDarkCss(theme.css);
     }
@@ -208,6 +246,21 @@ export const useThemeStore = defineStore('theme', () => {
     const a = document.createElement("a");
     a.href = url;
     a.download = `${theme.name}.json`;
+    a.click();
+    URL.revokeObjectURL(url);
+  }
+
+  function exportThemeCSS(id: string) {
+    const theme = allThemes.value.find((t) => t.id === id);
+    if (!theme) return;
+
+    const blob = new Blob([theme.css], {
+      type: "text/css",
+    });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = `${theme.name}.css`;
     a.click();
     URL.revokeObjectURL(url);
   }
@@ -276,10 +329,16 @@ export const useThemeStore = defineStore('theme', () => {
     deleteTheme: deleteCustomTheme,
     duplicateTheme,
     exportTheme,
+    exportThemeCSS,
     importTheme,
     getThemeCSS,
     getWechatDarkCss,
-    createTheme: (name: string, editorMode: string, css: string, vars?: DesignerVariables) => {
+    createTheme: (
+      name: string,
+      editorMode: string,
+      css: string,
+      vars?: DesignerVariables,
+    ) => {
       const newTheme: CustomTheme = {
         id: `custom-${Date.now()}`,
         name,
