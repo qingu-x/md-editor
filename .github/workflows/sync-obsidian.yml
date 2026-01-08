@@ -53,7 +53,12 @@ jobs:
           
           # 确保关键文件在根目录
           cp apps/obsidian/src/assets/manifest.json $TEMP_DIR/manifest.json
-          cp apps/obsidian/LICENSE $TEMP_DIR/LICENSE
+          # 如果 apps/obsidian/ 下没有 LICENSE，就从主目录拿
+          if [ -f apps/obsidian/LICENSE ]; then
+            cp apps/obsidian/LICENSE $TEMP_DIR/LICENSE
+          else
+            cp LICENSE $TEMP_DIR/LICENSE
+          fi
           
           cd $TEMP_DIR
           git init
