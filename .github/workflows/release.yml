@@ -155,6 +155,9 @@ jobs:
       - name: Install workspace dependencies
         run: pnpm install --frozen-lockfile
 
+      - name: Build Core Package
+        run: pnpm --filter @wemd/core run build
+
       - name: Build Obsidian Plugin
         run: |
           cd apps/obsidian
