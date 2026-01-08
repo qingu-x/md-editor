@@ -49,7 +49,8 @@ jobs:
 
           # 准备同步目录
           TEMP_DIR=$(mktemp -d)
-          cp -r apps/obsidian/. $TEMP_DIR/
+          # 使用 rsync 排除 node_modules 和 dist
+          rsync -av --exclude='node_modules' --exclude='dist' apps/obsidian/ $TEMP_DIR/
           
           # 确保关键文件在根目录
           cp apps/obsidian/src/assets/manifest.json $TEMP_DIR/manifest.json
