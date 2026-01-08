@@ -5,9 +5,6 @@ on:
     branches:
       - main
       - vue
-    paths:
-      - 'apps/obsidian/**'
-      - 'packages/core/**'
 
 jobs:
   sync-and-publish:
@@ -53,9 +50,6 @@ jobs:
           # 准备同步目录
           TEMP_DIR=$(mktemp -d)
           cp -r apps/obsidian/. $TEMP_DIR/
-          
-          # 复制构建产物到根目录（Obsidian 官方要求产物在根目录或指定位置）
-          # 我们把 dist 里的产物也带过去
           
           cd $TEMP_DIR
           git init
