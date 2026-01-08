@@ -3,7 +3,7 @@
   "name": "MD Beautify",
   "version": "1.0.0",
   "minAppVersion": "0.15.0",
-  "description": "A powerful markdown editor and beautifier integrated into Obsidian.",
+  "description": "An elegant Markdown beautifier for WeChat and other platforms.",
   "author": "MD Beautify",
   "authorUrl": "https://github.com/qingu-x/md-editor",
   "isDesktopOnly": false
