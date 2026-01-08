@@ -54,9 +54,9 @@ jobs:
           
           # 确保关键文件在根目录
           cp apps/obsidian/src/assets/manifest.json $TEMP_DIR/manifest.json
-          # 同时也把编译产物复制到根目录，方便官方审核和用户下载
-          [ -f apps/obsidian/main.js ] && cp apps/obsidian/main.js $TEMP_DIR/main.js
-          [ -f apps/obsidian/styles.css ] && cp apps/obsidian/styles.css $TEMP_DIR/styles.css
+          # 同时也把编译产物复制到根目录（注意：产物在 dist 目录下）
+          [ -f apps/obsidian/dist/main.js ] && cp apps/obsidian/dist/main.js $TEMP_DIR/main.js
+          [ -f apps/obsidian/dist/styles.css ] && cp apps/obsidian/dist/styles.css $TEMP_DIR/styles.css
           
           # 如果 apps/obsidian/ 下没有 LICENSE，就从主目录拿
           if [ -f apps/obsidian/LICENSE ]; then
