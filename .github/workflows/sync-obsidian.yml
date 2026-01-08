@@ -51,6 +51,10 @@ jobs:
           TEMP_DIR=$(mktemp -d)
           cp -r apps/obsidian/. $TEMP_DIR/
           
+          # 确保关键文件在根目录
+          cp apps/obsidian/src/assets/manifest.json $TEMP_DIR/manifest.json
+          cp apps/obsidian/LICENSE $TEMP_DIR/LICENSE
+          
           cd $TEMP_DIR
           git init
           git config user.name "github-actions[bot]"
