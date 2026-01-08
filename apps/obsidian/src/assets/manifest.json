@@ -5,6 +5,6 @@
   "minAppVersion": "0.15.0",
   "description": "A powerful markdown editor and beautifier integrated into Obsidian.",
   "author": "MD Beautify",
-  "authorUrl": "https://github.com/lucas-lh/md-editor",
+  "authorUrl": "https://github.com/qingu-x/md-editor",
   "isDesktopOnly": false
 }

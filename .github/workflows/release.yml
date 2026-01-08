@@ -178,4 +178,8 @@ jobs:
         if: startsWith(github.ref, 'refs/tags/')
         uses: softprops/action-gh-release@v1
         with:
-          files: apps/obsidian/dist/md-beautify-obsidian.zip
+          files: |
+            apps/obsidian/dist/md-beautify-obsidian.zip
+            apps/obsidian/dist/main.js
+            apps/obsidian/dist/manifest.json
+            apps/obsidian/dist/styles.css

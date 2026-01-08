@@ -1,0 +1,67 @@
+name: Sync to Standalone Obsidian Repo
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - 'apps/obsidian/**'
+      - 'packages/core/**'
+
+jobs:
+  sync-and-publish:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup PNPM
+        uses: pnpm/action-setup@v3
+        with:
+          version: 9
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 18
+          cache: pnpm
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Build Core
+        run: pnpm --filter @wemd/core run build
+
+      - name: Build Obsidian Plugin
+        run: |
+          cd apps/obsidian
+          pnpm run build
+
+      - name: Push to Standalone Repo
+        env:
+          SSH_PRIVATE_KEY: ${{ secrets.OBSIDIAN_SYNC_KEY }}
+        run: |
+          # 配置 SSH
+          mkdir -p ~/.ssh
+          echo "$SSH_PRIVATE_KEY" > ~/.ssh/id_rsa
+          chmod 600 ~/.ssh/id_rsa
+          ssh-keyscan github.com >> ~/.ssh/known_hosts
+
+          # 准备同步目录
+          TEMP_DIR=$(mktemp -d)
+          cp -r apps/obsidian/. $TEMP_DIR/
+          
+          # 复制构建产物到根目录（Obsidian 官方要求产物在根目录或指定位置）
+          # 我们把 dist 里的产物也带过去
+          
+          cd $TEMP_DIR
+          git init
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git remote add origin git@github.com:qingu-x/obsidian-md-beautify-plugin.git
+          
+          git add .
+          git commit -m "Sync from monorepo: ${GITHUB_SHA::7}"
+          git push -f origin master:main

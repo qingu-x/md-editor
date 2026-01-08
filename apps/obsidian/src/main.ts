@@ -17,7 +17,7 @@ This is a modern Markdown editor designed for **beautiful layout and presentatio
 
 ==Highlighted text==
 
-This is a [link](https://github.com/lucas-lh/md-editor)
+This is a [link](https://github.com/qingu-x/md-editor)
 
 ## 2. Special Formats
 ### Subscript and Superscript
