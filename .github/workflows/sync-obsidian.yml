@@ -43,8 +43,13 @@ jobs:
 
       - name: Push and Create Release
         env:
-          GH_TOKEN: ${{ secrets.OBSIDIAN_RELEASE_TOKEN || secrets.GITHUB_TOKEN }}
+          GH_TOKEN: ${{ secrets.OBSIDIAN_RELEASE_TOKEN }}
         run: |
+          if [ -z "$GH_TOKEN" ]; then
+            echo "Error: OBSIDIAN_RELEASE_TOKEN is not set. Please add it to repository secrets."
+            exit 1
+          fi
+
           # 准备同步目录
           TEMP_DIR=$(mktemp -d)
           rsync -av --exclude='node_modules' --exclude='dist' apps/obsidian/ $TEMP_DIR/
@@ -61,16 +66,16 @@ jobs:
           fi
           
           cd $TEMP_DIR
-          git init
+          git init -b main
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
           
-          # 使用 HTTPS + Token 认证方式
+          # 使用 HTTPS + Token 认证方式，确保 URL 格式正确
           git remote add origin "https://x-access-token:${GH_TOKEN}@github.com/qingu-x/obsidian-md-beautify-plugin.git"
           
           git add .
           git commit -m "Sync from monorepo: ${GITHUB_SHA::7}"
-          git push -f origin master:main
+          git push -f origin main
 
           # 创建 Release
           VERSION=$(node -p "require('./manifest.json').version")
