@@ -11,6 +11,8 @@ on:
 jobs:
   sync-and-publish:
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -41,15 +43,8 @@ jobs:
 
       - name: Push and Create Release
         env:
-          SSH_PRIVATE_KEY: ${{ secrets.OBSIDIAN_SYNC_KEY }}
           GH_TOKEN: ${{ secrets.OBSIDIAN_RELEASE_TOKEN || secrets.GITHUB_TOKEN }}
         run: |
-          # 配置 SSH
-          mkdir -p ~/.ssh
-          echo "$SSH_PRIVATE_KEY" > ~/.ssh/id_rsa
-          chmod 600 ~/.ssh/id_rsa
-          ssh-keyscan github.com >> ~/.ssh/known_hosts
-
           # 准备同步目录
           TEMP_DIR=$(mktemp -d)
           rsync -av --exclude='node_modules' --exclude='dist' apps/obsidian/ $TEMP_DIR/
@@ -69,7 +64,9 @@ jobs:
           git init
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
-          git remote add origin git@github.com:qingu-x/obsidian-md-beautify-plugin.git
+          
+          # 使用 HTTPS + Token 认证方式
+          git remote add origin "https://x-access-token:${GH_TOKEN}@github.com/qingu-x/obsidian-md-beautify-plugin.git"
           
           git add .
           git commit -m "Sync from monorepo: ${GITHUB_SHA::7}"
