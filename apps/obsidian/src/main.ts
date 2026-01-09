@@ -64,7 +64,7 @@ Go for it :rocket:
 `;
 
 const VIEW_TYPE_MDBEAUTIFY_PREVIEW = 'md-beautify-preview-view';
-import { createMarkdownParser, processHtml, basicTheme, customDefaultTheme, codeGithubTheme, academicPaperTheme, auroraGlassTheme, bauhausTheme, cyberpunkNeonTheme, knowledgeBaseTheme, luxuryGoldTheme, morandiForestTheme, neoBrutalismTheme, receiptTheme, sunsetFilmTheme, templateTheme } from '@wemd/core';
+import { createMarkdownParser, processHtml, convertCssToWeChatDarkMode, basicTheme, customDefaultTheme, codeGithubTheme, academicPaperTheme, auroraGlassTheme, bauhausTheme, cyberpunkNeonTheme, knowledgeBaseTheme, luxuryGoldTheme, morandiForestTheme, neoBrutalismTheme, receiptTheme, sunsetFilmTheme, templateTheme } from '@wemd/core';
 
 const allThemes: Record<string, string> = {
 	basic: basicTheme + '\n' + customDefaultTheme + '\n' + codeGithubTheme,
@@ -97,6 +97,7 @@ interface MDBeautifySettings {
 	autoUploadImages: boolean;
 	customThemes: string[];
 	controlsVisible: boolean;
+	themeMode: 'auto' | 'light' | 'dark';
 }
 
 const DEFAULT_SETTINGS: MDBeautifySettings = {
@@ -114,7 +115,8 @@ const DEFAULT_SETTINGS: MDBeautifySettings = {
 	},
 	autoUploadImages: false,
 	customThemes: [],
-	controlsVisible: false
+	controlsVisible: false,
+	themeMode: 'auto'
 }
 
 export default class MDBeautifyPlugin extends Plugin {
@@ -433,14 +435,20 @@ export default class MDBeautifyPlugin extends Plugin {
 		}
 	}
 
-	getThemeCss(themeId?: string) {
+	getThemeCss(themeId?: string, isDark?: boolean) {
 		const id = themeId || this.settings.defaultTheme;
 		// If user has customized this theme, return the custom version
-		if (this.settings.customThemeStyles[id]) {
-			return this.settings.customThemeStyles[id];
+		let css = this.settings.customThemeStyles[id] || allThemes[id] || allThemes['basic'];
+		
+		if (isDark) {
+			const DARK_MARK = "/* wemd-wechat-dark-converted */";
+			if (!css.includes(DARK_MARK)) {
+				const darkCss = convertCssToWeChatDarkMode(css);
+				css = `${css}\n${DARK_MARK}\n${darkCss}`;
+			}
 		}
-		// Otherwise return the built-in base theme
-		return allThemes[id] || allThemes['basic'];
+		
+		return css;
 	}
 
 	async copyBeautified() {
@@ -481,7 +489,8 @@ export default class MDBeautifyPlugin extends Plugin {
 
 		// Remove frontmatter/properties
 		content = content.replace(/^---[\s\S]*?---/, '').trim();
-		const themeCss = this.getThemeCss();
+		const isDarkMode = document.body.classList.contains('theme-dark');
+		const themeCss = this.getThemeCss(undefined, isDarkMode);
 		
 		try {
 			const html = this.parser.render(content);
@@ -523,6 +532,13 @@ export default class MDBeautifyPlugin extends Plugin {
 			}
 		});
 	}
+
+	isDarkMode() {
+		if (this.settings.themeMode === 'auto') {
+			return document.body.classList.contains('theme-dark');
+		}
+		return this.settings.themeMode === 'dark';
+	}
 }
 
 class MDBeautifyPreviewView extends ItemView {
@@ -532,6 +548,7 @@ class MDBeautifyPreviewView extends ItemView {
 	scrollContainer!: HTMLElement;
 	private lastScrollTime = 0;
 	private lastScrollSource: 'editor' | 'preview' | null = null;
+	private lastActiveView: MarkdownView | null = null;
 
 	constructor(leaf: WorkspaceLeaf, plugin: MDBeautifyPlugin) {
 		super(leaf);
@@ -663,10 +680,36 @@ class MDBeautifyPreviewView extends ItemView {
 		hostSetting.settingEl.style.padding = '0';
 		hostSetting.settingEl.style.flex = '1';
 
+		// Theme Mode Selector
+		const modeContainer = selectorsRow.createDiv();
+		modeContainer.style.display = 'flex';
+		modeContainer.style.alignItems = 'center';
+		modeContainer.style.gap = '4px';
+		modeContainer.style.flex = '1';
+		modeContainer.createSpan({ text: '外观:' }).style.fontSize = '12px';
+
+		const modeSetting = new Setting(modeContainer)
+			.addDropdown(dropdown => {
+				dropdown
+					.addOption('auto', '跟随')
+					.addOption('light', '浅色')
+					.addOption('dark', '深色')
+					.setValue(this.plugin.settings.themeMode)
+					.onChange(async (value) => {
+						this.plugin.settings.themeMode = value as 'auto' | 'light' | 'dark';
+						await this.plugin.saveSettings();
+						this.plugin.updateAllPreviews(true);
+					});
+			});
+		modeSetting.infoEl.remove();
+		modeSetting.settingEl.style.border = 'none';
+		modeSetting.settingEl.style.padding = '0';
+		modeSetting.settingEl.style.flex = '1';
+
 		this.scrollContainer = container.createDiv({ cls: 'md-beautify-view-preview-scroll' });
 		this.scrollContainer.style.flex = '1';
 		this.scrollContainer.style.overflowY = 'auto';
-		this.scrollContainer.style.backgroundColor = '#ffffff';
+		this.scrollContainer.style.backgroundColor = 'var(--background-primary)';
 		this.scrollContainer.style.padding = '20px';
 
 		this.scrollContainer.addEventListener('scroll', () => {
@@ -679,6 +722,9 @@ class MDBeautifyPreviewView extends ItemView {
 
 		this.previewEl = this.scrollContainer.createDiv({ cls: 'md-beautify-view-preview-content' });
 		
+		// Set initial active view
+		this.lastActiveView = this.app.workspace.getActiveViewOfType(MarkdownView);
+
 		// Initial update
 		this.updatePreview();
 
@@ -693,6 +739,12 @@ class MDBeautifyPreviewView extends ItemView {
 			this.app.workspace.on('active-leaf-change', () => {
 				this.updatePreview();
 				this.setupEditorScrollListener();
+			})
+		);
+
+		this.registerEvent(
+			this.app.workspace.on('css-change', () => {
+				this.updatePreview(true);
 			})
 		);
 
@@ -835,17 +887,53 @@ class MDBeautifyPreviewView extends ItemView {
 	}
 
 	updatePreview(force = false) {
+		// 检查深色模式并同步 UI 主题属性
+		const isDarkMode = this.plugin.isDarkMode();
+		
+		// 在外层容器上设置主题属性，以便 CSS 变量和样式生效
+		if (this.scrollContainer) {
+			this.scrollContainer.setAttribute('data-ui-theme', isDarkMode ? 'dark' : 'light');
+			if (isDarkMode) {
+				this.scrollContainer.classList.add('wemd-dark-mode');
+				this.scrollContainer.style.backgroundColor = '#0f1113'; // Web 端深色背景
+			} else {
+				this.scrollContainer.classList.remove('wemd-dark-mode');
+				this.scrollContainer.style.backgroundColor = 'var(--background-primary)';
+			}
+		}
+
+		if (this.previewEl) {
+			this.previewEl.setAttribute('data-ui-theme', isDarkMode ? 'dark' : 'light');
+			if (isDarkMode) {
+				this.previewEl.classList.add('wemd-dark-mode');
+			} else {
+				this.previewEl.classList.remove('wemd-dark-mode');
+			}
+		}
+
 		const activeView = this.app.workspace.getActiveViewOfType(MarkdownView);
 		
 		if (activeView) {
+			this.lastActiveView = activeView;
 			this.renderContent(activeView);
 			return;
+		}
+
+		if (this.lastActiveView) {
+			// Check if the view is still valid (file still exists and is the same)
+			if (this.lastActiveView.file && this.app.vault.getAbstractFileByPath(this.lastActiveView.file.path)) {
+				this.renderContent(this.lastActiveView);
+				return;
+			} else {
+				this.lastActiveView = null;
+			}
 		}
 
 		if (force) {
 			// 如果强制刷新但没有活跃视图，尝试找到第一个 Markdown 视图
 			const leaves = this.app.workspace.getLeavesOfType("markdown");
 			if (leaves.length > 0 && leaves[0].view instanceof MarkdownView) {
+				this.lastActiveView = leaves[0].view;
 				this.renderContent(leaves[0].view);
 				return;
 			}
@@ -875,7 +963,9 @@ class MDBeautifyPreviewView extends ItemView {
 			// Remove frontmatter/properties
 			content = content.replace(/^---[\s\S]*?---/, '').trim();
 
-			const themeCss = this.plugin.getThemeCss();
+			// 检查深色模式
+			const isDarkMode = this.plugin.isDarkMode();
+			const themeCss = this.plugin.getThemeCss(undefined, isDarkMode);
 			
 			// Update style element for live preview (non-inlined)
 			this.styleEl.innerHTML = themeCss;
@@ -884,6 +974,16 @@ class MDBeautifyPreviewView extends ItemView {
 			// For preview, we don't inline styles for better performance, and we replace local images with placeholders
 			const finalHtml = processHtml(html, themeCss, false, false, true);
 			this.previewEl.innerHTML = finalHtml;
+
+			// 参考 web 端的实现方式，同步 data-ui-theme 属性和暗色模式类
+			this.previewEl.setAttribute('data-ui-theme', isDarkMode ? 'dark' : 'light');
+			if (isDarkMode) {
+				this.previewEl.classList.add('wemd-dark-mode');
+			} else {
+				this.previewEl.classList.remove('wemd-dark-mode');
+			}
+			// 预览内容背景透明，使用父容器背景
+			this.previewEl.style.backgroundColor = 'transparent';
 
 			// Restore scroll ratio after content update (with multiple checks for images/rendering)
 			if (scrollRatio > 0) {
@@ -1128,6 +1228,22 @@ class MDBeautifySettingTab extends PluginSettingTab {
 					});
 			});
 
+		new Setting(container)
+			.setName('外观模式')
+			.setDesc('选择预览界面的外观模式（跟随系统、浅色或深色）')
+			.addDropdown(dropdown => {
+				dropdown
+					.addOption('auto', '跟随 Obsidian')
+					.addOption('light', '浅色模式')
+					.addOption('dark', '深色模式')
+					.setValue(this.plugin.settings.themeMode)
+					.onChange(async (value) => {
+						this.plugin.settings.themeMode = value as 'auto' | 'light' | 'dark';
+						await this.plugin.saveSettings();
+						this.plugin.updateAllPreviews(true);
+					});
+			});
+
 		const themeLabel = t(`theme_${themeId}` as any) || themeId;
 
 		// Main Editor Container
@@ -1171,13 +1287,14 @@ class MDBeautifySettingTab extends PluginSettingTab {
 		previewFrame.style.overflowY = 'auto';
 		previewFrame.style.border = '1px solid var(--background-modifier-border)';
 		previewFrame.style.padding = '20px';
-		previewFrame.style.backgroundColor = '#ffffff';
+		previewFrame.style.backgroundColor = 'var(--background-primary)';
 
 		const previewStyle = previewFrame.createEl('style');
 		const previewContent = previewFrame.createDiv();
 
 		const updateSettingsPreview = () => {
-			const css = this.plugin.getThemeCss(themeId);
+			const isDarkMode = document.body.classList.contains('theme-dark');
+			const css = this.plugin.getThemeCss(themeId, isDarkMode);
 			// Wrap styles to scope them to preview frame
 			previewStyle.innerHTML = css.replace(/#wemd/g, '.md-beautify-preview-wrapper');
 			

@@ -25,3 +25,45 @@
   max-height: 400px;
   overflow-y: auto;
 }
+
+/* ========================================
+   Web 基础样式同步
+   ======================================== */
+
+/* 确保斜体样式生效 */
+#wemd em {
+  font-style: italic !important;
+  font-synthesis: style;
+}
+
+/* 强制图片自适应 */
+#wemd img {
+  max-width: 100% !important;
+  height: auto !important;
+  display: block;
+  margin: 10px auto;
+}
+
+/* 针对整个预览容器启用字体合成 */
+#wemd {
+  font-synthesis: style weight;
+  background-color: inherit;
+}
+
+/* ========================================
+   深色模式支持 (Web 方式)
+   ======================================== */
+
+.wemd-dark-mode,
+[data-ui-theme="dark"] {
+  color-scheme: dark;
+}
+
+/* 当处于深色模式时，确保背景色正确 */
+.wemd-dark-mode#wemd,
+[data-ui-theme="dark"]#wemd {
+  background-color: #191919; /* 微信深色模式背景色 */
+}
+
+/* 如果用户希望完全跟随 Obsidian 主题，可以使用下面的变量 */
+/* .theme-dark .wemd-dark-mode#wemd { background-color: var(--background-primary); } */

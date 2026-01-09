@@ -5,6 +5,8 @@ on:
     branches:
       - main
       - vue
+    paths:
+      - 'apps/obsidian/src/assets/manifest.json'
 
 jobs:
   sync-and-publish:
@@ -37,9 +39,10 @@ jobs:
           cd apps/obsidian
           pnpm run build
 
-      - name: Push to Standalone Repo
+      - name: Push and Create Release
         env:
           SSH_PRIVATE_KEY: ${{ secrets.OBSIDIAN_SYNC_KEY }}
+          GH_TOKEN: ${{ secrets.OBSIDIAN_RELEASE_TOKEN || secrets.GITHUB_TOKEN }}
         run: |
           # 配置 SSH
           mkdir -p ~/.ssh
@@ -49,16 +52,13 @@ jobs:
 
           # 准备同步目录
           TEMP_DIR=$(mktemp -d)
-          # 使用 rsync 排除 node_modules 和 dist
           rsync -av --exclude='node_modules' --exclude='dist' apps/obsidian/ $TEMP_DIR/
           
           # 确保关键文件在根目录
           cp apps/obsidian/src/assets/manifest.json $TEMP_DIR/manifest.json
-          # 同时也把编译产物复制到根目录（注意：产物在 dist 目录下）
           [ -f apps/obsidian/dist/main.js ] && cp apps/obsidian/dist/main.js $TEMP_DIR/main.js
           [ -f apps/obsidian/dist/styles.css ] && cp apps/obsidian/dist/styles.css $TEMP_DIR/styles.css
           
-          # 如果 apps/obsidian/ 下没有 LICENSE，就从主目录拿
           if [ -f apps/obsidian/LICENSE ]; then
             cp apps/obsidian/LICENSE $TEMP_DIR/LICENSE
           else
@@ -74,3 +74,22 @@ jobs:
           git add .
           git commit -m "Sync from monorepo: ${GITHUB_SHA::7}"
           git push -f origin master:main
+
+          # 创建 Release
+          VERSION=$(node -p "require('./manifest.json').version")
+          echo "Creating release for version $VERSION"
+          
+          # 检查 Release 是否已存在，如果不存在则创建
+          if ! gh release view "$VERSION" --repo qingu-x/obsidian-md-beautify-plugin > /dev/null 2>&1; then
+            gh release create "$VERSION" \
+              main.js manifest.json styles.css \
+              --repo qingu-x/obsidian-md-beautify-plugin \
+              --title "$VERSION" \
+              --notes "Automated release from monorepo"
+          else
+            echo "Release $VERSION already exists, uploading/updating assets..."
+            gh release upload "$VERSION" \
+              main.js manifest.json styles.css \
+              --repo qingu-x/obsidian-md-beautify-plugin \
+              --clobber
+          fi

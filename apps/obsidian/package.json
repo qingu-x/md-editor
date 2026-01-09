@@ -6,7 +6,7 @@
   "scripts": {
     "dev": "node esbuild.config.mjs",
     "build": "tsc -noEmit && node esbuild.config.mjs production && cp src/assets/manifest.json src/assets/styles.css dist/",
-    "version": "node version-bump.mjs && git add src/assets/manifest.json versions.json"
+    "version": "node version-bump.mjs && git add src/assets/manifest.json versions.json && :"
   },
   "keywords": [
     "obsidian",

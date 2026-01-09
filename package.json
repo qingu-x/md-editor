@@ -8,6 +8,7 @@
     "dev:web": "pnpm --filter @wemd/web run dev",
     "dev:electron": "ELECTRON_START_URL=http://localhost:5173 NODE_ENV=development pnpm --filter wemd-electron run dev -- --dev",
     "dev:desktop": "node scripts/run-desktop-dev.mjs",
+    "version:obsidian": "pnpm --filter md-beautify-obsidian version",
     "lint": "turbo run lint",
     "format": "prettier --write \"**/*.{ts,tsx,md}\"",
     "prepare": "husky"
