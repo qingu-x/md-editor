@@ -46,7 +46,12 @@ jobs:
           GH_TOKEN: ${{ secrets.OBSIDIAN_RELEASE_TOKEN }}
         run: |
           if [ -z "$GH_TOKEN" ]; then
-            echo "Error: OBSIDIAN_RELEASE_TOKEN is not set. Please add it to repository secrets."
+            echo "::error::OBSIDIAN_RELEASE_TOKEN is empty or not accessible."
+            echo "If this is an Organization Secret, please check:"
+            echo "1. Go to Organization Settings > Secrets and variables > Actions"
+            echo "2. Find 'OBSIDIAN_RELEASE_TOKEN' and click the edit icon"
+            echo "3. Ensure 'Repository access' includes this repository"
+            echo "4. Ensure 'Visibility' is compatible with this repository's privacy (Public/Private)"
             exit 1
           fi
 

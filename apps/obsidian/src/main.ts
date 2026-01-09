@@ -487,6 +487,7 @@ export default class MDBeautifyPlugin extends Plugin {
 			return;
 		}
 
+		const rawMarkdown = content; // Keep raw markdown for text/plain
 		// Remove frontmatter/properties
 		content = content.replace(/^---[\s\S]*?---/, '').trim();
 		const isDarkMode = document.body.classList.contains('theme-dark');
@@ -494,14 +495,20 @@ export default class MDBeautifyPlugin extends Plugin {
 		
 		try {
 			const html = this.parser.render(content);
-			// Inline styles for copying
-			const finalHtml = processHtml(html, themeCss, true);
+			// Inline styles for copying - match web version logic
+			// processHtml(html, css, inlineStyles, inlinePseudoElements, replaceLocalImages)
+			const styledHtml = processHtml(html, themeCss, true, true);
+			
+			// Convert checkbox to emoji (WeChat doesn't support <input>)
+			const finalHtml = this.convertCheckboxesToEmoji(styledHtml);
 			
 			// Copy to clipboard
-			const blob = new Blob([finalHtml], { type: 'text/html' });
+			const htmlBlob = new Blob([finalHtml], { type: 'text/html' });
+			const textBlob = new Blob([rawMarkdown], { type: 'text/plain' });
+			
 			const data = [new ClipboardItem({ 
-				'text/html': blob, 
-				'text/plain': new Blob([finalHtml], { type: 'text/plain' }) 
+				'text/html': htmlBlob, 
+				'text/plain': textBlob 
 			})];
 			
 			await navigator.clipboard.write(data);
@@ -510,6 +517,21 @@ export default class MDBeautifyPlugin extends Plugin {
 			console.error('MD Beautify copy error:', err);
 			new Notice(t('copy_failed') + (err.message || String(err)));
 		}
+	}
+
+	/**
+	 * 将 HTML 中的 checkbox 转换为 emoji
+	 * 微信公众号会过滤 <input> 标签，需要转为 emoji 替代
+	 */
+	private convertCheckboxesToEmoji(html: string): string {
+		// 先替换选中的 checkbox（包含 checked 属性）
+		let result = html.replace(/<input[^>]*checked[^>]*>/gi, "✅&nbsp;");
+		// 再替换未选中的 checkbox
+		result = result.replace(
+			/<input[^>]*type=["']checkbox["'][^>]*>/gi,
+			"⬜&nbsp;",
+		);
+		return result;
 	}
 
 	showPreviewModal() {
