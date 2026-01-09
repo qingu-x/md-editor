@@ -3,10 +3,10 @@ name: Sync to Standalone Obsidian Repo
 on:
   push:
     branches:
-      - main
       - vue
     paths:
       - 'apps/obsidian/src/assets/manifest.json'
+  workflow_dispatch: # 允许手动触发，方便调试和补发版本
 
 jobs:
   sync-and-publish:
