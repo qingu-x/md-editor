@@ -4,8 +4,6 @@
 
 ---
 
-<a name="english"></a>
-
 ## English
 
 **MD Beautify** is an elegant Markdown beautification plugin for Obsidian. It is the Obsidian integration of [MD Beautify](https://github.com/qingu-x/md-editor). It helps you format and style your notes perfectly for platforms like WeChat Official Accounts, Zhihu, and other rich-text editors.
@@ -31,8 +29,6 @@
 - **Manual**: Download `main.js`, `manifest.json`, and `styles.css` from the [latest release](https://github.com/qingu-x/obsidian-md-beautify-plugin/releases), and place them in your vault's `.obsidian/plugins/md-beautify/` folder.
 
 ---
-
-<a name="中文"></a>
 
 ## 中文
 
