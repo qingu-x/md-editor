@@ -180,6 +180,3 @@ jobs:
         with:
           files: |
             apps/obsidian/dist/md-beautify-obsidian.zip
-            apps/obsidian/dist/main.js
-            apps/obsidian/dist/manifest.json
-            apps/obsidian/dist/styles.css
